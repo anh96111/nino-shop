@@ -1479,29 +1479,56 @@
       if (active) active.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
 
-    /* SWIPE */
-    let startX = 0, moveX = 0, isDragging = false;
+    // SWIPE
+    let startX = 0, startY = 0, moveX = 0, moveY = 0;
+    let isDragging = false, isHorizontal = null;
 
     slider.addEventListener("touchstart", e => {
-      startX     = e.touches[0].clientX;
-      moveX      = startX;
-      isDragging = true;
+    startX       = e.touches[0].clientX;
+    startY       = e.touches[0].clientY;
+    moveX        = startX;
+    moveY        = startY;
+    isDragging   = true;
+    isHorizontal = null;
     }, { passive: true });
 
     slider.addEventListener("touchmove", e => {
-      if (!isDragging) return;
-      moveX = e.touches[0].clientX;
-    }, { passive: true });
+    if (!isDragging) return;
+    moveX = e.touches[0].clientX;
+    moveY = e.touches[0].clientY;
+
+    // Xác định hướng gesture lần đầu tiên
+    if (isHorizontal === null) {
+        const diffX = Math.abs(moveX - startX);
+        const diffY = Math.abs(moveY - startY);
+        if (diffX > 5 || diffY > 5) {
+        isHorizontal = diffX >= diffY;
+        }
+    }
+
+    // Nếu là swipe ngang → chặn scroll dọc
+    if (isHorizontal === true) {
+        e.preventDefault();
+    }
+    }, { passive: false });
 
     slider.addEventListener("touchend", () => {
-      if (!isDragging) return;
-      const diff = startX - moveX;
-      if      (diff >  50 && currentSlide < currentGallery.length - 1) currentSlide++;
-      else if (diff < -50 && currentSlide > 0)                          currentSlide--;
-      updateSlider();
-      isDragging = false;
-      startX = 0; moveX = 0;
+    if (!isDragging) return;
+
+    // Chỉ đổi slide nếu là gesture ngang
+    if (isHorizontal === true) {
+        const diff = startX - moveX;
+        if      (diff >  50 && currentSlide < currentGallery.length - 1) currentSlide++;
+        else if (diff < -50 && currentSlide > 0)                          currentSlide--;
+        updateSlider();
+    }
+
+    isDragging   = false;
+    isHorizontal = null;
+    startX = 0; startY = 0;
+    moveX  = 0; moveY  = 0;
     });
+
 
     /* ===================================================
        SIZE & QTY
