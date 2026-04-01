@@ -561,6 +561,11 @@
       margin-top: 4px;
     }
 
+    .order-totals-row.freeship {
+      color: #2e7d32;
+      font-weight: 700;
+    }
+
     /* ===== FORM ===== */
     .form-group { margin-bottom: 14px; }
 
@@ -775,8 +780,7 @@
 
   <!-- FACEBOOK PIXEL -->
   <script>
-    const FB_PIXEL_ID     = "958914646618702";
-    const FB_ACCESS_TOKEN = "EAAcIc5sZCkW0BRFZBdAenETOY5TwDhv5cpnTHoZCAzvFEDlSNESiFSpcivHJQZCS58XZCopX2E36C4iwZCCgq5ZCQCRGe8QpQ46Y6nUlapqcq6EnP0VoIZCZCFZCFoolUpnwyn5JDfomHR6pdpNiHCCwYb70DIsZA9Upk2ZCDGdGGUTdE3puchfN7OCdWFC7IXCgtGQR2QZDZD";
+    const FB_PIXEL_ID = "958914646618702";
 
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -830,7 +834,7 @@
     <!-- FREE SHIP -->
     <section class="section" style="padding-top:10px; padding-bottom:10px;">
       <div class="free-ship-bar">
-        🚚 Miễn phí vận chuyển cho tất cả đơn hàng khi mua trong thời gian ưu đãi hôm nay
+        🚚 Miễn phí ship cho tất cả đơn hàng khi mua trong thời gian ưu đãi hôm nay
       </div>
     </section>
 
@@ -1068,6 +1072,9 @@
             <span>Tạm tính</span>
             <span id="summarySubTotal">0đ</span>
           </div>
+          <div class="order-totals-row freeship">
+            <span>🚚 Miễn phí vận chuyển</span>
+          </div>
           <div class="order-totals-row">
             <span>Thuế</span>
             <span>9.000đ</span>
@@ -1121,7 +1128,7 @@
 
   <script>
     /* ===================================================
-       CẤU HÌNH SẢN PHẨM
+       CẤU HÌNH
     =================================================== */
     const PRODUCT = {
       id:       "ao-croptop-001",
@@ -1130,8 +1137,8 @@
       currency: "VND"
     };
 
-    const TAX         = 9000;
-    const GAS_URL     = "https://script.google.com/macros/s/AKfycbxodCpNkfJejRKjfk5IvJ4xmtdg_ti6rn_8e7NFleNkIPApNSreA0aJhuPpcWUaD4FQ/exec";
+    const TAX     = 9000;
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxodCpNkfJejRKjfk5IvJ4xmtdg_ti6rn_8e7NFleNkIPApNSreA0aJhuPpcWUaD4FQ/exec";
 
     /* ===================================================
        PRODUCT IMAGES
@@ -1248,6 +1255,7 @@
     let colorIndexMap  = {};
     let slideColorMap  = [];
     let cartItems      = [];
+    let clientIp       = null;
 
     /* ===================================================
        DOM REFS
@@ -1271,7 +1279,7 @@
     const thankCloseBtn      = document.getElementById("thankCloseBtn");
 
     /* ===================================================
-       FACEBOOK — SHA256 + CAPI + genEventId
+       SHA256
     =================================================== */
     async function sha256(str) {
       const buf = await crypto.subtle.digest(
@@ -1282,36 +1290,13 @@
         .map(b => b.toString(16).padStart(2, "0")).join("");
     }
 
+    /* ===================================================
+       UTILS
+    =================================================== */
     function genEventId() {
       return Date.now().toString(36) + Math.random().toString(36).slice(2);
     }
 
-    async function sendCAPI(eventName, eventId, userData, customData) {
-      try {
-        await fetch(
-          `https://graph.facebook.com/v19.0/${FB_PIXEL_ID}/events?access_token=${FB_ACCESS_TOKEN}`,
-          {
-            method:  "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              data: [{
-                event_name:       eventName,
-                event_time:       Math.floor(Date.now() / 1000),
-                event_id:         eventId,
-                event_source_url: window.location.href,
-                action_source:    "website",
-                user_data:        userData,
-                custom_data:      customData
-              }]
-            })
-          }
-        );
-      } catch (_) { /* silent — CAPI không chặn flow chính */ }
-    }
-
-    /* ===================================================
-       UTILS
-    =================================================== */
     function formatPrice(num) {
       return num.toLocaleString("vi-VN") + "đ";
     }
@@ -1337,6 +1322,11 @@
       return match ? match[2] : null;
     }
 
+    function setCookie(name, value, days) {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = name + "=" + value + "; expires=" + expires + "; path=/";
+    }
+
     function setupOptionGroup(containerId, callback) {
       const buttons = document.querySelectorAll(`#${containerId} .option-btn`);
       buttons.forEach(btn => {
@@ -1346,6 +1336,57 @@
           callback(btn.dataset.value);
         });
       });
+    }
+
+    /* ===================================================
+       BUILD _fbc COOKIE TỪ fbclid TRÊN URL
+    =================================================== */
+    (function () {
+      const fbclid = getQueryParam("fbclid");
+      if (fbclid) {
+        const fbc = "fb.1." + Date.now() + "." + fbclid;
+        setCookie("_fbc", fbc, 90);
+      }
+    })();
+
+    /* ===================================================
+       LẤY CLIENT IP
+    =================================================== */
+    fetch("https://api.ipify.org?format=json")
+      .then(r => r.json())
+      .then(d => { clientIp = d.ip; })
+      .catch(() => {});
+
+    /* ===================================================
+       BUILD BASE PAYLOAD — dùng chung cho mọi GAS call
+    =================================================== */
+    function buildBasePayload(eventIdObj) {
+      return {
+        product_id:       PRODUCT.id,
+        product_name:     PRODUCT.name,
+        price:            PRODUCT.price,
+        value:            PRODUCT.price,
+        currency:         PRODUCT.currency,
+        event_source_url: window.location.href,
+        user_agent:       navigator.userAgent,
+        client_ip:        clientIp || null,
+        fbp:              getCookie("_fbp") || null,
+        fbc:              getCookie("_fbc") || null,
+        fbclid:           getQueryParam("fbclid") || null,
+        ...eventIdObj
+      };
+    }
+
+    /* ===================================================
+       GỬI LÊN GAS
+    =================================================== */
+    function sendToGAS(payload) {
+      fetch(GAS_URL, {
+        method:  "POST",
+        mode:    "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(payload)
+      }).catch(() => {});
     }
 
     /* ===================================================
@@ -1377,7 +1418,6 @@
         }
         slidesEl.appendChild(slide);
 
-        // FIX: capture index by value
         const capturedIndex = index;
 
         const dot = document.createElement("div");
@@ -1386,7 +1426,7 @@
         dotsEl.appendChild(dot);
 
         const thumbSrc = isVideo
-          ? "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Crect width='72' height='72' fill='%23eee'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='22' fill='%23aaa'%3E▶%3C/text%3E%3C/svg%3E"
+          ? "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Crect width='72' height='72' fill='%23eee'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='22' fill='%23aaa'%3E%E2%96%B6%3C/text%3E%3C/svg%3E"
           : src;
         const thumb = document.createElement("img");
         thumb.className = "thumb";
@@ -1401,12 +1441,10 @@
       }
 
       PRODUCT_EXTRA_IMAGES.forEach(src => addSlide(src, "extra", false));
-
       Object.keys(COLOR_IMAGES).forEach(color => {
         colorIndexMap[color] = index;
         COLOR_IMAGES[color].forEach(src => addSlide(src, color, false));
       });
-
       PRODUCT_VIDEOS.forEach(src => addSlide(src, "video", true));
 
       goToSlide(0);
@@ -1442,22 +1480,18 @@
 
     function updateSlider() {
       slidesEl.style.transform = `translateX(-${currentSlide * 100}%)`;
-
       document.querySelectorAll(".dot").forEach((dot, i) => {
         dot.classList.toggle("active", i === currentSlide);
       });
-
       document.querySelectorAll("#thumbs .thumb").forEach((thumb, i) => {
         thumb.classList.toggle("active", i === currentSlide);
       });
-
       const slideColor = slideColorMap[currentSlide];
       if (slideColor && slideColor !== "video" && slideColor !== "extra") {
         selectedColor = slideColor;
         colorLabelEl.textContent = slideColor;
         updateColorThumbActive();
       }
-
       autoScrollThumbs();
       autoScrollColorThumbs();
     }
@@ -1475,69 +1509,54 @@
     }
 
     function autoScrollColorThumbs() {
-    const active = document.querySelector(".color-thumb-item.active");
-    if (!active) return;
-    const container = document.getElementById("colorThumbs");
-    const itemLeft  = active.offsetLeft;
-    const itemWidth = active.offsetWidth;
-    const containerWidth = container.offsetWidth;
-    container.scrollTo({
-      left: itemLeft - (containerWidth / 2) + (itemWidth / 2),
-      behavior: "smooth"
-    });
-  }
+      const active = document.querySelector(".color-thumb-item.active");
+      if (!active) return;
+      const container      = document.getElementById("colorThumbs");
+      const itemLeft       = active.offsetLeft;
+      const itemWidth      = active.offsetWidth;
+      const containerWidth = container.offsetWidth;
+      container.scrollTo({
+        left:     itemLeft - (containerWidth / 2) + (itemWidth / 2),
+        behavior: "smooth"
+      });
+    }
 
-
-    // SWIPE
+    /* SWIPE */
     let startX = 0, startY = 0, moveX = 0, moveY = 0;
     let isDragging = false, isHorizontal = null;
 
     slider.addEventListener("touchstart", e => {
-    startX       = e.touches[0].clientX;
-    startY       = e.touches[0].clientY;
-    moveX        = startX;
-    moveY        = startY;
-    isDragging   = true;
-    isHorizontal = null;
+      startX       = e.touches[0].clientX;
+      startY       = e.touches[0].clientY;
+      moveX        = startX;
+      moveY        = startY;
+      isDragging   = true;
+      isHorizontal = null;
     }, { passive: true });
 
     slider.addEventListener("touchmove", e => {
-    if (!isDragging) return;
-    moveX = e.touches[0].clientX;
-    moveY = e.touches[0].clientY;
-
-    // Xác định hướng gesture lần đầu tiên
-    if (isHorizontal === null) {
+      if (!isDragging) return;
+      moveX = e.touches[0].clientX;
+      moveY = e.touches[0].clientY;
+      if (isHorizontal === null) {
         const diffX = Math.abs(moveX - startX);
         const diffY = Math.abs(moveY - startY);
-        if (diffX > 5 || diffY > 5) {
-        isHorizontal = diffX >= diffY;
-        }
-    }
-
-    // Nếu là swipe ngang → chặn scroll dọc
-    if (isHorizontal === true) {
-        e.preventDefault();
-    }
+        if (diffX > 5 || diffY > 5) isHorizontal = diffX >= diffY;
+      }
+      if (isHorizontal === true) e.preventDefault();
     }, { passive: false });
 
     slider.addEventListener("touchend", () => {
-    if (!isDragging) return;
-
-    // Chỉ đổi slide nếu là gesture ngang
-    if (isHorizontal === true) {
+      if (!isDragging) return;
+      if (isHorizontal === true) {
         const diff = startX - moveX;
         if      (diff >  50 && currentSlide < currentGallery.length - 1) currentSlide++;
         else if (diff < -50 && currentSlide > 0)                          currentSlide--;
         updateSlider();
-    }
-
-    isDragging   = false;
-    isHorizontal = null;
-    startX = 0; startY = 0;
-    moveX  = 0; moveY  = 0;
+      }
+      isDragging = false; isHorizontal = null;
+      startX = 0; startY = 0; moveX = 0; moveY = 0;
     });
-
 
     /* ===================================================
        SIZE & QTY
@@ -1699,7 +1718,6 @@
         btn.addEventListener("click", () => {
           const action = btn.dataset.action;
           const idx    = parseInt(btn.dataset.idx);
-
           if (action === "minus") {
             if (cartItems[idx].quantity > 1) {
               cartItems[idx].quantity--;
@@ -1713,7 +1731,6 @@
           } else if (action === "remove") {
             cartItems.splice(idx, 1);
           }
-
           saveCartItems();
           renderCartSummary();
         });
@@ -1723,16 +1740,11 @@
     /* ===================================================
        OPEN CHECKOUT
     =================================================== */
-    async function openCheckoutCart() {
+    function openCheckoutCart() {
       loadCartItems();
       renderCartSummary();
 
       const eid = genEventId();
-      const baseUserData = {
-        client_user_agent: navigator.userAgent,
-        fbp: getCookie("_fbp") || undefined,
-        fbc: getQueryParam("fbclid") || getCookie("_fbc") || undefined
-      };
 
       if (typeof fbq !== "undefined") {
         fbq('track', 'InitiateCheckout', {
@@ -1744,12 +1756,10 @@
         }, { eventID: eid });
       }
 
-      sendCAPI("InitiateCheckout", eid, baseUserData, {
-        content_name: PRODUCT.name,
-        content_ids:  [PRODUCT.id],
-        content_type: "product",
-        value:        getCartGrandTotal(),
-        currency:     PRODUCT.currency
+      sendToGAS({
+        ...buildBasePayload({ initiate_checkout_event_id: eid }),
+        event_type: "initiate_checkout",
+        value:      getCartGrandTotal()
       });
 
       openModal();
@@ -1762,11 +1772,6 @@
       addCurrentSelectionToCart();
 
       const eid = genEventId();
-      const baseUserData = {
-        client_user_agent: navigator.userAgent,
-        fbp: getCookie("_fbp") || undefined,
-        fbc: getQueryParam("fbclid") || getCookie("_fbc") || undefined
-      };
 
       if (typeof fbq !== "undefined") {
         fbq('track', 'AddToCart', {
@@ -1778,28 +1783,18 @@
         }, { eventID: eid });
       }
 
-      sendCAPI("AddToCart", eid, baseUserData, {
-        content_name: PRODUCT.name,
-        content_ids:  [PRODUCT.id],
-        content_type: "product",
-        value:        PRODUCT.price * quantity,
-        currency:     PRODUCT.currency
+      sendToGAS({
+        ...buildBasePayload({ add_to_cart_event_id: eid }),
+        event_type: "add_to_cart",
+        value:      PRODUCT.price * quantity
       });
 
       showToast("✓ Đã thêm vào giỏ hàng");
     });
 
-    goToCartBtn.addEventListener("click", () => openCheckoutCart());
-
-    buyNowBtn.addEventListener("click", () => {
-      addCurrentSelectionToCart();
-      openCheckoutCart();
-    });
-
-    inlineBuyNowBtn.addEventListener("click", () => {
-      addCurrentSelectionToCart();
-      openCheckoutCart();
-    });
+    goToCartBtn.addEventListener("click",     () => openCheckoutCart());
+    buyNowBtn.addEventListener("click",       () => { addCurrentSelectionToCart(); openCheckoutCart(); });
+    inlineBuyNowBtn.addEventListener("click", () => { addCurrentSelectionToCart(); openCheckoutCart(); });
 
     /* ===================================================
        COUNTDOWN
@@ -1831,25 +1826,24 @@
       }
 
       loadCartItems();
-
       submitBtn.disabled    = true;
       submitBtn.textContent = "Đang gửi...";
       statusMessage.textContent = "";
 
+      const purchaseEventId = genEventId();
+      const hashedPhone     = await sha256(phone);
+
       const payload = {
-        product_id:   PRODUCT.id,
-        product_name: PRODUCT.name,
+        ...buildBasePayload({ purchase_event_id: purchaseEventId }),
+        event_type:   "purchase",
         items:        cartItems,
-        price:        PRODUCT.price,
         quantity:     cartItems.reduce((sum, item) => sum + item.quantity, 0),
         subtotal:     getCartSubTotal(),
         tax:          TAX,
         total:        getCartGrandTotal(),
-        currency:     PRODUCT.currency,
-        customer:     { full_name: fullName, phone, address },
-        user_agent:   navigator.userAgent,
-        fb_browser_id: getCookie("_fbp"),
-        fb_click_id:   getQueryParam("fbclid") || getCookie("_fbc")
+        value:        getCartGrandTotal(),
+        hashed_phone: hashedPhone,
+        customer:     { full_name: fullName, phone, address }
       };
 
       try {
@@ -1860,25 +1854,6 @@
           body:    JSON.stringify(payload)
         });
 
-        // no-cors: không đọc response — coi resolve = thành công
-        const eid = genEventId();
-        const hashedPhone = await sha256(phone);
-
-        const purchaseUserData = {
-          ph:                hashedPhone,
-          client_user_agent: navigator.userAgent,
-          fbp: getCookie("_fbp") || undefined,
-          fbc: getQueryParam("fbclid") || getCookie("_fbc") || undefined
-        };
-
-        const purchaseCustomData = {
-          content_name: PRODUCT.name,
-          content_ids:  [PRODUCT.id],
-          content_type: "product",
-          value:        getCartGrandTotal(),
-          currency:     PRODUCT.currency
-        };
-
         if (typeof fbq !== "undefined") {
           fbq('track', 'Purchase', {
             content_name: PRODUCT.name,
@@ -1886,20 +1861,15 @@
             content_type: 'product',
             value:        getCartGrandTotal(),
             currency:     PRODUCT.currency
-          }, { eventID: eid });
+          }, { eventID: purchaseEventId });
         }
 
-        sendCAPI("Purchase", eid, purchaseUserData, purchaseCustomData);
-
-        // Clear
         document.getElementById("orderForm").reset();
         quantity = 1;
         updateQtyDisplay();
         localStorage.removeItem("nino_cart");
         cartItems = [];
         renderCartSummary();
-
-        // Đóng orderModal → mở thankModal
         hideModal();
         openThankModal();
 
@@ -2011,8 +1981,17 @@
     }
 
     /* ===================================================
-       INIT
+       INIT — ViewContent CAPI qua GAS
     =================================================== */
+    (function initViewContent() {
+      const eid = genEventId();
+      sendToGAS({
+        ...buildBasePayload({ view_content_event_id: eid }),
+        event_type: "view_content",
+        value:      PRODUCT.price
+      });
+    })();
+
     loadCartItems();
     buildFullGallery();
     buildColorThumbs();
