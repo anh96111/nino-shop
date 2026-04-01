@@ -1475,9 +1475,18 @@
     }
 
     function autoScrollColorThumbs() {
-      const active = document.querySelector(".color-thumb-item.active");
-      if (active) active.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-    }
+    const active = document.querySelector(".color-thumb-item.active");
+    if (!active) return;
+    const container = document.getElementById("colorThumbs");
+    const itemLeft  = active.offsetLeft;
+    const itemWidth = active.offsetWidth;
+    const containerWidth = container.offsetWidth;
+    container.scrollTo({
+      left: itemLeft - (containerWidth / 2) + (itemWidth / 2),
+      behavior: "smooth"
+    });
+  }
+
 
     // SWIPE
     let startX = 0, startY = 0, moveX = 0, moveY = 0;
