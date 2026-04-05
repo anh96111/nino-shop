@@ -25,13 +25,6 @@
   /* ---------------------------------------------------
      INJECT CSS (chỉ 1 lần)
   --------------------------------------------------- */
-  if (!document.getElementById("nino-style")) {
-    const link = document.createElement("link");
-    link.id   = "nino-style";
-    link.rel  = "stylesheet";
-    link.href = "/template/product.css";
-    document.head.appendChild(link);
-  }
 
   /* ---------------------------------------------------
      INJECT FACEBOOK PIXEL
