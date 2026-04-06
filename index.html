@@ -233,6 +233,47 @@
       min-height: 32px;
     }
 
+    /* ===== SOLD OUT COLOR ===== */
+    .color-thumb-item.sold-out {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .color-thumb-item.sold-out .color-thumb-img-wrap {
+      border-color: #ddd;
+    }
+
+    .color-thumb-item.sold-out .color-thumb-img {
+      filter: grayscale(60%);
+    }
+
+    .sold-out-tag {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.52);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      text-align: center;
+      padding: 3px 0;
+      letter-spacing: 0.3px;
+    }
+
+    /* ===== BEST SELLER BADGE ===== */
+    .best-seller-badge {
+      position: absolute;
+      top: 6px; left: 6px;
+      background: #ee4d2d;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 4px;
+      letter-spacing: 0.2px;
+      line-height: 1.4;
+      z-index: 2;
+    }
+
     /* ===== SIZE ===== */
     .option-list { display: flex; flex-wrap: wrap; gap: 10px; }
 
@@ -1148,17 +1189,26 @@
       "https://res.cloudinary.com/dezednxpz/image/upload/v1774989814/Woman_wearing_sun-protection_202604010304_pbjt9w.jpg"
     ];
 
-    const COLOR_IMAGES = {
-      "Sáng( Croptop)":        ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7r98o-lzmuzy7sl4ctc1_rsyj4f.webp"],
-      "Hồng( Croptop)":        ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7r98o-lzmv0037x9hpe3_ssseez.webp"],
-      "Ghi Tối( Croptop)":     ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134201-7r98o-lus375g70ehqf8_phatdm.webp"],
-      "Nâu Be( Croptop)":      ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3764m0omube_s29k7e.webp"],
-      "Xanh Cổ Vịt( Croptop)": ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134201-7r98o-lus377wffab8b1_auq9zv.webp"],
-      "Đen( Croptop)":         ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus376o19nlb4f_ttu4rl.webp"],
-      "Xanh lá(Croptop)":      ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134201-7r98o-lus3794jmqk0e7_lbttlv.webp"],
-      "Xanh than(croptop)":    ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3779yc6aq62_l6yeif.webp"],
-      "Nâu coca(Croptop)":     ["https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7ra0g-m8e76xlha9guee_iicyqo.webp"]
-    };
+    // soldOut: true  → mờ + tag hết hàng, không thể chọn, không vào gallery
+    // bestSeller: true → badge "Best Seller"
+    const COLOR_CONFIG = [
+      { name: "Sáng( Croptop)",        img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7r98o-lzmuzy7sl4ctc1_rsyj4f.webp",  soldOut: false, bestSeller: true  },
+      { name: "Hồng( Croptop)",        img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7r98o-lzmv0037x9hpe3_ssseez.webp",  soldOut: false, bestSeller: false },
+      { name: "Ghi Tối( Croptop)",     img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134201-7r98o-lus375g70ehqf8_phatdm.webp",  soldOut: false, bestSeller: true  },
+      { name: "Nâu coca(Croptop)",     img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7ra0g-m8e76xlha9guee_iicyqo.webp",  soldOut: false, bestSeller: false },
+      { name: "Nâu Be( Croptop)",      img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3764m0omube_s29k7e.webp",  soldOut: true,  bestSeller: false },
+      { name: "Xanh Cổ Vịt( Croptop)",img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134201-7r98o-lus377wffab8b1_auq9zv.webp",  soldOut: true,  bestSeller: false },
+      { name: "Đen( Croptop)",         img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus376o19nlb4f_ttu4rl.webp",  soldOut: true,  bestSeller: false },
+      { name: "Xanh lá(Croptop)",      img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134201-7r98o-lus3794jmqk0e7_lbttlv.webp",  soldOut: true,  bestSeller: false },
+      { name: "Xanh than(croptop)",    img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3779yc6aq62_l6yeif.webp",  soldOut: true,  bestSeller: false }
+    ];
+
+
+    // COLOR_IMAGES chỉ chứa màu available — dùng cho gallery
+    const COLOR_IMAGES = {};
+    COLOR_CONFIG.forEach(c => {
+      if (!c.soldOut) COLOR_IMAGES[c.name] = [c.img];
+    });
 
     const PRODUCT_VIDEOS = [];
 
@@ -1339,7 +1389,7 @@
     }
 
     /* ===================================================
-       BUILD _fbc COOKIE TỪ fbclid TRÊN URL
+       BUILD _fbc COOKIE
     =================================================== */
     (function () {
       const fbclid = getQueryParam("fbclid");
@@ -1358,7 +1408,7 @@
       .catch(() => {});
 
     /* ===================================================
-       BUILD BASE PAYLOAD — dùng chung cho mọi GAS call
+       BUILD BASE PAYLOAD
     =================================================== */
     function buildBasePayload(eventIdObj) {
       return {
@@ -1441,6 +1491,7 @@
       }
 
       PRODUCT_EXTRA_IMAGES.forEach(src => addSlide(src, "extra", false));
+      // Chỉ add slide cho màu available
       Object.keys(COLOR_IMAGES).forEach(color => {
         colorIndexMap[color] = index;
         COLOR_IMAGES[color].forEach(src => addSlide(src, color, false));
@@ -1450,30 +1501,49 @@
       goToSlide(0);
     }
 
+    /* ===================================================
+       BUILD COLOR THUMBS — render tất cả màu, sold-out mờ
+    =================================================== */
     function buildColorThumbs() {
       colorThumbsEl.innerHTML = "";
-      Object.keys(COLOR_IMAGES).forEach((color, i) => {
-        const img  = COLOR_IMAGES[color][0];
-        const item = document.createElement("div");
-        item.className     = "color-thumb-item" + (i === 0 ? " active" : "");
-        item.dataset.color = color;
+
+      COLOR_CONFIG.forEach((cfg, i) => {
+        const isFirst  = !i && !cfg.soldOut; // active nếu là màu đầu available
+        const item     = document.createElement("div");
+
+        item.className     = "color-thumb-item" + (cfg.soldOut ? " sold-out" : (cfg.name === selectedColor ? " active" : ""));
+        item.dataset.color = cfg.name;
+
+        const badgeHtml      = cfg.bestSeller
+          ? `<div class="best-seller-badge">Best Seller</div>`
+          : "";
+        const soldOutTagHtml = cfg.soldOut
+          ? `<div class="sold-out-tag">Hết hàng</div>`
+          : "";
+
         item.innerHTML = `
           <div class="color-thumb-img-wrap">
-            <img class="color-thumb-img" src="${img}" alt="${color}" loading="lazy" decoding="async" />
+            ${badgeHtml}
+            <img class="color-thumb-img" src="${cfg.img}" alt="${cfg.name}" loading="lazy" decoding="async" />
+            ${soldOutTagHtml}
           </div>
-          <div class="color-thumb-label">${color}</div>
+          <div class="color-thumb-label">${cfg.name}</div>
         `;
-        item.addEventListener("click", () => {
-          selectedColor = color;
-          colorLabelEl.textContent = color;
-          goToSlide(colorIndexMap[color]);
-        });
+
+        if (!cfg.soldOut) {
+          item.addEventListener("click", () => {
+            selectedColor = cfg.name;
+            colorLabelEl.textContent = cfg.name;
+            goToSlide(colorIndexMap[cfg.name]);
+          });
+        }
+
         colorThumbsEl.appendChild(item);
       });
     }
 
     function updateColorThumbActive() {
-      document.querySelectorAll(".color-thumb-item").forEach(el => {
+      document.querySelectorAll(".color-thumb-item:not(.sold-out)").forEach(el => {
         el.classList.toggle("active", el.dataset.color === selectedColor);
       });
     }
@@ -1981,7 +2051,7 @@
     }
 
     /* ===================================================
-       INIT — ViewContent CAPI qua GAS
+       INIT
     =================================================== */
     (function initViewContent() {
       const eid = genEventId();
