@@ -1,3 +1,6 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/boc-yen", "destination": "/boc-yen.html" }
+  ]
 }
