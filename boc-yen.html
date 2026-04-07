@@ -196,11 +196,10 @@
 
     .color-thumb-item {
       flex: 0 0 auto;
-      width: 40%;
+      width: 30%;
       cursor: pointer;
     }
 
-    .color-thumb-item { width: 30%; }
     .color-thumb-img-wrap {
       width: 100%;
       aspect-ratio: 1 / 1;
@@ -286,7 +285,6 @@
       cursor: pointer;
     }
 
-    /* FIX: qty-btn disabled style */
     .qty-btn:disabled {
       opacity: 0.35;
       cursor: not-allowed;
@@ -300,7 +298,6 @@
       font-size: 16px;
     }
 
-    /* NEW: chữ "chiếc" */
     .qty-unit {
       font-size: 15px;
       font-weight: 700;
@@ -538,7 +535,6 @@
       line-height: 1;
     }
 
-    /* FIX: cart minus disabled style */
     .cart-qty-btn:disabled {
       opacity: 0.35;
       cursor: not-allowed;
@@ -775,6 +771,7 @@
 
   <!-- FACEBOOK PIXEL -->
   <script>
+    // FIX 1: content_ids, content_category, value khớp với sản phẩm yên xe
     const FB_PIXEL_ID = "958914646618702";
     !function(f,b,e,v,n,t,s){
       if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -787,12 +784,12 @@
     fbq('init', FB_PIXEL_ID);
     fbq('track', 'PageView');
     fbq('track', 'ViewContent', {
-      content_name: 'Vỏ bọc yên xe máy chống thấm nước,chống thấm và chống trầy xước,bền bỉ',
-      content_category: 'Đồ gia dụng',
-      content_ids: ['ao-croptop-001'],
-      content_type: 'product',
-      value: 220000,
-      currency: 'VND'
+      content_name:     'Vỏ bọc yên xe máy chống thấm nước, chống trầy xước, bền bỉ',
+      content_category: 'Phụ kiện xe máy',
+      content_ids:      ['boc-yen-001'],
+      content_type:     'product',
+      value:            49500,
+      currency:         'VND'
     });
   </script>
 </head>
@@ -820,7 +817,7 @@
         <div class="old-price">220.000đ</div>
         <div class="discount-badge">-45%</div>
       </div>
-      <div class="product-title">COMBO 2 Vỏ bọc yên xe máy chống thấm nước,chống thấm và chống trầy xước,bền bỉ</div>
+      <div class="product-title">COMBO 2 Vỏ bọc yên xe máy chống thấm nước, chống trầy xước, bền bỉ</div>
       <div class="sold">Đã bán 80k+</div>
     </section>
 
@@ -864,7 +861,6 @@
       <div class="qty-wrap">
         <button class="qty-btn" id="minusQty">-</button>
         <input class="qty-input" type="number" id="quantity" value="2" min="2" readonly />
-        <!-- NEW: chữ chiếc -->
         <span class="qty-unit">chiếc</span>
         <button class="qty-btn" id="plusQty">+</button>
       </div>
@@ -904,9 +900,10 @@
             <li><strong>Bền Bỉ và Sang Trọng:</strong> Chất liệu da không chỉ bền mà còn mang lại vẻ ngoài sang trọng, tạo điểm nhấn cho xe của bạn.</li>
             <li><strong>Phù Hợp Với Mọi Loại Yên Xe:</strong> Kích thước linh hoạt giúp bọc yên xe dễ dàng tương thích với nhiều loại xe máy khác nhau.</li>
           </ul>
+          <!-- FIX 3: xóa 2 đoạn <p> nội dung áo, thay bằng nội dung yên xe -->
           <h3>An tâm khi đặt hàng:</h3>
-          <p>Shop hỗ trợ khách chọn size theo cân nặng và có hỗ trợ đổi size / đổi màu nếu chọn chưa phù hợp.</p>
-          <p>Bạn nên đặt sớm để giữ màu và size dễ mặc vì đây là mẫu đang được nhiều chị em chọn trong mùa nắng.</p>
+          <p>Shop hỗ trợ khách chọn loại yên phù hợp theo dòng xe và có hỗ trợ đổi loại / đổi sản phẩm nếu chọn chưa phù hợp.</p>
+          <p>Bạn nên đặt sớm để đảm bảo còn hàng vì đây là mẫu đang được nhiều khách chọn trong thời gian ưu đãi.</p>
         </div>
       </div>
       <button class="desc-toggle-btn" id="descToggleBtn">Xem thêm ▾</button>
@@ -964,10 +961,11 @@
         <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1774966653/Screenshot_2026-03-31_063159_j3ckds.png"
           style="width:100%; border-radius:12px;" loading="lazy" decoding="async" alt="Bản đồ cửa hàng" />
       </div>
+      <!-- FIX 5+6: Chính sách & Cam kết — thay "size" → ngôn ngữ yên xe -->
       <div style="margin-bottom:14px;">
         <div style="font-weight:700; margin-bottom:6px;">Chính sách đổi trả</div>
         <div style="font-size:14px; color:#555; line-height:1.7;">
-          Hỗ trợ đổi size / đổi màu trong 7 ngày nếu sản phẩm chưa qua sử dụng.
+          Hỗ trợ đổi loại yên / đổi sản phẩm trong 7 ngày nếu chưa qua sử dụng.
           Trường hợp lỗi do nhà sản xuất được đổi mới hoàn toàn.
         </div>
       </div>
@@ -981,17 +979,19 @@
         <div style="font-weight:700; margin-bottom:6px;">Cam kết</div>
         <div style="font-size:14px; color:#555; line-height:1.7;">
           ✔ Được kiểm tra hàng trước khi thanh toán (COD)<br>
-          ✔ Hỗ trợ đổi size nếu không vừa<br>
+          <!-- FIX 6: thay "đổi size" → "đổi loại yên" -->
+          ✔ Hỗ trợ đổi loại yên nếu không phù hợp<br>
           ✔ Sản phẩm đúng mô tả 100%
         </div>
       </div>
+      <!-- FIX 4: FAQ — thay câu hỏi "size" → loại yên -->
       <div>
         <div style="font-weight:700; margin-bottom:6px;">FAQ</div>
         <div style="font-size:14px; color:#555; line-height:1.7;">
           <div><strong>Hỏi:</strong> Có được kiểm hàng không?</div>
           <div>✔ Có, kiểm tra trước khi thanh toán.</div>
-          <div style="margin-top:8px;"><strong>Hỏi:</strong> Không vừa size có đổi không?</div>
-          <div>✔ Có, hỗ trợ đổi size nhanh chóng.</div>
+          <div style="margin-top:8px;"><strong>Hỏi:</strong> Không vừa loại yên có đổi không?</div>
+          <div>✔ Có, hỗ trợ đổi loại yên nhanh chóng.</div>
           <div style="margin-top:8px;"><strong>Hỏi:</strong> Bao lâu nhận hàng?</div>
           <div>✔ 2–5 ngày toàn quốc.</div>
         </div>
@@ -1054,9 +1054,8 @@
         </div>
         <div class="form-group">
           <label>Ghi chú đơn hàng</label>
-          <textarea id="note" rows="2" placeholder="VD: 1 size lớn + 1 size nhỏ, giao giờ hành chính..."></textarea>
+          <textarea id="note" rows="2" placeholder="VD: 1 loại lớn + 1 loại nhỏ, giao giờ hành chính..."></textarea>
         </div>
-
         <button type="submit" class="submit-btn" id="submitBtn">XÁC NHẬN ĐẶT HÀNG</button>
         <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
         <div class="status-message" id="statusMessage"></div>
@@ -1090,10 +1089,11 @@
        CẤU HÌNH
     =================================================== */
     const PRODUCT = {
-      id:       "ao-croptop-001",
-      name:     "COMBO 2 chiếc vỏ bọc yên xe máy chống thấm nước,chống thấm và chống trầy xước,bền bỉ",
-      price:    49500,
-      currency: "VND"
+      id:         "boc-yen-001",           // FIX 2: ID đúng sản phẩm
+      name:       "COMBO 2 chiếc vỏ bọc yên xe máy chống thấm nước, chống trầy xước, bền bỉ",
+      price:      49500,
+      currency:   "VND",
+      sheet_name: "Bọc Yên"               // FIX mới: chỉ định sheet GAS
     };
 
     const TAX     = 9000;
@@ -1111,7 +1111,6 @@
       "https://res.cloudinary.com/dixjbykgy/image/upload/v1775493172/sg-11134201-7rd5o-m7j3ub9jcstf69_adenab.webp"
     ];
 
-    /* NEW: cập nhật ảnh + thêm option "1 lớn + 1 nhỏ" */
     const COLOR_CONFIG = [
       {
         name:       "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
@@ -1344,7 +1343,6 @@
       toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2000);
     }
 
-    /* NEW: cập nhật display + disable minus khi đạt QTY_MIN */
     function updateQtyDisplay() {
       document.getElementById("quantity").value = quantity;
       minusQtyBtn.disabled = (quantity <= QTY_MIN);
@@ -1385,9 +1383,11 @@
 
     /* ===================================================
        BUILD BASE PAYLOAD
+       FIX mới: thêm sheet_name vào mọi payload → GAS ghi đúng sheet
     =================================================== */
     function buildBasePayload(eventIdObj) {
       return {
+        sheet_name:       PRODUCT.sheet_name,
         product_id:       PRODUCT.id,
         product_name:     PRODUCT.name,
         price:            PRODUCT.price,
@@ -1405,7 +1405,6 @@
 
     /* ===================================================
        GỬI LÊN GAS
-       NOTE: mode no-cors → fetch luôn resolve.
     =================================================== */
     function sendToGAS(payload) {
       fetch(GAS_URL, {
@@ -1598,8 +1597,7 @@
     });
 
     /* ===================================================
-       QTY — trang chính
-       FIX: minus disabled khi đạt QTY_MIN, input readonly
+       QTY
     =================================================== */
     minusQtyBtn.addEventListener("click", () => {
       if (quantity > QTY_MIN) { quantity--; updateQtyDisplay(); }
@@ -1609,7 +1607,6 @@
       quantity++; updateQtyDisplay();
     });
 
-    /* input readonly → không cần validate input event, giữ để an toàn */
     document.getElementById("quantity").addEventListener("change", e => {
       const val = parseInt(e.target.value);
       quantity = (!isNaN(val) && val >= QTY_MIN) ? val : QTY_MIN;
@@ -1678,9 +1675,13 @@
 
     /* ===================================================
        CART — localStorage
+       NOTE: dùng key riêng "nino_cart_boc_yen" tránh xung đột
+             với landing page áo chống nắng cùng domain
     =================================================== */
+    const CART_KEY = "nino_cart_boc_yen";
+
     function loadCartItems() {
-      const saved = localStorage.getItem("nino_cart");
+      const saved = localStorage.getItem(CART_KEY);
       if (saved) {
         try { cartItems = JSON.parse(saved) || []; }
         catch (_) { cartItems = []; }
@@ -1688,7 +1689,7 @@
     }
 
     function saveCartItems() {
-      localStorage.setItem("nino_cart", JSON.stringify(cartItems));
+      localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
     }
 
     function addCurrentSelectionToCart() {
@@ -1720,8 +1721,6 @@
 
     /* ===================================================
        RENDER CART SUMMARY
-       FIX lỗi 1: cart minus không cho giảm dưới QTY_MIN
-       FIX lỗi 2: guard giỏ trống khi render (submit sẽ check riêng)
     =================================================== */
     function renderCartSummary() {
       const cartSummaryList = document.getElementById("cartSummaryList");
@@ -1739,7 +1738,6 @@
         <div class="cart-item">
           <div class="cart-item-top">${item.product_name}</div>
           <div class="cart-item-meta">Loại yên: ${item.color}</div>
-          ${item.size ? `<div class="cart-item-meta">Size: ${item.size}</div>` : ""}
           <div class="cart-item-controls">
             <button class="cart-qty-btn" data-action="minus" data-idx="${idx}"
               ${item.quantity <= QTY_MIN ? "disabled" : ""}>−</button>
@@ -1759,7 +1757,6 @@
           const action = btn.dataset.action;
           const idx    = parseInt(btn.dataset.idx);
           if (action === "minus") {
-            /* FIX lỗi 1: không cho giảm dưới QTY_MIN */
             if (cartItems[idx].quantity > QTY_MIN) {
               cartItems[idx].quantity--;
               cartItems[idx].total = cartItems[idx].quantity * cartItems[idx].price;
@@ -1850,7 +1847,6 @@
 
     /* ===================================================
        ORDER FORM SUBMIT
-       FIX lỗi 2: guard giỏ trống — không gửi đơn rỗng
     =================================================== */
     document.getElementById("orderForm").addEventListener("submit", async e => {
       e.preventDefault();
@@ -1865,7 +1861,6 @@
         return;
       }
 
-      /* FIX lỗi 2: kiểm tra giỏ hàng trước khi gửi */
       loadCartItems();
       if (!cartItems.length) {
         statusMessage.style.color = "red";
@@ -1895,7 +1890,6 @@
       };
 
       try {
-        /* NOTE: no-cors → luôn resolve dù GAS có lỗi */
         await fetch(GAS_URL, {
           method:  "POST",
           mode:    "no-cors",
@@ -1916,7 +1910,7 @@
         document.getElementById("orderForm").reset();
         quantity = QTY_MIN;
         updateQtyDisplay();
-        localStorage.removeItem("nino_cart");
+        localStorage.removeItem(CART_KEY);
         cartItems = [];
         renderCartSummary();
         hideModal();
