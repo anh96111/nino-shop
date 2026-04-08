@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Vỏ bọc yên xe máy chống thấm nước,chống thấm và chống trầy xước,bền bỉ</title>
+  <title>Áo Chống Nắng Toàn Thân Nữ 2 lớp Croptop From Dài Rộng - Vải COTTON TỔ ONG - Chống tia UV, đặc biệt thoáng khí tránh gây ra mồ hôi.</title>
 
-  <link rel="preload" as="image"
-    href="https://res.cloudinary.com/dezednxpz/video/upload/v1775632661/01_psvqvg.mp4">
+  <!-- [ẢNH_HERO] — thay URL ảnh hero tại đây -->
+  <link rel="preload" as="image" href="https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7r98o-lzmuzy7sl4ctc1_rsyj4f.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700;800&display=swap" rel="stylesheet">
@@ -29,7 +28,6 @@
     }
 
     img { max-width: 100%; display: block; }
-
     button, input, textarea { font: inherit; }
 
     .app {
@@ -193,17 +191,10 @@
     }
 
     .color-thumbs::-webkit-scrollbar { display: none; }
-
-    .color-thumb-item {
-      flex: 0 0 auto;
-      width: 30%;
-      cursor: pointer;
-    }
+    .color-thumb-item { flex: 0 0 auto; width: 92px; cursor: pointer; }
 
     .color-thumb-img-wrap {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      height: auto;
+      width: 92px; height: 92px;
       border-radius: 12px;
       border: 2px solid #ddd;
       overflow: hidden;
@@ -243,9 +234,19 @@
       min-height: 32px;
     }
 
-    .color-thumb-item.sold-out { cursor: not-allowed; opacity: 0.45; }
-    .color-thumb-item.sold-out .color-thumb-img-wrap { border-color: #ddd; }
-    .color-thumb-item.sold-out .color-thumb-img { filter: grayscale(60%); }
+    /* ===== SOLD OUT COLOR ===== */
+    .color-thumb-item.sold-out {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .color-thumb-item.sold-out .color-thumb-img-wrap {
+      border-color: #ddd;
+    }
+
+    .color-thumb-item.sold-out .color-thumb-img {
+      filter: grayscale(60%);
+    }
 
     .sold-out-tag {
       position: absolute;
@@ -259,6 +260,7 @@
       letter-spacing: 0.3px;
     }
 
+    /* ===== BEST SELLER BADGE ===== */
     .best-seller-badge {
       position: absolute;
       top: 6px; left: 6px;
@@ -273,6 +275,39 @@
       z-index: 2;
     }
 
+    /* ===== SIZE ===== */
+    .option-list { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .option-btn {
+      padding: 12px 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s ease;
+      line-height: 1.4;
+      position: relative;
+      min-width: 170px;
+      text-align: left;
+    }
+
+    .option-btn.active {
+      border-color: #ee4d2d;
+      color: #ee4d2d;
+      background: #fff7f5;
+      font-weight: 700;
+    }
+
+    .option-btn.active::after {
+      content: "✓";
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #ee4d2d;
+    }
+
     /* ===== QTY ===== */
     .qty-wrap { display: flex; align-items: center; gap: 10px; }
 
@@ -285,23 +320,12 @@
       cursor: pointer;
     }
 
-    .qty-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
     .qty-input {
       width: 70px; height: 42px;
       text-align: center;
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 16px;
-    }
-
-    .qty-unit {
-      font-size: 15px;
-      font-weight: 700;
-      color: #444;
     }
 
     /* ===== COLLAPSE ===== */
@@ -382,7 +406,7 @@
     .desc-inner p { margin-bottom: 10px; }
     .desc-inner ul { padding-left: 18px; margin-bottom: 10px; }
     .desc-inner li { margin-bottom: 5px; }
-    .desc-inner h3 { font-size: 15px; font-weight: 700; color: #222; margin-bottom: 8px; margin-top: 16px; }
+    .desc-inner h3 { font-size: 14px; font-weight: 700; color: #222; margin-bottom: 8px; }
 
     .desc-preview { overflow: hidden; position: relative; }
 
@@ -500,7 +524,11 @@
       font-size: 15px;
     }
 
-    .order-summary-title { font-weight: 800; font-size: 16px; margin-bottom: 10px; }
+    .order-summary-title {
+      font-weight: 800;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
 
     /* ===== CART ITEM IN MODAL ===== */
     .cart-item {
@@ -535,11 +563,6 @@
       line-height: 1;
     }
 
-    .cart-qty-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
     .cart-qty-display {
       min-width: 28px;
       text-align: center;
@@ -568,7 +591,10 @@
       gap: 6px;
     }
 
-    .order-totals-row { display: flex; justify-content: space-between; }
+    .order-totals-row {
+      display: flex;
+      justify-content: space-between;
+    }
 
     .order-totals-row.grand {
       font-size: 16px;
@@ -577,7 +603,10 @@
       margin-top: 4px;
     }
 
-    .order-totals-row.freeship { color: #2e7d32; font-weight: 700; }
+    .order-totals-row.freeship {
+      color: #2e7d32;
+      font-weight: 700;
+    }
 
     /* ===== FORM ===== */
     .form-group { margin-bottom: 14px; }
@@ -589,7 +618,8 @@
       margin-bottom: 8px;
     }
 
-    .form-group input, .form-group textarea {
+    .form-group input,
+    .form-group textarea {
       width: 100%;
       border: 1px solid #ddd;
       border-radius: 12px;
@@ -598,7 +628,8 @@
       outline: none;
     }
 
-    .form-group input:focus, .form-group textarea:focus { border-color: #ee4d2d; }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: #ee4d2d; }
 
     .submit-btn {
       width: 100%;
@@ -613,7 +644,10 @@
       margin-top: 6px;
     }
 
-    .submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+    .submit-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
 
     .status-message { margin-top: 14px; font-weight: 700; font-size: 14px; }
     .mini-note { font-size: 13px; color: #888; margin-top: 6px; }
@@ -637,11 +671,13 @@
       pointer-events: none;
     }
 
-    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
     /* ===== REVIEW ===== */
     .review-item { padding: 16px 0; border-bottom: 1px solid #f1f1f1; }
-
     .review-top { display: flex; gap: 12px; align-items: flex-start; }
 
     .review-avatar {
@@ -702,7 +738,8 @@
       justify-content: center;
     }
 
-    .media-lightbox img, .media-lightbox video {
+    .media-lightbox img,
+    .media-lightbox video {
       width: 100%;
       max-height: 85vh;
       object-fit: contain;
@@ -748,8 +785,20 @@
     }
 
     .thank-icon { font-size: 64px; line-height: 1; margin-bottom: 16px; }
-    .thank-title { font-size: 22px; font-weight: 800; color: #222; margin-bottom: 14px; }
-    .thank-body { font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 24px; }
+
+    .thank-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #222;
+      margin-bottom: 14px;
+    }
+
+    .thank-body {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 24px;
+    }
 
     .thank-close-btn {
       display: inline-block;
@@ -766,33 +815,35 @@
     @media (max-width: 480px) {
       .product-title { font-size: 19px; }
       .price { font-size: 28px; }
+      .color-thumb-item { width: 84px; }
+      .color-thumb-img-wrap { width: 84px; height: 84px; }
     }
   </style>
 
   <!-- FACEBOOK PIXEL -->
   <script>
     const FB_PIXEL_ID = "958914646618702";
-    !function(f,b,e,v,n,t,s){
-      if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)
-    }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', FB_PIXEL_ID);
     fbq('track', 'PageView');
     fbq('track', 'ViewContent', {
-      content_name:     'Vỏ bọc yên xe máy chống thấm nước, chống trầy xước, bền bỉ',
-      content_category: 'Phụ kiện xe máy',
-      content_ids:      ['boc-yen-001'],
+      content_name:     'Áo Chống Nắng Toàn Thân Nữ 2 lớp Croptop From Dài Rộng - Vải COTTON TỔ ONG - Chống tia UV, đặc biệt thoáng khí tránh gây ra mồ hôi.',
+      content_category: 'Thời trang nữ',
+      content_ids:      ['ao-croptop-cotton-to-ong-001'],
       content_type:     'product',
-      value:            49500,
+      value:            275000,
       currency:         'VND'
     });
   </script>
 </head>
-
 <body>
   <div class="app">
 
@@ -812,12 +863,14 @@
     <!-- INFO -->
     <section class="section">
       <div class="price-row">
-        <div class="price">99.000đ<span style="font-size:14px; font-weight:600; color:#ee4d2d; margin-left:4px;">/combo 2 chiếc</span></div>
-        <div class="old-price">220.000đ</div>
-        <div class="discount-badge">-45%</div>
+        <div class="price">275.000đ</div>
+        <div class="old-price">465.000đ</div>
+        <div class="discount-badge">-41%</div>
       </div>
-      <div class="product-title">COMBO 2 Vỏ bọc yên xe máy chống thấm nước, chống trầy xước, bền bỉ</div>
-      <div class="sold">Đã bán 80k+</div>
+      <div class="product-title">
+        Áo Chống Nắng Toàn Thân Nữ 2 lớp Croptop From Dài Rộng - Vải COTTON TỔ ONG - Chống tia UV, đặc biệt thoáng khí tránh gây ra mồ hôi.
+      </div>
+      <div class="sold">Đã bán 103k+</div>
     </section>
 
     <!-- FREE SHIP -->
@@ -830,7 +883,7 @@
     <!-- RETURN POLICY -->
     <section class="section">
       <div class="collapse-head" id="returnHead">
-        <span>🛡️ Trả hàng miễn phí 15 ngày • Kiểm tra hàng khi nhận</span>
+        <span>🛡️ Trả hàng miễn phí 15 ngày • Bảo hiểm Thời trang</span>
         <span class="collapse-arrow">⌄</span>
       </div>
       <div class="collapse-body" id="returnBody">
@@ -850,8 +903,49 @@
 
     <!-- COLOR -->
     <section class="section">
-      <div class="color-head">Loại yên: <span id="colorLabel"></span></div>
+      <div class="color-head">Màu sắc: <span id="colorLabel">Ghi sáng</span></div>
       <div class="color-thumbs" id="colorThumbs"></div>
+    </section>
+
+    <!-- SIZE -->
+    <section class="section">
+      <div class="section-title">Size</div>
+      <div class="option-list" id="sizeOptions">
+        <button class="option-btn active" data-value="Size L (40 - 50 kg)">Size L (40 - 50 kg)</button>
+        <button class="option-btn" data-value="Size XL (51 - 65 kg)">Size XL (51 - 65 kg)</button>
+      </div>
+    </section>
+
+    <!-- SIZE GUIDE -->
+    <section class="section">
+      <div class="collapse-head active" id="sizeGuideHead">
+        <span>Hướng Dẫn Chọn Size</span>
+        <span class="collapse-arrow">⌄</span>
+      </div>
+      <div class="collapse-body show" id="sizeGuideBody">
+        <div style="font-size:14px; color:#555; margin-bottom:14px;">Số đo sản phẩm</div>
+        <div style="border:1px solid #eee; border-radius:12px; overflow:hidden;">
+          <table style="width:100%; border-collapse:collapse; text-align:center; font-size:14px;">
+            <thead>
+              <tr style="background:#fafafa;">
+                <th style="padding:14px 10px; border-bottom:1px solid #eee;">Size (Quốc Tế)</th>
+                <th style="padding:14px 10px; border-bottom:1px solid #eee;">Cân nặng mẫu<br><span style="font-weight:400; color:#888;">(kg)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding:16px 10px; border-bottom:1px solid #eee; color:#ee4d2d; font-weight:700;">L</td>
+                <td style="padding:16px 10px; border-bottom:1px solid #eee; color:#ee4d2d; font-weight:700;">40 - 50</td>
+              </tr>
+              <tr>
+                <td style="padding:16px 10px;">XL</td>
+                <td style="padding:16px 10px;">51 - 65</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:13px; color:#777; margin-top:12px;">Số đo có thể thay đổi nhẹ</div>
+      </div>
     </section>
 
     <!-- QTY -->
@@ -859,8 +953,7 @@
       <div class="section-title">Số lượng</div>
       <div class="qty-wrap">
         <button class="qty-btn" id="minusQty">-</button>
-        <input class="qty-input" type="number" id="quantity" value="2" min="2" readonly />
-        <span class="qty-unit">chiếc</span>
+        <input class="qty-input" type="number" id="quantity" value="1" min="1" />
         <button class="qty-btn" id="plusQty">+</button>
       </div>
       <div style="margin-top:16px; display:flex; gap:10px;">
@@ -874,78 +967,38 @@
       <div class="desc-section-title">Mô tả sản phẩm</div>
       <div class="desc-preview collapsed" id="descPreview">
         <div class="desc-inner">
-          <h3>Yên xe bị rách, bạc màu, nhìn cũ và rất mất thẩm mỹ?</h3>
-          <p>Mỗi lần dừng xe là thấy "quê quê" vì cái yên…</p>
-          <p>Chưa kể gặp mưa → nước thấm vào, ngồi lên là ướt quần, cực kỳ khó chịu.</p>
-          <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1775631774/%E1%BA%A2nh_c%E1%BA%ADn_c%E1%BA%A3nh_202604081357_dm7onh.jpg"
-            loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:16px;" />
-
-          <h3>Không cần thay yên tốn vài trăm nghìn.</h3>
-          <p><strong>Chỉ cần 1 chiếc bọc yên:</strong></p>
+          <h3>Cùng là 2 lớp chống nắng — nhưng mặc lên, một cái bí ngộp, một cái thoáng rõ. Khác nhau ở chất vải.</h3>
+          <!-- [ẢNH_MÔ_TẢ_0] — thay URL ảnh tại đây -->
+          <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1775666159/Ch%E1%BB%89nh_s%E1%BB%ADa_%E1%BA%A3nh_202604082234_rg9sqe.jpg" loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:10px;" />
+          <p>Hầu hết áo chống nắng 2 lớp trên thị trường dùng vải umi hoặc poly. Che nắng tốt, nhưng có một vấn đề ai mặc cũng biết: bí. Đi chưa đầy 15 phút là mồ hôi ướt lưng, dính áo trong, càng mặc càng nóng hơn không mặc.</p>
+          <p>Cotton tổ ong khác ở chỗ: bề mặt vải dệt hàng nghìn lỗ li ti. Nắng vẫn chặn đủ 2 lớp, nhưng hơi nóng bên trong có đường thoát ra ngoài thay vì giữ lại ẩm ướt sát da. Mặc 30–40 phút ngoài nắng, lưng không ướt đẫm — đó là khác biệt lớn nhất so với áo chống nắng thông thường.</p>
+          <!-- [ẢNH_MÔ_TẢ_1] — thay URL ảnh tại đây -->
+          
+          <h3>Mặc ra đường thực tế thì sao:</h3>
           <ul>
-            <li>✔ Che toàn bộ phần yên cũ, rách</li>
-            <li>✔ Biến yên xe nhìn như mới chỉ trong vài giây</li>
-            <li>✔ Chi phí chỉ bằng 1/5 thay yên</li>
+            <li>Dáng croptop dài rộng, che kín từ cổ xuống — đi xe máy gió không thổi hở</li>
+            <li>Form rộng thoải mái, mặc đồ gì bên trong cũng được, không bó ép khó chịu</li>
+            <li>Khóa kéo dài + mũ liền — lên xe kéo khóa là xong, không cần loay hoay</li>
+            <li>Vải có độ dày đủ chắc tay, không mỏng bay như loại 1 lớp rẻ tiền</li>
           </ul>
-    
-          <h3>Chỉ cần trùm lên:</h3>
-          <ul style="list-style:none; padding-left:0;">
-            <li>→ Yên xe cũ biến mất hoàn toàn</li>
-            <li>→ Tổng thể xe nhìn gọn gàng, sạch sẽ hơn</li>
-            <li>→ Không ai biết yên bên trong đã bị rách</li>
-          </ul>
-          <img src="https://res.cloudinary.com/dixjbykgy/image/upload/v1775493172/sg-11134201-7rd6o-m7j3u9xtaobwe0_gaprqg.webp"
-            loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:16px;" />
-
-          <h3>Ngoài ra, bọc yên còn giúp:</h3>
-          <ul>
-            <li>✔ Chống nước khi trời mưa</li>
-            <li>✔ Không bị ướt khi ngồi lên</li>
-            <li>✔ Không cần lau yên mỗi ngày</li>
-          </ul>
-          <img src="https://res.cloudinary.com/dixjbykgy/image/upload/v1775493172/sg-11134201-7rd5o-m7j3ub9jcstf69_adenab.webp"
-            loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:16px;" />
-
-          <ul>
-            <li>✔ Che yên rách, bạc màu cực nhanh</li>
-            <li>✔ Làm xe nhìn mới hơn rõ rệt</li>
-            <li>✔ Tiết kiệm tiền thay yên</li>
-            <li>✔ Chống nước, chống bụi</li>
-            <li>✔ Gọn nhẹ, dễ mang theo</li>
-          </ul>
-          <video controls playsinline preload="metadata" loop muted style="width:100%; border-radius:12px; margin-bottom:16px;">
-            <source src="https://res.cloudinary.com/dezednxpz/video/upload/v1775632959/0408_2_togoof.mp4" type="video/mp4" />
-          </video>
-
-          <h3>Nhiều khách đã dùng và phản hồi:</h3>
-          <p><em>"Yên cũ nhìn chán lắm, bọc vào nhìn như xe mới luôn"</em></p>
-          <p><em>"Đi mưa không còn bị ướt nữa, tiện thật"</em></p>
-
+          <!-- [ẢNH_MÔ_TẢ_2] — thay URL ảnh tại đây -->
+          <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1775666160/hong_mdxeq6.jpg" loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:10px;" />
+          <h3>Nói thẳng — mẫu này không dành cho ai:</h3>
+          <p>Nếu bạn cần áo chống nắng siêu mỏng siêu nhẹ kiểu mặc đi cafe cho đẹp — đây không phải mẫu đó. Đây là áo mặc để đi nắng thật, chắc chắn, thoáng hơn hẳn vải thường nhưng vẫn là 2 lớp — không phải áo thời trang mỏng dính.</p>
+          <h3>Khách mua rồi nói gì:</h3>
+          <p>Phản hồi nhiều nhất là "thoáng hơn áo cũ rõ rệt" và "vải dày nhưng không bí như tưởng". Một số khách đặt thêm màu thứ 2 sau khi mặc thử. Tỉ lệ đổi trả thấp — phần lớn trường hợp đổi là do chọn sai size, không phải lỗi sản phẩm.</p>
+          <!-- [ẢNH_MÔ_TẢ_3] — thay URL ảnh tại đây -->
+          <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1774989813/Woman_wearing_sun-protection_202604010304_1_na4rdl.jpg" loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:10px;" />
           <h3>Thông tin sản phẩm:</h3>
           <ul>
-            <li>• Chất liệu chống thấm nước</li>
-            <li>• Co giãn, ôm sát nhiều loại yên</li>
-            <li>• Lắp đặt trong vài giây</li>
-            <li>• Gọn nhẹ, bỏ cốp tiện lợi</li>
+            <li>Chất liệu: cotton tổ ong 2 lớp</li>
+            <li>Kiểu dáng: croptop form dài rộng toàn thân</li>
+            <li>Màu sắc: Đen · Xanh than · Nâu · Ghi chì · Ghi sáng · Hồng</li>
+            <li>Size: L (40–50 kg) · XL (51–65 kg)</li>
+            <li>Chặn tia UV, thoáng khí qua cấu trúc dệt tổ ong</li>
           </ul>
-          <img src="https://res.cloudinary.com/dixjbykgy/image/upload/v1775493172/sg-11134201-7rdvv-mdfh9nq5rgx6b3_s1tlqb.webp"
-            loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:16px;" />
-          <img src="https://res.cloudinary.com/dixjbykgy/image/upload/v1775492853/sg-11134201-7rd6g-m7j3ubostbcced_xquzqe.webp"
-            loading="lazy" decoding="async" style="width:100%; border-radius:12px; margin-bottom:16px;" />
-
-          <h3>Cam kết từ shop:</h3>
-          <ul>
-            <li>✔ Sản phẩm giống mô tả 100%</li>
-            <li>✔ Được kiểm tra hàng trước khi thanh toán</li>
-            <li>✔ Hỗ trợ đổi nếu không phù hợp</li>
-          </ul>
-
-          <p style="font-weight:700; color:#ee4d2d; font-size:15px; margin-top:16px;">
-            👉 Nếu yên xe bạn đã cũ hoặc rách, đây là cách rẻ nhất để "làm mới" ngay lập tức
-          </p>
-          <p style="font-weight:700; color:#333;">
-            Số lượng đang bán rất nhanh – bạn nên đặt sớm để tránh hết hàng.
-          </p>
+          <h3>An tâm đặt hàng:</h3>
+          <p>Hỗ trợ chọn size theo cân nặng. Đổi size / đổi màu nếu chọn chưa vừa — không gây khó. Đặt sớm giữ màu — mẫu cotton tổ ong thường hết trước các mẫu khác mỗi đợt nắng.</p>
         </div>
       </div>
       <button class="desc-toggle-btn" id="descToggleBtn">Xem thêm ▾</button>
@@ -1006,7 +1059,7 @@
       <div style="margin-bottom:14px;">
         <div style="font-weight:700; margin-bottom:6px;">Chính sách đổi trả</div>
         <div style="font-size:14px; color:#555; line-height:1.7;">
-          Hỗ trợ đổi loại yên / đổi sản phẩm trong 7 ngày nếu chưa qua sử dụng.
+          Hỗ trợ đổi size / đổi màu trong 7 ngày nếu sản phẩm chưa qua sử dụng.
           Trường hợp lỗi do nhà sản xuất được đổi mới hoàn toàn.
         </div>
       </div>
@@ -1020,7 +1073,7 @@
         <div style="font-weight:700; margin-bottom:6px;">Cam kết</div>
         <div style="font-size:14px; color:#555; line-height:1.7;">
           ✔ Được kiểm tra hàng trước khi thanh toán (COD)<br>
-          ✔ Hỗ trợ đổi loại yên nếu không phù hợp<br>
+          ✔ Hỗ trợ đổi size nếu không vừa<br>
           ✔ Sản phẩm đúng mô tả 100%
         </div>
       </div>
@@ -1029,8 +1082,8 @@
         <div style="font-size:14px; color:#555; line-height:1.7;">
           <div><strong>Hỏi:</strong> Có được kiểm hàng không?</div>
           <div>✔ Có, kiểm tra trước khi thanh toán.</div>
-          <div style="margin-top:8px;"><strong>Hỏi:</strong> Không vừa loại yên có đổi không?</div>
-          <div>✔ Có, hỗ trợ đổi loại yên nhanh chóng.</div>
+          <div style="margin-top:8px;"><strong>Hỏi:</strong> Không vừa size có đổi không?</div>
+          <div>✔ Có, hỗ trợ đổi size nhanh chóng.</div>
           <div style="margin-top:8px;"><strong>Hỏi:</strong> Bao lâu nhận hàng?</div>
           <div>✔ 2–5 ngày toàn quốc.</div>
         </div>
@@ -1091,10 +1144,6 @@
           <label>Địa chỉ nhận hàng</label>
           <textarea id="address" rows="3" required></textarea>
         </div>
-        <div class="form-group">
-          <label>Ghi chú đơn hàng</label>
-          <textarea id="note" rows="2" placeholder="VD: 1 loại lớn + 1 loại nhỏ, giao giờ hành chính..."></textarea>
-        </div>
         <button type="submit" class="submit-btn" id="submitBtn">XÁC NHẬN ĐẶT HÀNG</button>
         <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
         <div class="status-message" id="statusMessage"></div>
@@ -1128,53 +1177,37 @@
        CẤU HÌNH
     =================================================== */
     const PRODUCT = {
-      id:         "boc-yen-001",
-      name:       "COMBO 2 chiếc vỏ bọc yên xe máy chống thấm nước, chống trầy xước, bền bỉ",
-      price:      49500,
-      currency:   "VND",
-      sheet_name: "Bọc Yên"
+      id:       "ao-croptop-cotton-to-ong-001",
+      name:     "Áo Chống Nắng Toàn Thân Nữ 2 lớp Croptop From Dài Rộng - Vải COTTON TỔ ONG - Chống tia UV, đặc biệt thoáng khí tránh gây ra mồ hôi.",
+      price:    275000,
+      currency: "VND",
+      sheetname: "Áo nắng cotton"
     };
 
     const TAX     = 9000;
-    const QTY_MIN = 2;
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxodCpNkfJejRKjfk5IvJ4xmtdg_ti6rn_8e7NFleNkIPApNSreA0aJhuPpcWUaD4FQ/exec";
 
     /* ===================================================
-       PRODUCT IMAGES & VIDEOS
+       PRODUCT IMAGES
+       [ẢNH_EXTRA_1], [ẢNH_EXTRA_2] — thay URL ảnh extra tại đây
     =================================================== */
-    // ✅ FIX 1: Thêm 2 video vào đầu
-    const PRODUCT_VIDEOS = [
-      "https://res.cloudinary.com/dezednxpz/video/upload/v1775632661/01_psvqvg.mp4",
-      "https://res.cloudinary.com/dezednxpz/video/upload/v1775632959/0408_2_togoof.mp4"
-    ];
-
     const PRODUCT_EXTRA_IMAGES = [
-      "https://res.cloudinary.com/dixjbykgy/image/upload/v1775492763/sg-11134201-7rd62-m7j3uabyvjsf04_zkak42.webp",
-      "https://res.cloudinary.com/dixjbykgy/image/upload/v1775492853/sg-11134201-7rd6g-m7j3ubostbcced_xquzqe.webp",
-      "https://res.cloudinary.com/dixjbykgy/image/upload/v1775493172/sg-11134201-7rdvv-mdfh9nq5rgx6b3_s1tlqb.webp",
-      "https://res.cloudinary.com/dixjbykgy/image/upload/v1775493172/sg-11134201-7rd6o-m7j3u9xtaobwe0_gaprqg.webp",
-      "https://res.cloudinary.com/dixjbykgy/image/upload/v1775493172/sg-11134201-7rd5o-m7j3ub9jcstf69_adenab.webp"
+      "https://res.cloudinary.com/dezednxpz/image/upload/v1774989814/Remove_text_add_202603312224_hlvcq9.jpg",
+      "https://res.cloudinary.com/dezednxpz/image/upload/v1774989814/Woman_wearing_sun-protection_202604010304_pbjt9w.jpg"
     ];
 
+    /* ===================================================
+       COLOR CONFIG
+       [ẢNH_GHI_SÁNG], [ẢNH_GHI_CHÌ], [ẢNH_NÂU], [ẢNH_HỒNG], [ẢNH_ĐEN], [ẢNH_XANH_THAN]
+       — thay URL ảnh từng màu tại đây
+    =================================================== */
     const COLOR_CONFIG = [
-      {
-        name:       "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        img:        "https://res.cloudinary.com/dezednxpz/image/upload/v1775553863/Combo_2_y%C3%AAn_202604071617_1_i2sv6o.jpg",
-        soldOut:    false,
-        bestSeller: false
-      },
-      {
-        name:       "Size nhỏ(Wave, Sirius, Dream, Future, Exiter..)",
-        img:        "https://res.cloudinary.com/dezednxpz/image/upload/v1775553880/Combo_2_y%C3%AAn_202604071616_gnm2tj.jpg",
-        soldOut:    false,
-        bestSeller: false
-      },
-      {
-        name:       "1 lớn + 1 nhỏ",
-        img:        "https://res.cloudinary.com/dezednxpz/image/upload/v1775553885/Combo_2_y%C3%AAn_202604071623_lo44iz.jpg",
-        soldOut:    false,
-        bestSeller: false
-      }
+      { name: "Ghi sáng",  img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666162/s%C3%A1ng_ws4mam.jpg",  soldOut: false, bestSeller: false },
+      { name: "Ghi chì",   img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666158/ch%C3%AC_pkkklm.jpg",  soldOut: false, bestSeller: true  },
+      { name: "Nâu",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666161/nau_rtqufz.jpg",  soldOut: false, bestSeller: true  },
+      { name: "Hồng",      img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666160/hong_mdxeq6.jpg",  soldOut: false, bestSeller: false },
+      { name: "Đen",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus376o19nlb4f_ttu4rl.webp",  soldOut: true,  bestSeller: false },
+      { name: "Xanh than", img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3779yc6aq62_l6yeif.webp",  soldOut: true,  bestSeller: false }
     ];
 
     const COLOR_IMAGES = {};
@@ -1182,156 +1215,102 @@
       if (!c.soldOut) COLOR_IMAGES[c.name] = [c.img];
     });
 
+    const PRODUCT_VIDEOS = [];
+
     /* ===================================================
        REVIEWS
     =================================================== */
     const REVIEWS = [
       {
-        name: "Vũ Hảo",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906707/528684809_10234145965525107_1862972145806632462_n_ufcgxj.jpg",
+        name: "thynguynthhng867",
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666156/608669903_10236803308436120_5728387328273075460_n_we3otz.jpg",
         stars: 5, date: "2026-03-28 18:02",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Đã nhận đủ hàng chất lượng phải dùng mới biết tốt sấu nhấn viên giao hàng chu đáo nhiệt tình.hàng đã dùng nói chung là.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496745/vn-11134103-820l4-mfg8tu6yosgb5e_b9tdvk.webp"],
-        likes: 20
+        classify: "Ghi chì, Size XL (51 - 65 kg)",
+        color: "ghi chì", match: "đúng mô tả", material: "cotton tổ ong 2 lớp",
+        content: "Áo rất đẹp đường may chắc chắn vải dày dặn hai lớp, mặc thoáng hơn áo umi cũ của mình. Màu đúng với hình, phom dáng đẹp",
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1774907035/vn-11134103-7ra0g-maaynyunwy2r76_olw5ye.webp"],
+        likes: 8
       },
       {
         name: "Nguyệt",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906706/557559620_10164204049014766_4269914487634007854_n_bl8qbl.jpg",
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666155/557559620_10164204049014766_4269914487634007854_n_im73vk.jpg",
         stars: 5, date: "2026-02-17 11:24",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Mình mua không mất phí ship. thật tuyệt vời. Chúc shop kinh doanh đắt hàng nha. Hình ảnh mang tính chất nhận xu. Cảm ơn shop nhiều nha!",
+        classify: "Nâu, Size L (40 - 50 kg)",
+        color: "nâu", match: "đúng mô tả", material: "cotton tổ ong dày dặn",
+        content: "Shop giao hàng nhanh, mới đặt hôm qua nay đã nhận được, sản phẩm dày dặn thoáng khí nên mua",
         media: [
-          "https://res.cloudinary.com/dixjbykgy/image/upload/v1775496746/vn-11134103-820l4-mgk8vwpc3rwq8c_k95i9i.webp",
-          "https://res.cloudinary.com/dixjbykgy/image/upload/v1775496745/vn-11134103-7ras8-mdudq1yn5w5x67_nfghr5.webp"
+          "https://res.cloudinary.com/dezednxpz/video/upload/v1774907035/vn-11110103-6khwe-m8ob3dvrym4i97.default_ylqdql.mp4",
+          "https://res.cloudinary.com/dezednxpz/image/upload/v1774907035/vn-11134103-7ra0g-m8ob2ri0pp533c_vdjtzl.webp"
         ],
         likes: 29
       },
       {
-        name: "Nguyễn Hòa Khánh",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906706/548733749_10164221308823539_8545624774797196044_n_iqf4wd.jpg",
+        name: "Hà thu",
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666154/548733749_10164221308823539_8545624774797196044_n_zoc5gw.jpg",
         stars: 5, date: "2026-01-18 15:39",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Rất đẹp nhé ae vừa rẻ vừa đẹp mắt. Ae nên mua nhé. Mình rất thích có dịp sẽ ủng hộ tiếp, ủng hộ shop cho 5 sao 🙂🙂🙂",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496746/vn-11134103-820l4-mfg8tu6yq70r1f_sjqrkc.webp"],
+        classify: "Ghi sáng, Size XL (51 - 65 kg)",
+        color: "ghi sáng", match: "đúng sản phẩm", material: "cotton tổ ong co dãn",
+        content: "Giao hàng nhanh, quá rẻ so với thị trường, rất ưng ý, ủng hộ shop cho 5 sao 🙂🙂🙂",
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1774907034/vn-11134103-7ra0g-m7hqmmkys1h2b7_zwnscx.webp"],
         likes: 13
       },
       {
-        name: "Hải Nam",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906706/557559620_10164204049014766_4269914487634007854_n_bl8qbl.jpg",
-        stars: 5, date: "2026-03-21 09:15",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Hàng nhận rồi nha shop. Bọc yên khá dày, lắp vào nhìn xe đẹp hẳn lên. Đi mưa cũng không bị thấm nước.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496746/vn-11134103-820l4-mgk8vwpc3rwq8c_k95i9i.webp"],
-        likes: 18
+        name: "anhoanh95",
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666154/528684809_10234145965525107_1862972145806632462_n_pjnnbt.jpg",
+        stars: 5, date: "2026-03-05 10:13",
+        classify: "Ghi sáng, Size XL (51 - 65 kg)",
+        color: "ghi sáng", match: "đúng", material: "cotton tổ ong",
+        content: "Đẹp và rất dày, mà mặc thoáng không bí như áo cũ. Vừa vặn. May đẹp, không có chỉ thừa nhiều.",
+        media: [
+          "https://res.cloudinary.com/dezednxpz/image/upload/v1774907034/vn-11134103-7ra0g-m9dxhmnqk39j45_twen5s.webp",
+          "https://res.cloudinary.com/dezednxpz/video/upload/v1774907035/vn-11110103-6khwi-m9dxhrcpouwy63.default_azitzf.mp4"
+        ],
+        likes: 6
       },
       {
-        name: "Thu Hà",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906707/528684809_10234145965525107_1862972145806632462_n_ufcgxj.jpg",
-        stars: 5, date: "2026-02-14 14:37",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Chất liệu da mềm, ôm yên xe khá chuẩn. Shop đóng gói cẩn thận, giao nhanh. Sẽ ủng hộ thêm.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496745/vn-11134103-820l4-mf6g4nzkq2o8a3_txhsn4.webp"],
-        likes: 25
+        name: "thnguynthanh214",
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666153/515438282_10161038595011631_4166789956527747626_n_c3roiy.jpg",
+        stars: 5, date: "2026-03-14 17:18",
+        classify: "Ghi chì, Size XL (51 - 65 kg)",
+        color: "ghi chì", match: "áo croptop mặc dáng đẹp", material: "cotton tổ ong 2 lớp",
+        content: "Đáng mua nhé mọi người. Vải tổ ong thoáng thật sự. Tặng shop 5 sao. Sẽ ủng hộ shop tiếp.",
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1774907035/vn-11134103-7ra0g-m9r6zxazkrjiae_mfhksr.webp"],
+        likes: 2
       },
       {
-        name: "Hoàng Minh",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906706/557559620_10164204049014766_4269914487634007854_n_bl8qbl.jpg",
-        stars: 5, date: "2026-01-30 20:41",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Giá rẻ hơn ngoài tiệm mà chất lượng lại ổn. Lắp vào vừa khít yên xe, nhìn rất gọn gàng.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496745/vn-11134103-820l4-mf6g4nzkq2o8a3_txhsn4.webp"],
-        likes: 14
+        name: "thanh213213",
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666153/459463556_10164124046460299_1325571861796915874_n_djbqob.jpg",
+        stars: 5, date: "2026-03-04 15:59",
+        classify: "Nâu, Size XL (51 - 65 kg)",
+        color: "nâu", match: "đúng", material: "cotton tổ ong",
+        content: "Áo đẹp cầm chắc tay luôn, vải dày dặn mà thoáng, giao hàng rất nhanh lần sau sẽ ủng hộ tiếp",
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1774907036/vn-11134103-7ras8-mal39afs6w8xb9_yeodm6.webp"],
+        likes: 11
       },
       {
-        name: "Thanh Trúc",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906707/528684809_10234145965525107_1862972145806632462_n_ufcgxj.jpg",
-        stars: 5, date: "2026-03-03 10:22",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Sản phẩm giống hình, da khá đẹp. Lắp xong ngồi êm hơn trước. Shop tư vấn nhiệt tình.",
-        media: [], likes: 17
-      },
-      {
-        name: "Quốc Bảo",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906706/557559620_10164204049014766_4269914487634007854_n_bl8qbl.jpg",
-        stars: 5, date: "2026-02-25 16:50",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Đóng gói kỹ, giao hàng nhanh. Bọc yên lắp vào rất vừa, da dày nên nhìn khá xịn.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775497537/vn-11134103-820l4-mibic13e33sw4a_hs20ib.webp"],
-        likes: 21
-      },
-      {
-        name: "Lan Chi",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906707/528684809_10234145965525107_1862972145806632462_n_ufcgxj.jpg",
-        stars: 5, date: "2026-03-11 12:09",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Mua lần 2 rồi, vẫn rất ưng. Chất da tốt, chống nước ổn, trời mưa cũng không lo.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496745/vn-11134103-820l4-mfg8tu6yosgb5e_b9tdvk.webp"],
-        likes: 26
-      },
-      {
-        name: "Anh Tuấn",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906706/557559620_10164204049014766_4269914487634007854_n_bl8qbl.jpg",
-        stars: 5, date: "2026-01-19 08:33",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Hàng ok nha shop. Nhìn khá đẹp và chắc chắn. Giá hợp lý so với chất lượng.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496745/vn-11134103-820l4-mf6folohhrt70d_vclbfz.webp"],
-        likes: 13
-      },
-      {
-        name: "Hồng Nhung",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906707/528684809_10234145965525107_1862972145806632462_n_ufcgxj.jpg",
-        stars: 5, date: "2026-03-05 19:12",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Bọc yên co giãn tốt, lắp vào không bị nhăn. Nhìn xe gọn gàng hơn hẳn.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775497532/vn-11134103-820l4-mfg8tu6yq70r1f_erpxmm.webp"],
-        likes: 19
-      },
-      {
-        name: "Phúc Lâm",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906706/557559620_10164204049014766_4269914487634007854_n_bl8qbl.jpg",
-        stars: 5, date: "2026-02-09 21:44",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Nhận hàng thấy khá ưng. Da dày, may chắc chắn. Sẽ giới thiệu bạn bè mua thêm.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775496746/vn-11134103-820l4-mfg8tu6yq70r1f_sjqrkc.webp"],
-        likes: 22
-      },
-      {
-        name: "Mai Anh",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1774906707/528684809_10234145965525107_1862972145806632462_n_ufcgxj.jpg",
-        stars: 5, date: "2026-03-27 15:06",
-        classify: "Size lớn(Lead, Air blade, SH, Winer X, Exiter..)",
-        color: "đen", match: "tuyệt vời", material: "Da",
-        content: "Sản phẩm đúng mô tả. Lắp rất nhanh, đi mưa không bị ướt yên nữa. Cảm ơn shop.",
-        media: ["https://res.cloudinary.com/dixjbykgy/image/upload/v1775497531/vn-11134103-820l4-mf3pp5n1o0zzbb_qrhsh4.webp"],
-        likes: 24
+        name: "linhshopper89",
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666163/418447225_10161579475531340_6372121161793659725_n_yvjpgz.jpg",
+        stars: 4, date: "2026-03-22 09:41",
+        classify: "Hồng, Size L (40 - 50 kg)",
+        color: "hồng", match: "đúng mô tả", material: "cotton tổ ong dày",
+        content: "Lúc đầu shop giao nhầm màu nhưng đã hỗ trợ đổi lại rất nhanh. Áo đẹp, chất vải ổn, form mặc lên đẹp.",
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1774907035/vn-11134103-7ra0g-m8ob2ri0pp533c_vdjtzl.webp"],
+        likes: 4
       }
     ];
 
     /* ===================================================
        STATE
     =================================================== */
-    const _firstAvailable = COLOR_CONFIG.find(c => !c.soldOut);
-    let selectedColor = _firstAvailable ? _firstAvailable.name : "";
-    let quantity      = QTY_MIN;
-    let currentSlide  = 0;
-    let currentGallery  = [];
-    let colorIndexMap   = {};
-    let slideColorMap   = [];
-    let cartItems       = [];
-    let clientIp        = null;
+    let selectedColor  = "Ghi sáng";
+    let selectedSize   = "Size L (40 - 50 kg)";
+    let quantity       = 1;
+    let currentSlide   = 0;
+    let currentGallery = [];
+    let colorIndexMap  = {};
+    let slideColorMap  = [];
+    let cartItems      = [];
+    let clientIp       = null;
 
     /* ===================================================
        DOM REFS
@@ -1353,7 +1332,6 @@
     const toastEl            = document.getElementById("toast");
     const submitBtn          = document.getElementById("submitBtn");
     const thankCloseBtn      = document.getElementById("thankCloseBtn");
-    const minusQtyBtn        = document.getElementById("minusQty");
 
     /* ===================================================
        SHA256
@@ -1388,7 +1366,6 @@
 
     function updateQtyDisplay() {
       document.getElementById("quantity").value = quantity;
-      minusQtyBtn.disabled = (quantity <= QTY_MIN);
     }
 
     function getQueryParam(name) {
@@ -1403,6 +1380,17 @@
     function setCookie(name, value, days) {
       const expires = new Date(Date.now() + days * 864e5).toUTCString();
       document.cookie = name + "=" + value + "; expires=" + expires + "; path=/";
+    }
+
+    function setupOptionGroup(containerId, callback) {
+      const buttons = document.querySelectorAll(`#${containerId} .option-btn`);
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          callback(btn.dataset.value);
+        });
+      });
     }
 
     /* ===================================================
@@ -1429,7 +1417,7 @@
     =================================================== */
     function buildBasePayload(eventIdObj) {
       return {
-        sheet_name:       PRODUCT.sheet_name,
+        sheet_name:       PRODUCT.sheetname,
         product_id:       PRODUCT.id,
         product_name:     PRODUCT.name,
         price:            PRODUCT.price,
@@ -1464,9 +1452,9 @@
       slidesEl.innerHTML = "";
       dotsEl.innerHTML   = "";
       thumbsEl.innerHTML = "";
-      currentGallery = [];
-      colorIndexMap  = {};
-      slideColorMap  = [];
+      currentGallery     = [];
+      colorIndexMap      = {};
+      slideColorMap      = [];
 
       let index = 0;
 
@@ -1478,8 +1466,7 @@
         slide.className = "slide";
 
         if (isVideo) {
-          // ✅ FIX 2: Thêm loop, muted, autoplay cho video
-          slide.innerHTML = `<video controls playsinline preload="metadata" loop muted autoplay><source src="${src}" type="video/mp4" /></video>`;
+          slide.innerHTML = `<video controls playsinline preload="metadata"><source src="${src}" type="video/mp4" /></video>`;
         } else {
           const eager = index === 0 ? "eager" : "lazy";
           const fp    = index === 0 ? "high"  : "low";
@@ -1509,13 +1496,12 @@
         index++;
       }
 
-      // ✅ FIX 3: Video lên đầu tiên
-      PRODUCT_VIDEOS.forEach(src => addSlide(src, "video", true));
       PRODUCT_EXTRA_IMAGES.forEach(src => addSlide(src, "extra", false));
       Object.keys(COLOR_IMAGES).forEach(color => {
         colorIndexMap[color] = index;
         COLOR_IMAGES[color].forEach(src => addSlide(src, color, false));
       });
+      PRODUCT_VIDEOS.forEach(src => addSlide(src, "video", true));
 
       goToSlide(0);
     }
@@ -1524,16 +1510,20 @@
        BUILD COLOR THUMBS
     =================================================== */
     function buildColorThumbs() {
-      colorThumbsEl.innerHTML  = "";
-      colorLabelEl.textContent = selectedColor;
+      colorThumbsEl.innerHTML = "";
 
-      COLOR_CONFIG.forEach(cfg => {
-        const item = document.createElement("div");
+      COLOR_CONFIG.forEach((cfg, i) => {
+        const item     = document.createElement("div");
+
         item.className     = "color-thumb-item" + (cfg.soldOut ? " sold-out" : (cfg.name === selectedColor ? " active" : ""));
         item.dataset.color = cfg.name;
 
-        const badgeHtml      = cfg.bestSeller ? `<div class="best-seller-badge">Best Seller</div>` : "";
-        const soldOutTagHtml = cfg.soldOut    ? `<div class="sold-out-tag">Hết hàng</div>`         : "";
+        const badgeHtml      = cfg.bestSeller
+          ? `<div class="best-seller-badge">Best Seller</div>`
+          : "";
+        const soldOutTagHtml = cfg.soldOut
+          ? `<div class="sold-out-tag">Hết hàng</div>`
+          : "";
 
         item.innerHTML = `
           <div class="color-thumb-img-wrap">
@@ -1546,7 +1536,7 @@
 
         if (!cfg.soldOut) {
           item.addEventListener("click", () => {
-            selectedColor            = cfg.name;
+            selectedColor = cfg.name;
             colorLabelEl.textContent = cfg.name;
             goToSlide(colorIndexMap[cfg.name]);
           });
@@ -1572,7 +1562,7 @@
       });
       const slideColor = slideColorMap[currentSlide];
       if (slideColor && slideColor !== "video" && slideColor !== "extra") {
-        selectedColor            = slideColor;
+        selectedColor = slideColor;
         colorLabelEl.textContent = slideColor;
         updateColorThumbActive();
       }
@@ -1600,7 +1590,7 @@
       const itemWidth      = active.offsetWidth;
       const containerWidth = container.offsetWidth;
       container.scrollTo({
-        left: itemLeft - (containerWidth / 2) + (itemWidth / 2),
+        left:     itemLeft - (containerWidth / 2) + (itemWidth / 2),
         behavior: "smooth"
       });
     }
@@ -1610,10 +1600,12 @@
     let isDragging = false, isHorizontal = null;
 
     slider.addEventListener("touchstart", e => {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      moveX  = startX; moveY = startY;
-      isDragging = true; isHorizontal = null;
+      startX       = e.touches[0].clientX;
+      startY       = e.touches[0].clientY;
+      moveX        = startX;
+      moveY        = startY;
+      isDragging   = true;
+      isHorizontal = null;
     }, { passive: true });
 
     slider.addEventListener("touchmove", e => {
@@ -1632,8 +1624,8 @@
       if (!isDragging) return;
       if (isHorizontal === true) {
         const diff = startX - moveX;
-        if (diff > 50 && currentSlide < currentGallery.length - 1) currentSlide++;
-        else if (diff < -50 && currentSlide > 0) currentSlide--;
+        if      (diff >  50 && currentSlide < currentGallery.length - 1) currentSlide++;
+        else if (diff < -50 && currentSlide > 0)                          currentSlide--;
         updateSlider();
       }
       isDragging = false; isHorizontal = null;
@@ -1641,19 +1633,19 @@
     });
 
     /* ===================================================
-       QTY
+       SIZE & QTY
     =================================================== */
-    minusQtyBtn.addEventListener("click", () => {
-      if (quantity > QTY_MIN) { quantity--; updateQtyDisplay(); }
-    });
+    setupOptionGroup("sizeOptions", value => { selectedSize = value; });
 
+    document.getElementById("minusQty").addEventListener("click", () => {
+      if (quantity > 1) { quantity--; updateQtyDisplay(); }
+    });
     document.getElementById("plusQty").addEventListener("click", () => {
       quantity++; updateQtyDisplay();
     });
-
-    document.getElementById("quantity").addEventListener("change", e => {
+    document.getElementById("quantity").addEventListener("input", e => {
       const val = parseInt(e.target.value);
-      quantity = (!isNaN(val) && val >= QTY_MIN) ? val : QTY_MIN;
+      quantity  = (!isNaN(val) && val > 0) ? val : 1;
       updateQtyDisplay();
     });
 
@@ -1669,15 +1661,16 @@
       });
     }
 
-    setupCollapse("returnHead", "returnBody");
-    setupCollapse("reviewHead", "reviewBody");
+    setupCollapse("returnHead",    "returnBody");
+    setupCollapse("reviewHead",    "reviewBody");
+    setupCollapse("sizeGuideHead", "sizeGuideBody");
 
     /* ===================================================
        DESC XEM THÊM
     =================================================== */
     const descPreview   = document.getElementById("descPreview");
     const descToggleBtn = document.getElementById("descToggleBtn");
-    let descExpanded = false;
+    let descExpanded    = false;
 
     descToggleBtn.addEventListener("click", () => {
       descExpanded = !descExpanded;
@@ -1720,10 +1713,8 @@
     /* ===================================================
        CART — localStorage
     =================================================== */
-    const CART_KEY = "nino_cart_boc_yen";
-
     function loadCartItems() {
-      const saved = localStorage.getItem(CART_KEY);
+      const saved = localStorage.getItem("nino_cart_cotton");
       if (saved) {
         try { cartItems = JSON.parse(saved) || []; }
         catch (_) { cartItems = []; }
@@ -1731,12 +1722,14 @@
     }
 
     function saveCartItems() {
-      localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
+      localStorage.setItem("nino_cart_cotton", JSON.stringify(cartItems));
     }
 
     function addCurrentSelectionToCart() {
       loadCartItems();
-      const existingIndex = cartItems.findIndex(item => item.color === selectedColor);
+      const existingIndex = cartItems.findIndex(item =>
+        item.color === selectedColor && item.size === selectedSize
+      );
       if (existingIndex > -1) {
         cartItems[existingIndex].quantity += quantity;
         cartItems[existingIndex].total = cartItems[existingIndex].quantity * PRODUCT.price;
@@ -1745,6 +1738,7 @@
           product_id:   PRODUCT.id,
           product_name: PRODUCT.name,
           color:        selectedColor,
+          size:         selectedSize,
           quantity:     quantity,
           price:        PRODUCT.price,
           total:        PRODUCT.price * quantity
@@ -1779,10 +1773,10 @@
       cartSummaryList.innerHTML = cartItems.map((item, idx) => `
         <div class="cart-item">
           <div class="cart-item-top">${item.product_name}</div>
-          <div class="cart-item-meta">Loại yên: ${item.color}</div>
+          <div class="cart-item-meta">Màu: ${item.color}</div>
+          <div class="cart-item-meta">Size: ${item.size}</div>
           <div class="cart-item-controls">
-            <button class="cart-qty-btn" data-action="minus" data-idx="${idx}"
-              ${item.quantity <= QTY_MIN ? "disabled" : ""}>−</button>
+            <button class="cart-qty-btn" data-action="minus" data-idx="${idx}">−</button>
             <span class="cart-qty-display">${item.quantity}</span>
             <button class="cart-qty-btn" data-action="plus" data-idx="${idx}">+</button>
             <button class="cart-remove-btn" data-action="remove" data-idx="${idx}">🗑 Xoá</button>
@@ -1799,9 +1793,11 @@
           const action = btn.dataset.action;
           const idx    = parseInt(btn.dataset.idx);
           if (action === "minus") {
-            if (cartItems[idx].quantity > QTY_MIN) {
+            if (cartItems[idx].quantity > 1) {
               cartItems[idx].quantity--;
               cartItems[idx].total = cartItems[idx].quantity * cartItems[idx].price;
+            } else {
+              cartItems.splice(idx, 1);
             }
           } else if (action === "plus") {
             cartItems[idx].quantity++;
@@ -1837,7 +1833,7 @@
       sendToGAS({
         ...buildBasePayload({ initiate_checkout_event_id: eid }),
         event_type: "initiate_checkout",
-        value: getCartGrandTotal()
+        value:      getCartGrandTotal()
       });
 
       openModal();
@@ -1864,7 +1860,7 @@
       sendToGAS({
         ...buildBasePayload({ add_to_cart_event_id: eid }),
         event_type: "add_to_cart",
-        value: PRODUCT.price * quantity
+        value:      PRODUCT.price * quantity
       });
 
       showToast("✓ Đã thêm vào giỏ hàng");
@@ -1888,7 +1884,7 @@
     }, 1000);
 
     /* ===================================================
-      ORDER FORM SUBMIT — ✅ ĐÃ FIX VALUE
+       ORDER FORM SUBMIT
     =================================================== */
     document.getElementById("orderForm").addEventListener("submit", async e => {
       e.preventDefault();
@@ -1916,7 +1912,7 @@
 
       const purchaseEventId = genEventId();
       const hashedPhone     = await sha256(phone);
-      const finalGrandTotal = getCartGrandTotal();  // ✅ LƯU TRƯỚC KHI XÓA
+      const finalGrandTotal = getCartGrandTotal();
 
       const payload = {
         ...buildBasePayload({ purchase_event_id: purchaseEventId }),
@@ -1928,15 +1924,13 @@
         total:        finalGrandTotal,
         value:        finalGrandTotal,
         hashed_phone: hashedPhone,
-        customer:     { full_name: fullName, phone, address },
-        note:         document.getElementById("note").value.trim()
+        customer:     { full_name: fullName, phone, address }
       };
 
-      // ✅ Hiển thị Thank You NGAY LẬP TỨC
       document.getElementById("orderForm").reset();
-      quantity = QTY_MIN;
+      quantity = 1;
       updateQtyDisplay();
-      localStorage.removeItem(CART_KEY);
+      localStorage.removeItem("nino_cart_cotton");
       cartItems = [];
       renderCartSummary();
       hideModal();
@@ -1945,7 +1939,6 @@
       submitBtn.disabled    = false;
       submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
 
-      // ✅ Gửi data bất đồng bộ SAU (không chặn UI)
       setTimeout(() => {
         fetch(GAS_URL, {
           method:  "POST",
@@ -1959,14 +1952,13 @@
             content_name: PRODUCT.name,
             content_ids:  [PRODUCT.id],
             content_type: 'product',
-            value:        finalGrandTotal,  // ✅ FIX
+            value:        finalGrandTotal,
             currency:     PRODUCT.currency
           }, { eventID: purchaseEventId });
         }
       }, 0);
 
     });
-
 
     /* ===================================================
        REVIEWS
@@ -2073,7 +2065,7 @@
       sendToGAS({
         ...buildBasePayload({ view_content_event_id: eid }),
         event_type: "view_content",
-        value: PRODUCT.price
+        value:      PRODUCT.price
       });
     })();
 
@@ -2086,5 +2078,4 @@
     updateQtyDisplay();
   </script>
 </body>
-
 </html>
