@@ -1138,7 +1138,11 @@
         </div>
         <div class="form-group">
           <label>Số điện thoại</label>
-          <input type="tel" id="phone" required />
+          <input type="tel" id="phone" required
+            pattern="(0[3|5|7|8|9])[0-9]{8}"
+            maxlength="10"
+            inputmode="numeric"
+            placeholder="Nhập số điện thoại">
         </div>
         <div class="form-group">
           <label>Địa chỉ nhận hàng</label>
@@ -1899,6 +1903,12 @@
         return;
       }
 
+      const phoneRegex = /^(0[35789])[0-9]{8}$/;
+      if (!phoneRegex.test(phone)) {
+        statusMessage.style.color = "red";
+        statusMessage.textContent = "Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng Việt Nam.";
+        return;
+      }
       loadCartItems();
       if (!cartItems.length) {
         statusMessage.style.color = "red";
