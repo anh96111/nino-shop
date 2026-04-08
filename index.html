@@ -1190,8 +1190,6 @@
       "https://res.cloudinary.com/dezednxpz/image/upload/v1774989814/Woman_wearing_sun-protection_202604010304_pbjt9w.jpg"
     ];
 
-    // soldOut: true  → mờ + tag hết hàng, không thể chọn, không vào gallery
-    // bestSeller: true → badge "Best Seller"
     const COLOR_CONFIG = [
       { name: "Sáng( Croptop)",        img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7r98o-lzmuzy7sl4ctc1_rsyj4f.webp",  soldOut: false, bestSeller: true  },
       { name: "Hồng( Croptop)",        img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896880/vn-11134207-7r98o-lzmv0037x9hpe3_ssseez.webp",  soldOut: false, bestSeller: false },
@@ -1204,8 +1202,6 @@
       { name: "Xanh than(croptop)",    img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3779yc6aq62_l6yeif.webp",  soldOut: true,  bestSeller: false }
     ];
 
-
-    // COLOR_IMAGES chỉ chứa màu available — dùng cho gallery
     const COLOR_IMAGES = {};
     COLOR_CONFIG.forEach(c => {
       if (!c.soldOut) COLOR_IMAGES[c.name] = [c.img];
@@ -1409,11 +1405,11 @@
       .catch(() => {});
 
     /* ===================================================
-       BUILD BASE PAYLOAD
+       BUILD BASE PAYLOAD — ✅ FIX: sheetname → sheet_name
     =================================================== */
     function buildBasePayload(eventIdObj) {
       return {
-        sheetname: PRODUCT.sheetname,
+        sheet_name:       PRODUCT.sheetname,  // ✅ FIX
         product_id:       PRODUCT.id,
         product_name:     PRODUCT.name,
         price:            PRODUCT.price,
@@ -1493,7 +1489,6 @@
       }
 
       PRODUCT_EXTRA_IMAGES.forEach(src => addSlide(src, "extra", false));
-      // Chỉ add slide cho màu available
       Object.keys(COLOR_IMAGES).forEach(color => {
         colorIndexMap[color] = index;
         COLOR_IMAGES[color].forEach(src => addSlide(src, color, false));
@@ -1504,13 +1499,13 @@
     }
 
     /* ===================================================
-       BUILD COLOR THUMBS — render tất cả màu, sold-out mờ
+       BUILD COLOR THUMBS
     =================================================== */
     function buildColorThumbs() {
       colorThumbsEl.innerHTML = "";
 
       COLOR_CONFIG.forEach((cfg, i) => {
-        const isFirst  = !i && !cfg.soldOut; // active nếu là màu đầu available
+        const isFirst  = !i && !cfg.soldOut;
         const item     = document.createElement("div");
 
         item.className     = "color-thumb-item" + (cfg.soldOut ? " sold-out" : (cfg.name === selectedColor ? " active" : ""));
@@ -1882,7 +1877,7 @@
     }, 1000);
 
     /* ===================================================
-       ORDER FORM SUBMIT
+       ORDER FORM SUBMIT — ✅ ĐÃ FIX TẤT CẢ
     =================================================== */
     document.getElementById("orderForm").addEventListener("submit", async e => {
       e.preventDefault();
@@ -1898,12 +1893,20 @@
       }
 
       loadCartItems();
+      if (!cartItems.length) {
+        statusMessage.style.color = "red";
+        statusMessage.textContent = "Giỏ hàng trống. Vui lòng thêm sản phẩm trước khi đặt hàng.";
+        return;
+      }
+
       submitBtn.disabled    = true;
       submitBtn.textContent = "Đang gửi...";
       statusMessage.textContent = "";
 
+      // ✅ LƯU GIÁ TRỊ TRƯỚC KHI XÓA CART
       const purchaseEventId = genEventId();
       const hashedPhone     = await sha256(phone);
+      const finalGrandTotal = getCartGrandTotal();  // ✅ FIX: Lưu trước
 
       const payload = {
         ...buildBasePayload({ purchase_event_id: purchaseEventId }),
@@ -1912,33 +1915,17 @@
         quantity:     cartItems.reduce((sum, item) => sum + item.quantity, 0),
         subtotal:     getCartSubTotal(),
         tax:          TAX,
-        total:        getCartGrandTotal(),
-        value:        getCartGrandTotal(),
+        total:        finalGrandTotal,  // ✅ FIX
+        value:        finalGrandTotal,  // ✅ FIX
         hashed_phone: hashedPhone,
         customer:     { full_name: fullName, phone, address }
       };
 
-      fetch(GAS_URL, {
-        method:  "POST",
-        mode:    "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(payload)
-      }).catch(() => {});
-
-      if (typeof fbq !== "undefined") {
-        fbq('track', 'Purchase', {
-          content_name: PRODUCT.name,
-          content_ids:  [PRODUCT.id],
-          content_type: 'product',
-          value:        getCartGrandTotal(),
-          currency:     PRODUCT.currency
-        }, { eventID: purchaseEventId });
-      }
-
+      // ✅ HIỂN THỊ THANK YOU NGAY LẬP TỨC
       document.getElementById("orderForm").reset();
-      quantity = QTY_MIN;
+      quantity = 1;  // ✅ FIX: thay vì QTY_MIN
       updateQtyDisplay();
-      localStorage.removeItem(CART_KEY);
+      localStorage.removeItem("nino_cart");  // ✅ FIX: thay vì CART_KEY
       cartItems = [];
       renderCartSummary();
       hideModal();
@@ -1946,6 +1933,26 @@
 
       submitBtn.disabled    = false;
       submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
+
+      // ✅ GỬI DATA BẤT ĐỒNG BỘ SAU (không chặn UI)
+      setTimeout(() => {
+        fetch(GAS_URL, {
+          method:  "POST",
+          mode:    "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify(payload)
+        }).catch(() => {});
+
+        if (typeof fbq !== "undefined") {
+          fbq('track', 'Purchase', {
+            content_name: PRODUCT.name,
+            content_ids:  [PRODUCT.id],
+            content_type: 'product',
+            value:        finalGrandTotal,  // ✅ FIX
+            currency:     PRODUCT.currency
+          }, { eventID: purchaseEventId });
+        }
+      }, 0);
 
     });
 
