@@ -1,6 +1,7 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/boc-yen", "destination": "/boc-yen.html" }
+    { "source": "/boc-yen",        "destination": "/boc-yen.html" },
+    { "source": "/ao-nang-cotton", "destination": "/ao nang cotton.html" }
   ]
 }
