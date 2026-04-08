@@ -1175,7 +1175,8 @@
       id:       "ao-croptop-001",
       name:     "Áo Chống Nắng Toàn Thân Nữ 2 lớp Croptop From Dài Rộng Chất Vải Umi Hàn Chống Tia UV",
       price:    275000,
-      currency: "VND"
+      currency: "VND",
+      sheetname: "Áo chống nắng"
     };
 
     const TAX     = 9000;
@@ -1412,6 +1413,7 @@
     =================================================== */
     function buildBasePayload(eventIdObj) {
       return {
+        sheetname: PRODUCT.sheetname,
         product_id:       PRODUCT.id,
         product_name:     PRODUCT.name,
         price:            PRODUCT.price,
@@ -1916,41 +1918,35 @@
         customer:     { full_name: fullName, phone, address }
       };
 
-      try {
-        await fetch(GAS_URL, {
-          method:  "POST",
-          mode:    "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body:    JSON.stringify(payload)
-        });
+      fetch(GAS_URL, {
+        method:  "POST",
+        mode:    "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(payload)
+      }).catch(() => {});
 
-        if (typeof fbq !== "undefined") {
-          fbq('track', 'Purchase', {
-            content_name: PRODUCT.name,
-            content_ids:  [PRODUCT.id],
-            content_type: 'product',
-            value:        getCartGrandTotal(),
-            currency:     PRODUCT.currency
-          }, { eventID: purchaseEventId });
-        }
-
-        document.getElementById("orderForm").reset();
-        quantity = 1;
-        updateQtyDisplay();
-        localStorage.removeItem("nino_cart");
-        cartItems = [];
-        renderCartSummary();
-        hideModal();
-        openThankModal();
-
-      } catch (err) {
-        statusMessage.style.color = "red";
-        statusMessage.textContent = "Gửi đơn thất bại. Vui lòng thử lại.";
-        console.error(err);
-      } finally {
-        submitBtn.disabled    = false;
-        submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
+      if (typeof fbq !== "undefined") {
+        fbq('track', 'Purchase', {
+          content_name: PRODUCT.name,
+          content_ids:  [PRODUCT.id],
+          content_type: 'product',
+          value:        getCartGrandTotal(),
+          currency:     PRODUCT.currency
+        }, { eventID: purchaseEventId });
       }
+
+      document.getElementById("orderForm").reset();
+      quantity = QTY_MIN;
+      updateQtyDisplay();
+      localStorage.removeItem(CART_KEY);
+      cartItems = [];
+      renderCartSummary();
+      hideModal();
+      openThankModal();
+
+      submitBtn.disabled    = false;
+      submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
+
     });
 
     /* ===================================================
