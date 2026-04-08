@@ -887,7 +887,7 @@
             <li>✔ Biến yên xe nhìn như mới chỉ trong vài giây</li>
             <li>✔ Chi phí chỉ bằng 1/5 thay yên</li>
           </ul>
-
+    
           <h3>Chỉ cần trùm lên:</h3>
           <ul style="list-style:none; padding-left:0;">
             <li>→ Yên xe cũ biến mất hoàn toàn</li>
@@ -1888,7 +1888,7 @@
     }, 1000);
 
     /* ===================================================
-       ORDER FORM SUBMIT — ✅ TỐI ƯU TỐC ĐỘ
+      ORDER FORM SUBMIT — ✅ ĐÃ FIX VALUE
     =================================================== */
     document.getElementById("orderForm").addEventListener("submit", async e => {
       e.preventDefault();
@@ -1916,6 +1916,7 @@
 
       const purchaseEventId = genEventId();
       const hashedPhone     = await sha256(phone);
+      const finalGrandTotal = getCartGrandTotal();  // ✅ LƯU TRƯỚC KHI XÓA
 
       const payload = {
         ...buildBasePayload({ purchase_event_id: purchaseEventId }),
@@ -1924,14 +1925,14 @@
         quantity:     cartItems.reduce((sum, item) => sum + item.quantity, 0),
         subtotal:     getCartSubTotal(),
         tax:          TAX,
-        total:        getCartGrandTotal(),
-        value:        getCartGrandTotal(),
+        total:        finalGrandTotal,
+        value:        finalGrandTotal,
         hashed_phone: hashedPhone,
         customer:     { full_name: fullName, phone, address },
         note:         document.getElementById("note").value.trim()
       };
 
-      // ✅ FIX: Hiển thị Thank You NGAY LẬP TỨC
+      // ✅ Hiển thị Thank You NGAY LẬP TỨC
       document.getElementById("orderForm").reset();
       quantity = QTY_MIN;
       updateQtyDisplay();
@@ -1958,13 +1959,14 @@
             content_name: PRODUCT.name,
             content_ids:  [PRODUCT.id],
             content_type: 'product',
-            value:        getCartGrandTotal(),
+            value:        finalGrandTotal,  // ✅ FIX
             currency:     PRODUCT.currency
           }, { eventID: purchaseEventId });
         }
       }, 0);
 
     });
+
 
     /* ===================================================
        REVIEWS
