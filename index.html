@@ -43,7 +43,6 @@
       padding: 14px;
     }
 
-    /* ===== GALLERY ===== */
     .gallery-wrap { position: relative; background: #fff; }
 
     .slider {
@@ -122,7 +121,6 @@
 
     .thumb.active { border-color: #ee4d2d; }
 
-    /* ===== FLASH SALE ===== */
     .top-sale-bar {
       background: linear-gradient(90deg, #ff7337, #ff4d2d);
       color: #fff;
@@ -134,7 +132,6 @@
       align-items: center;
     }
 
-    /* ===== FREE SHIP BAR ===== */
     .free-ship-bar {
       background: #fff8e1;
       border: 1px solid #ffe082;
@@ -148,7 +145,6 @@
       gap: 8px;
     }
 
-    /* ===== PRODUCT INFO ===== */
     .price-row {
       display: flex;
       align-items: center;
@@ -179,7 +175,6 @@
     .sold { color: #666; font-size: 14px; }
     .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
 
-    /* ===== COLOR THUMBNAILS ===== */
     .color-head { font-size: 16px; font-weight: 700; margin-bottom: 12px; line-height: 1.5; }
 
     .color-thumbs {
@@ -233,19 +228,13 @@
       min-height: 32px;
     }
 
-    /* ===== SOLD OUT COLOR ===== */
     .color-thumb-item.sold-out {
       cursor: not-allowed;
       opacity: 0.45;
     }
 
-    .color-thumb-item.sold-out .color-thumb-img-wrap {
-      border-color: #ddd;
-    }
-
-    .color-thumb-item.sold-out .color-thumb-img {
-      filter: grayscale(60%);
-    }
+    .color-thumb-item.sold-out .color-thumb-img-wrap { border-color: #ddd; }
+    .color-thumb-item.sold-out .color-thumb-img { filter: grayscale(60%); }
 
     .sold-out-tag {
       position: absolute;
@@ -259,7 +248,6 @@
       letter-spacing: 0.3px;
     }
 
-    /* ===== BEST SELLER BADGE ===== */
     .best-seller-badge {
       position: absolute;
       top: 6px; left: 6px;
@@ -274,7 +262,6 @@
       z-index: 2;
     }
 
-    /* ===== SIZE ===== */
     .option-list { display: flex; flex-wrap: wrap; gap: 10px; }
 
     .option-btn {
@@ -307,7 +294,6 @@
       color: #ee4d2d;
     }
 
-    /* ===== QTY ===== */
     .qty-wrap { display: flex; align-items: center; gap: 10px; }
 
     .qty-btn {
@@ -327,7 +313,6 @@
       font-size: 16px;
     }
 
-    /* ===== COLLAPSE ===== */
     .collapse-head {
       display: flex;
       justify-content: space-between;
@@ -357,7 +342,6 @@
 
     .collapse-body.show { display: block; }
 
-    /* ===== SHOP ===== */
     .shop-box { display: flex; align-items: center; gap: 14px; }
 
     .shop-avatar {
@@ -392,7 +376,6 @@
     .shop-stat-label { color: #777; }
     .shop-stat-value { color: #ee4d2d; font-weight: 700; }
 
-    /* ===== DESCRIPTION ===== */
     .desc-section-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
 
     .desc-inner {
@@ -408,7 +391,6 @@
     .desc-inner h3 { font-size: 14px; font-weight: 700; color: #222; margin-bottom: 8px; }
 
     .desc-preview { overflow: hidden; position: relative; }
-
     .desc-preview.collapsed { max-height: 72px; }
 
     .desc-preview.collapsed::after {
@@ -432,7 +414,6 @@
       padding: 0;
     }
 
-    /* ===== BOTTOM BAR ===== */
     .bottom-bar {
       position: fixed;
       bottom: 0; left: 0;
@@ -468,7 +449,6 @@
 
     .btn-primary { background: #ee4d2d; color: #fff; }
 
-    /* ===== MODAL ===== */
     .modal {
       position: fixed;
       inset: 0;
@@ -529,7 +509,6 @@
       margin-bottom: 10px;
     }
 
-    /* ===== CART ITEM IN MODAL ===== */
     .cart-item {
       padding: 10px 0;
       border-bottom: 1px dashed #f1c9bb;
@@ -607,7 +586,6 @@
       font-weight: 700;
     }
 
-    /* ===== FORM ===== */
     .form-group { margin-bottom: 14px; }
 
     .form-group label {
@@ -630,7 +608,6 @@
     .form-group input:focus,
     .form-group textarea:focus { border-color: #ee4d2d; }
 
-    /* ===== THAY ĐỔI 1 — CSS DROPDOWN ===== */
     .form-group select {
       width: 100%;
       border: 1px solid #ddd;
@@ -670,7 +647,6 @@
     .status-message { margin-top: 14px; font-weight: 700; font-size: 14px; }
     .mini-note { font-size: 13px; color: #888; margin-top: 6px; }
 
-    /* ===== TOAST ===== */
     .toast {
       position: fixed;
       bottom: 110px;
@@ -694,7 +670,6 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* ===== REVIEW ===== */
     .review-item { padding: 16px 0; border-bottom: 1px solid #f1f1f1; }
     .review-top { display: flex; gap: 12px; align-items: flex-start; }
 
@@ -732,7 +707,6 @@
 
     .review-like { font-size: 13px; color: #888; }
 
-    /* ===== MEDIA LIGHTBOX ===== */
     .media-lightbox {
       position: fixed;
       inset: 0;
@@ -778,7 +752,6 @@
       z-index: 2;
     }
 
-    /* ===== THANK MODAL ===== */
     .thank-modal {
       position: fixed;
       inset: 0;
@@ -842,6 +815,19 @@
   <script>
     const FB_PIXEL_ID = "958914646618702";
 
+    // =====================================================
+    // BƯỚC 1 — EXTERNAL_ID: khai báo sớm trong <head>
+    // để dùng được ngay cho ViewContent bên dưới
+    // =====================================================
+    const EXTERNAL_ID = (function () {
+      let id = localStorage.getItem("nino_eid");
+      if (!id) {
+        id = Date.now().toString(36) + Math.random().toString(36).slice(2);
+        localStorage.setItem("nino_eid", id);
+      }
+      return id;
+    })();
+
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -852,6 +838,8 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', FB_PIXEL_ID);
     fbq('track', 'PageView');
+
+    // BƯỚC 2 — ViewContent: thêm external_id (plain, chưa băm)
     fbq('track', 'ViewContent', {
       content_name:     'Áo Chống Nắng Toàn Thân Nữ 2 lớp Croptop From Dài Rộng - Vải COTTON TỔ ONG - Chống tia UV, đặc biệt thoáng khí tránh gây ra mồ hôi.',
       content_category: 'Thời trang nữ',
@@ -859,6 +847,8 @@
       content_type:     'product',
       value:            275000,
       currency:         'VND'
+    }, {
+      external_id: EXTERNAL_ID   // plain text — GAS sẽ sha256
     });
   </script>
 </head>
@@ -1157,8 +1147,6 @@
             inputmode="numeric"
             placeholder="Nhập số điện thoại">
         </div>
-
-        <!-- THAY ĐỔI 2 — 4 TRƯỜNG ĐỊA CHỈ -->
         <div class="form-group">
           <label>Tỉnh/Thành Phố <span style="color:#ee4d2d">*</span> <span style="font-weight:400; color:#888; font-size:12px;">(địa chỉ trước sáp nhập)</span></label>
           <select id="province" required>
@@ -1181,7 +1169,6 @@
           <label>Địa chỉ chi tiết (số nhà, tên đường) <span style="color:#ee4d2d">*</span></label>
           <input type="text" id="address" required placeholder="VD: 123 Lê Lợi" />
         </div>
-
         <button type="submit" class="submit-btn" id="submitBtn">XÁC NHẬN ĐẶT HÀNG</button>
         <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
         <div class="status-message" id="statusMessage"></div>
@@ -1231,12 +1218,12 @@
     ];
 
     const COLOR_CONFIG = [
-      { name: "Ghi sáng",  img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666162/s%C3%A1ng_ws4mam.jpg",                                                soldOut: false, bestSeller: false },
-      { name: "Ghi chì",   img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666158/ch%C3%AC_pkkklm.jpg",                                                 soldOut: false, bestSeller: true  },
-      { name: "Nâu",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666161/nau_rtqufz.jpg",                                                       soldOut: false, bestSeller: true  },
-      { name: "Hồng",      img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666160/hong_mdxeq6.jpg",                                                      soldOut: false, bestSeller: false },
-      { name: "Đen",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus376o19nlb4f_ttu4rl.webp",                        soldOut: false,  bestSeller: false },
-      { name: "Xanh than", img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3779yc6aq62_l6yeif.webp",                        soldOut: true,  bestSeller: false }
+      { name: "Ghi sáng",  img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666162/s%C3%A1ng_ws4mam.jpg",                                         soldOut: false, bestSeller: false },
+      { name: "Ghi chì",   img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666158/ch%C3%AC_pkkklm.jpg",                                          soldOut: false, bestSeller: true  },
+      { name: "Nâu",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666161/nau_rtqufz.jpg",                                               soldOut: false, bestSeller: true  },
+      { name: "Hồng",      img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666160/hong_mdxeq6.jpg",                                              soldOut: false, bestSeller: false },
+      { name: "Đen",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus376o19nlb4f_ttu4rl.webp",                soldOut: false, bestSeller: false },
+      { name: "Xanh than", img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3779yc6aq62_l6yeif.webp",                soldOut: true,  bestSeller: false }
     ];
 
     const COLOR_IMAGES = {};
@@ -1330,6 +1317,7 @@
 
     /* ===================================================
        STATE
+       EXTERNAL_ID đã khai báo trong <head>, dùng lại ở đây
     =================================================== */
     let selectedColor  = "";
     let selectedSize   = "";
@@ -1363,7 +1351,7 @@
     const thankCloseBtn      = document.getElementById("thankCloseBtn");
 
     /* ===================================================
-       SHA256
+       SHA256 (Web Crypto — async, dùng cho phone)
     =================================================== */
     async function sha256(str) {
       const buf = await crypto.subtle.digest(
@@ -1846,6 +1834,7 @@
 
     /* ===================================================
        OPEN CHECKOUT
+       BƯỚC 4 — InitiateCheckout: thêm external_id (plain)
     =================================================== */
     function openCheckoutCart() {
       loadCartItems();
@@ -1860,13 +1849,18 @@
           content_type: 'product',
           value:        getCartGrandTotal(),
           currency:     PRODUCT.currency
-        }, { eventID: eid });
+        }, {
+          eventID:     eid,
+          external_id: EXTERNAL_ID   // plain — GAS sha256
+        });
       }
 
       sendToGAS({
         ...buildBasePayload({ initiate_checkout_event_id: eid }),
-        event_type: "initiate_checkout",
-        value:      getCartGrandTotal()
+        event_type:          "initiate_checkout",
+        value:               getCartGrandTotal(),
+        external_id:         EXTERNAL_ID,       // plain
+        external_id_hashed:  false
       });
 
       openModal();
@@ -1880,11 +1874,9 @@
       if (!selectedSize)  { showToast("⚠️ Vui lòng chọn size");    document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
       addCurrentSelectionToCart();
 
-
-
-
       const eid = genEventId();
 
+      // BƯỚC 3 — AddToCart: thêm external_id (plain)
       if (typeof fbq !== "undefined") {
         fbq('track', 'AddToCart', {
           content_name: PRODUCT.name,
@@ -1892,24 +1884,38 @@
           content_type: 'product',
           value:        PRODUCT.price * quantity,
           currency:     PRODUCT.currency
-        }, { eventID: eid });
+        }, {
+          eventID:     eid,
+          external_id: EXTERNAL_ID   // plain — GAS sha256
+        });
       }
 
       sendToGAS({
         ...buildBasePayload({ add_to_cart_event_id: eid }),
-        event_type: "add_to_cart",
-        value:      PRODUCT.price * quantity
+        event_type:         "add_to_cart",
+        value:              PRODUCT.price * quantity,
+        external_id:        EXTERNAL_ID,    // plain
+        external_id_hashed: false
       });
 
       showToast("✓ Đã thêm vào giỏ hàng");
     });
 
-    goToCartBtn.addEventListener("click",     () => openCheckoutCart());
-    buyNowBtn.addEventListener("click", () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); document.getElementById("colorThumbs").scrollIntoView({ behavior: "smooth", block: "center" }); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
-    inlineBuyNowBtn.addEventListener("click", () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); document.getElementById("colorThumbs").scrollIntoView({ behavior: "smooth", block: "center" }); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
+    goToCartBtn.addEventListener("click", () => openCheckoutCart());
 
+    buyNowBtn.addEventListener("click", () => {
+      if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); document.getElementById("colorThumbs").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      if (!selectedSize)  { showToast("⚠️ Vui lòng chọn size");    document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      addCurrentSelectionToCart();
+      openCheckoutCart();
+    });
 
-
+    inlineBuyNowBtn.addEventListener("click", () => {
+      if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); document.getElementById("colorThumbs").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      if (!selectedSize)  { showToast("⚠️ Vui lòng chọn size");    document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      addCurrentSelectionToCart();
+      openCheckoutCart();
+    });
 
     /* ===================================================
        COUNTDOWN
@@ -1925,7 +1931,7 @@
     }, 1000);
 
     /* ===================================================
-       THAY ĐỔI 3A — CASCADE DROPDOWN ĐỊA CHỈ
+       CASCADE DROPDOWN ĐỊA CHỈ
     =================================================== */
     const provinceSelect = document.getElementById("province");
     const districtSelect = document.getElementById("district");
@@ -2001,11 +2007,11 @@
 
     /* ===================================================
        ORDER FORM SUBMIT
+       BƯỚC 5 — Purchase: external_id = hashed_phone (đã băm)
     =================================================== */
     document.getElementById("orderForm").addEventListener("submit", async e => {
       e.preventDefault();
 
-      /* THAY ĐỔI 3B-1 — VALIDATE 4 TRƯỜNG ĐỊA CHỈ */
       const fullName     = document.getElementById("fullName").value.trim();
       const phone        = document.getElementById("phone").value.trim();
       const address      = document.getElementById("address").value.trim();
@@ -2044,20 +2050,22 @@
       statusMessage.textContent = "";
 
       const purchaseEventId = genEventId();
-      const hashedPhone     = await sha256(phone);
+      const hashedPhone     = await sha256(phone);   // đã băm
       const finalGrandTotal = getCartGrandTotal();
 
-      /* THAY ĐỔI 3B-2 — CUSTOMER OBJECT ĐẦY ĐỦ 4 TRƯỜNG */
       const payload = {
         ...buildBasePayload({ purchase_event_id: purchaseEventId }),
-        event_type:   "purchase",
-        items:        cartItems,
-        quantity:     cartItems.reduce((sum, item) => sum + item.quantity, 0),
-        subtotal:     getCartSubTotal(),
-        tax:          TAX,
-        total:        finalGrandTotal,
-        value:        finalGrandTotal,
-        hashed_phone: hashedPhone,
+        event_type:         "purchase",
+        items:              cartItems,
+        quantity:           cartItems.reduce((sum, item) => sum + item.quantity, 0),
+        subtotal:           getCartSubTotal(),
+        tax:                TAX,
+        total:              finalGrandTotal,
+        value:              finalGrandTotal,
+        hashed_phone:       hashedPhone,
+        // BƯỚC 5 — external_id = hashed_phone, đã băm → GAS gán thẳng
+        external_id:        hashedPhone,
+        external_id_hashed: true,
         customer: {
           full_name: fullName,
           phone,
@@ -2069,7 +2077,6 @@
       };
 
       document.getElementById("orderForm").reset();
-      /* Reset cascade state sau form.reset() */
       districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
       districtSelect.disabled  = true;
       wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';
@@ -2094,6 +2101,7 @@
           body:    JSON.stringify(payload)
         }).catch(() => {});
 
+        // BƯỚC 5 — Purchase Pixel: external_id = hashed_phone
         if (typeof fbq !== "undefined") {
           fbq('track', 'Purchase', {
             content_name: PRODUCT.name,
@@ -2101,7 +2109,10 @@
             content_type: 'product',
             value:        finalGrandTotal,
             currency:     PRODUCT.currency
-          }, { eventID: purchaseEventId });
+          }, {
+            eventID:     purchaseEventId,
+            external_id: hashedPhone   // đã băm — nhất quán với CAPI
+          });
         }
       }, 0);
     });
@@ -2210,8 +2221,10 @@
       const eid = genEventId();
       sendToGAS({
         ...buildBasePayload({ view_content_event_id: eid }),
-        event_type: "view_content",
-        value:      PRODUCT.price
+        event_type:         "view_content",
+        value:              PRODUCT.price,
+        external_id:        EXTERNAL_ID,   // plain — GAS sha256
+        external_id_hashed: false
       });
     })();
 
