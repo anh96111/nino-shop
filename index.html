@@ -1876,9 +1876,10 @@
        CTA EVENTS
     =================================================== */
     inlineAddToCartBtn.addEventListener("click", () => {
-      if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); return; }
-      if (!selectedSize)  { showToast("⚠️ Vui lòng chọn size");    return; }
+      if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); document.getElementById("colorThumbs").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      if (!selectedSize)  { showToast("⚠️ Vui lòng chọn size");    document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; }
       addCurrentSelectionToCart();
+
 
 
 
@@ -1904,8 +1905,9 @@
     });
 
     goToCartBtn.addEventListener("click",     () => openCheckoutCart());
-    buyNowBtn.addEventListener("click",       () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
-    inlineBuyNowBtn.addEventListener("click", () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
+    buyNowBtn.addEventListener("click", () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); document.getElementById("colorThumbs").scrollIntoView({ behavior: "smooth", block: "center" }); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
+    inlineBuyNowBtn.addEventListener("click", () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); document.getElementById("colorThumbs").scrollIntoView({ behavior: "smooth", block: "center" }); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); document.getElementById("sizeOptions").scrollIntoView({ behavior: "smooth", block: "center" }); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
+
 
 
 
