@@ -921,7 +921,7 @@
 
     <!-- COLOR -->
     <section class="section">
-      <div class="color-head">Màu sắc: <span id="colorLabel">Ghi sáng</span></div>
+      <div class="color-head">Màu sắc: <span id="colorLabel">--</span></div>
       <div class="color-thumbs" id="colorThumbs"></div>
     </section>
 
@@ -929,7 +929,7 @@
     <section class="section">
       <div class="section-title">Size</div>
       <div class="option-list" id="sizeOptions">
-        <button class="option-btn active" data-value="Size L (40 - 50 kg)">Size L (40 - 50 kg)</button>
+        <button class="option-btn" data-value="Size L (40 - 50 kg)">Size L (40 - 50 kg)</button>
         <button class="option-btn" data-value="Size XL (51 - 65 kg)">Size XL (51 - 65 kg)</button>
       </div>
     </section>
@@ -1235,7 +1235,7 @@
       { name: "Ghi chì",   img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666158/ch%C3%AC_pkkklm.jpg",                                                 soldOut: false, bestSeller: true  },
       { name: "Nâu",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666161/nau_rtqufz.jpg",                                                       soldOut: false, bestSeller: true  },
       { name: "Hồng",      img: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666160/hong_mdxeq6.jpg",                                                      soldOut: false, bestSeller: false },
-      { name: "Đen",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus376o19nlb4f_ttu4rl.webp",                        soldOut: true,  bestSeller: false },
+      { name: "Đen",       img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus376o19nlb4f_ttu4rl.webp",                        soldOut: false,  bestSeller: false },
       { name: "Xanh than", img: "https://res.cloudinary.com/dezednxpz/image/upload/v1774896879/vn-11134201-7r98o-lus3779yc6aq62_l6yeif.webp",                        soldOut: true,  bestSeller: false }
     ];
 
@@ -1331,8 +1331,8 @@
     /* ===================================================
        STATE
     =================================================== */
-    let selectedColor  = "Ghi sáng";
-    let selectedSize   = "Size L (40 - 50 kg)";
+    let selectedColor  = "";
+    let selectedSize   = "";
     let quantity       = 1;
     let currentSlide   = 0;
     let currentGallery = [];
@@ -1876,7 +1876,11 @@
        CTA EVENTS
     =================================================== */
     inlineAddToCartBtn.addEventListener("click", () => {
+      if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); return; }
+      if (!selectedSize)  { showToast("⚠️ Vui lòng chọn size");    return; }
       addCurrentSelectionToCart();
+
+
 
       const eid = genEventId();
 
@@ -1900,8 +1904,10 @@
     });
 
     goToCartBtn.addEventListener("click",     () => openCheckoutCart());
-    buyNowBtn.addEventListener("click",       () => { addCurrentSelectionToCart(); openCheckoutCart(); });
-    inlineBuyNowBtn.addEventListener("click", () => { addCurrentSelectionToCart(); openCheckoutCart(); });
+    buyNowBtn.addEventListener("click",       () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
+    inlineBuyNowBtn.addEventListener("click", () => { if (!selectedColor) { showToast("⚠️ Vui lòng chọn màu sắc"); return; } if (!selectedSize) { showToast("⚠️ Vui lòng chọn size"); return; } addCurrentSelectionToCart(); openCheckoutCart(); });
+
+
 
     /* ===================================================
        COUNTDOWN
