@@ -1155,6 +1155,11 @@
           <label>Địa chỉ chi tiết (số nhà, tên đường) <span style="color:#ee4d2d">*</span></label>
           <input type="text" id="address" required placeholder="VD: 123 Lê Lợi" />
         </div>
+        <div class="form-group">
+            <label>Ghi chú <span style="font-weight:400; color:#888; font-size:12px;">(tuỳ chọn)</span></label>
+            <textarea id="orderNote" rows="2" placeholder="VD: Giao hàng giờ hành chính, gọi trước khi giao..."></textarea>
+        </div>
+
         <button type="submit" class="submit-btn" id="submitBtn">XÁC NHẬN ĐẶT HÀNG</button>
         <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
         <div class="status-message" id="statusMessage"></div>
@@ -2031,6 +2036,7 @@
       const fullName     = document.getElementById("fullName").value.trim();
       const phone        = document.getElementById("phone").value.trim();
       const address      = document.getElementById("address").value.trim();
+      const orderNote    = document.getElementById("orderNote").value.trim();
       const wardEl       = document.getElementById("ward");
       const districtEl   = document.getElementById("district");
       const provinceEl   = document.getElementById("province");
@@ -2083,6 +2089,7 @@
         hashed_phone:       hashedPhone,
         external_id:        hashedPhone,
         external_id_hashed: true,
+        note:               orderNote,
         customer: {
           full_name: fullName,
           phone,
@@ -2094,6 +2101,7 @@
       };
 
       document.getElementById("orderForm").reset();
+      document.getElementById("orderNote").value = "";
       districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
       districtSelect.disabled  = true;
       wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';
