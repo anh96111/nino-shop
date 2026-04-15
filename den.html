@@ -1071,8 +1071,12 @@
     <!-- INFO -->
     <section class="section">
       <div class="price-row">
-        <span class="price">225.000đ</span>
+        <span class="price" id="displayPrice">225.000đ</span>
+        <span class="old-price" id="displayOldPrice">260.000đ</span>
+        <span class="badge-discount" id="displayDiscount">-13%</span>
       </div>
+
+
 
       <h1 class="product-title">Đèn LED Siêu Sáng Sử Dụng Pin Makita 35 LED Với 2 Chế Độ Sáng, Có Cổng Sạc Điện Thoại USB</h1>
 
@@ -1128,31 +1132,52 @@
       <div class="section-label">Chọn phân loại</div>
       <div class="variant-grid">
 
-        <div class="variant-card" data-price="499000" data-name="Đèn LED Makita 35 LED – Đèn + Pin 10 Cell + Sạc">
+        <div class="variant-card" data-price="499000" data-old-price="699000" data-name="Đèn LED Makita 35 LED – Đèn + Pin 10 Cell + Sạc">
           <div class="variant-card-left">
             <div class="variant-name">Đèn + Pin 10 Cell + Sạc</div>
             <div class="variant-desc">Dùng được ngay, không cần mua thêm</div>
             <span class="variant-badge">🔥 Bán chạy nhất</span>
           </div>
-          <div class="variant-price">499.000đ</div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+            <div class="variant-price">499.000đ</div>
+            <div style="display:flex; align-items:center; gap:5px;">
+              <span style="font-size:12px; color:#aaa; text-decoration:line-through;">699.000đ</span>
+              <span style="font-size:11px; font-weight:700; background:var(--primary); color:#fff; padding:1px 6px; border-radius:4px;">-29%</span>
+            </div>
+          </div>
         </div>
 
-        <div class="variant-card" data-price="625000" data-name="Đèn LED Makita 35 LED – Đèn + Pin 20 Cell + Sạc">
+
+        <div class="variant-card" data-price="625000" data-old-price="899000" data-name="Đèn LED Makita 35 LED – Đèn + Pin 20 Cell + Sạc">
           <div class="variant-card-left">
             <div class="variant-name">Đèn + Pin 20 Cell + Sạc</div>
             <div class="variant-desc">Pin dung lượng cao – dùng lâu hơn</div>
             <span class="variant-badge">⚡ Dùng được lâu nhất</span>
           </div>
-          <div class="variant-price">625.000đ</div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+            <div class="variant-price">625.000đ</div>
+            <div style="display:flex; align-items:center; gap:5px;">
+              <span style="font-size:12px; color:#aaa; text-decoration:line-through;">899.000đ</span>
+              <span style="font-size:11px; font-weight:700; background:var(--primary); color:#fff; padding:1px 6px; border-radius:4px;">-31%</span>
+            </div>
+          </div>
         </div>
 
-        <div class="variant-card" data-price="225000" data-name="Đèn LED Makita 35 LED – Chỉ Đèn (Không Pin, Không Sạc)">
+
+        <div class="variant-card" data-price="225000" data-old-price="260000" data-name="Đèn LED Makita 35 LED – Chỉ Đèn (Không Pin, Không Sạc)">
           <div class="variant-card-left">
             <div class="variant-name">Chỉ Đèn (Không Pin, Không Sạc)</div>
             <div class="variant-desc">Phù hợp nếu đã có sẵn pin Makita</div>
           </div>
-          <div class="variant-price">225.000đ</div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+            <div class="variant-price">225.000đ</div>
+            <div style="display:flex; align-items:center; gap:5px;">
+              <span style="font-size:12px; color:#aaa; text-decoration:line-through;">260.000đ</span>
+              <span style="font-size:11px; font-weight:700; background:var(--primary); color:#fff; padding:1px 6px; border-radius:4px;">-13%</span>
+            </div>
+          </div>
         </div>
+
 
       </div>
     </section>
@@ -1734,19 +1759,42 @@
        VARIANT SELECTOR
     =================================================== */
     function setupVariantSelector() {
-      const cards = document.querySelectorAll(".variant-card");
+      const cards           = document.querySelectorAll(".variant-card");
+      const displayPrice    = document.getElementById("displayPrice");
+      const displayOldPrice = document.getElementById("displayOldPrice");
+      const displayDiscount = document.getElementById("displayDiscount");
+
       cards.forEach(card => {
         card.addEventListener("click", () => {
           cards.forEach(c => c.classList.remove("active"));
           card.classList.add("active");
+
+          const price    = parseInt(card.dataset.price);
+          const oldPrice = parseInt(card.dataset.oldPrice);
+
           selectedVariant = {
-            price: parseInt(card.dataset.price),
+            price: price,
             name:  card.dataset.name
           };
-          PRODUCT.price = selectedVariant.price;
+          PRODUCT.price = price;
+
+          // Cập nhật hiển thị giá
+          displayPrice.textContent = formatPrice(price);
+
+          if (oldPrice && oldPrice > price) {
+            const pct = Math.round((1 - price / oldPrice) * 100);
+            displayOldPrice.textContent = formatPrice(oldPrice);
+            displayOldPrice.style.display = "inline";
+            displayDiscount.textContent = "-" + pct + "%";
+            displayDiscount.style.display = "inline";
+          } else {
+            displayOldPrice.style.display = "none";
+            displayDiscount.style.display = "none";
+          }
         });
       });
     }
+
 
     /* ===================================================
        GALLERY
