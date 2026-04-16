@@ -1169,6 +1169,11 @@
           <label>Địa chỉ chi tiết (số nhà, tên đường) <span style="color:#ee4d2d">*</span></label>
           <input type="text" id="address" required placeholder="VD: 123 Lê Lợi" />
         </div>
+        <div class="form-group">
+          <label>Ghi chú đơn hàng <span style="font-weight:400; color:#888; font-size:12px;">(không bắt buộc)</span></label>
+          <textarea id="orderNote" rows="3" placeholder="VD: Giao hàng vào buổi sáng, gọi trước khi giao..."></textarea>
+        </div>
+
         <button type="submit" class="submit-btn" id="submitBtn">XÁC NHẬN ĐẶT HÀNG</button>
         <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
         <div class="status-message" id="statusMessage"></div>
@@ -1416,8 +1421,9 @@
     (function () {
       const fbclid = getQueryParam("fbclid");
       if (fbclid) {
-        const fbc = "fb.1." + Date.now() + "." + fbclid;
+        const fbc = "fb.1." + Math.floor(Date.now() / 1000) + "." + fbclid;
         setCookie("_fbc", fbc, 90);
+
       }
     })();
 
@@ -2015,6 +2021,7 @@
       const fullName     = document.getElementById("fullName").value.trim();
       const phone        = document.getElementById("phone").value.trim();
       const address      = document.getElementById("address").value.trim();
+      const orderNote    = document.getElementById("orderNote").value.trim();
       const wardEl       = document.getElementById("ward");
       const districtEl   = document.getElementById("district");
       const provinceEl   = document.getElementById("province");
@@ -2072,11 +2079,13 @@
           address,
           ward:      wardName,
           district:  districtName,
-          province:  provinceName
+          province:  provinceName,
+          note:      orderNote
         }
       };
 
       document.getElementById("orderForm").reset();
+      document.getElementById("orderNote").value = "";
       districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
       districtSelect.disabled  = true;
       wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';

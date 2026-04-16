@@ -1624,8 +1624,9 @@
     (function () {
       const fbclid = getQueryParam("fbclid");
       if (fbclid) {
-        const fbc = "fb.1." + Date.now() + "." + fbclid;
+        const fbc = "fb.1." + Math.floor(Date.now() / 1000) + "." + fbclid;
         setCookie("_fbc", fbc, 90);
+
       }
     })();
 
