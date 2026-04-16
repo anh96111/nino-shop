@@ -1025,7 +1025,7 @@
       content_category: 'Sức khỏe',
       content_ids:      ['may-do-huyet-ap-bap-tay-001'],
       content_type:     'product',
-      value:            399000,
+      value:            325000,
       currency:         'VND'
     }, {
       external_id: EXTERNAL_ID
@@ -1059,9 +1059,9 @@
     <!-- INFO -->
     <section class="section">
       <div class="price-row">
-        <span class="price">399.000đ</span>
+        <span class="price">325.000đ</span>
         <span class="old-price">654.000đ</span>
-        <span class="badge-discount">-39%</span>
+        <span class="badge-discount">-50%</span>
       </div>
 
       <h1 class="product-title">Chỉ 30 Giây Đo Tại Nhà – Máy Đo Huyết Áp Bắp Tay Giọng Nói Tiếng Việt Giúp Phát Hiện Sớm Nguy Cơ Đột Quỵ, Tim Mạch - BH 12 tháng.</h1>
@@ -1362,8 +1362,8 @@
         <div class="order-totals">
           <div class="order-totals-row"><span>Tạm tính</span><span id="summarySubTotal">0đ</span></div>
           <div class="order-totals-row freeship"><span>🚚 Miễn phí vận chuyển</span></div>
-          <div class="order-totals-row"><span>Thuế</span><span>9.000đ</span></div>
           <div class="order-totals-row grand"><span>Tổng thanh toán</span><span id="summaryGrandTotal">0đ</span></div>
+          <p style="font-size:12px; color:#aaa; font-style:italic; margin-top:6px;">Vui lòng kiểm tra số lượng trước khi đặt hàng.</p>
         </div>
       </div>
 
@@ -1441,12 +1441,11 @@
     const PRODUCT = {
       id:        "may-do-huyet-ap-bap-tay-001",
       name:      "Chỉ 30 Giây Đo Tại Nhà – Máy Đo Huyết Áp Bắp Tay Giọng Nói Tiếng Việt Giúp Phát Hiện Sớm Nguy Cơ Đột Quỵ, Tim Mạch - BH 12 tháng.",
-      price:     399000,
+      price:     325000,
       currency:  "VND",
       sheetname: "may do hp"
     };
 
-    const TAX     = 9000;
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxodCpNkfJejRKjfk5IvJ4xmtdg_ti6rn_8e7NFleNkIPApNSreA0aJhuPpcWUaD4FQ/exec";
 
     const PRODUCT_EXTRA_IMAGES = [
@@ -1907,7 +1906,7 @@
     }
 
     function getCartGrandTotal() {
-      return getCartSubTotal() + TAX;
+      return getCartSubTotal() ;
     }
 
     /* ===================================================

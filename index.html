@@ -1124,14 +1124,12 @@
           <div class="order-totals-row freeship">
             <span>🚚 Miễn phí vận chuyển</span>
           </div>
-          <div class="order-totals-row">
-            <span>Thuế</span>
-            <span>9.000đ</span>
-          </div>
           <div class="order-totals-row grand">
             <span>Tổng thanh toán</span>
             <span id="summaryGrandTotal">0đ</span>
           </div>
+          <p style="font-size:12px; color:#aaa; font-style:italic; margin-top:6px;">Vui lòng kiểm tra số lượng trước khi đặt hàng.</p>
+          
         </div>
       </div>
       <form id="orderForm">
@@ -1214,7 +1212,6 @@
       sheetname: "Áo nắng cotton"
     };
 
-    const TAX     = 9000;
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxodCpNkfJejRKjfk5IvJ4xmtdg_ti6rn_8e7NFleNkIPApNSreA0aJhuPpcWUaD4FQ/exec";
 
     const PRODUCT_EXTRA_IMAGES = [
@@ -1779,7 +1776,7 @@
     }
 
     function getCartGrandTotal() {
-      return getCartSubTotal() + TAX;
+      return getCartSubTotal();
     }
 
     /* ===================================================
