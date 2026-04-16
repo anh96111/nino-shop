@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gối Mây Đan Thoáng Khí 35x55cm – Giảm Nóng Đầu, Hỗ Trợ Cổ Vai, Giúp Dễ Vào Giấc Ngủ Và Ngủ Sâu Hơn (Kèm Ruột Gối)</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary:        #1565C0;
+      --primary-dark:   #0D47A1;
+      --primary-light:  #E3F2FD;
+      --primary-border: #BBDEFB;
+      --primary-mid:    #1976D2;
+      --text:           #1a1a1a;
+      --text-sub:       #555;
+      --text-meta:      #888;
+      --border:         #e8e8e8;
+      --bg:             #f5f7fa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      scroll-behavior: smooth;
+    }
+
+    img { max-width: 100%; display: block; }
+    button, input, textarea, select { font: inherit; }
+
+    .app {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+      min-height: 100vh;
+      padding-bottom: 90px;
+    }
+
+    /* ── GALLERY ── */
+    .gallery-wrap { position: relative; background: #fff; }
+
+    .slider {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      background: #f0f4f8;
+      touch-action: pan-y;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.3s ease;
+      width: 100%;
+      will-change: transform;
+    }
+
+    .slide {
+      min-width: 100%;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .slide img, .slide video {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 5;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.2);
+    }
+
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.5);
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .dot.active { width: 18px; background: #fff; }
+
+    .thumbs {
+      display: flex;
+      gap: 8px;
+      padding: 10px 14px;
+      overflow-x: auto;
+      background: #fff;
+    }
+
+    .thumbs::-webkit-scrollbar { display: none; }
+
+    .thumb {
+      width: 62px; height: 62px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid transparent;
+      cursor: pointer;
+      flex: 0 0 auto;
+      background: #eef2f7;
+      transition: 0.15s;
+    }
+
+    .thumb.active { border-color: var(--primary); }
+
+    .sale-bar {
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary-mid));
+      color: #fff;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      background: #fff;
+      margin-top: 8px;
+      padding: 16px 14px;
+    }
+
+    /* ── PRICE ── */
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .price { color: var(--primary); font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+    .old-price { color: #aaa; font-size: 15px; text-decoration: line-through; }
+
+    .badge-discount {
+      background: var(--primary);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .product-title {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .sold-tag { font-size: 13px; color: var(--text-meta); margin-bottom: 14px; }
+
+    /* ── TRUST ── */
+    .trust-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 10px;
+      border-radius: 10px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      line-height: 1.4;
+    }
+
+    .trust-item .ti { font-size: 16px; flex: 0 0 auto; }
+
+    .social-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: 13px;
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    /* ── SHIP BAR ── */
+    .ship-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    /* ── COLLAPSE ── */
+    .collapse-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      gap: 8px;
+    }
+
+    .collapse-arrow {
+      color: #aaa;
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+
+    .collapse-head.active .collapse-arrow { transform: rotate(180deg); }
+
+    .collapse-body {
+      display: none;
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--text-sub);
+      line-height: 1.7;
+    }
+
+    .collapse-body.show { display: block; }
+
+    /* ── COMBO SELECTOR ── */
+    .section-label { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+
+    .combo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .combo-item {
+      border: 1.5px solid var(--primary-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+
+    .combo-item.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .combo-tag {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #e53935;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .combo-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .combo-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+
+    .combo-old-price {
+      font-size: 11.5px;
+      color: #aaa;
+      text-decoration: line-through;
+      margin-bottom: 2px;
+    }
+
+    .combo-save {
+      font-size: 11px;
+      font-weight: 700;
+      color: #2e7d32;
+    }
+
+    /* ── QTY ── */
+    .qty-wrap { display: flex; align-items: center; gap: 10px; }
+
+    .qty-btn {
+      width: 40px; height: 40px;
+      border: 1.5px solid var(--primary-border);
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 8px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .qty-input {
+      width: 60px; height: 40px;
+      text-align: center;
+      border: 1.5px solid var(--primary-border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .qty-input:focus { border-color: var(--primary); }
+
+    .cta-row { display: flex; gap: 10px; margin-top: 14px; }
+
+    .btn-ghost {
+      flex: 1;
+      border: 1.5px solid var(--primary);
+      background: #fff;
+      color: var(--primary);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-solid {
+      flex: 1;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-ghost:active { background: var(--primary-light); }
+    .btn-solid:active { background: var(--primary-dark); }
+
+    /* ── DESCRIPTION ── */
+    .desc-wrap {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #444;
+      word-break: break-word;
+    }
+
+    .desc-wrap .d-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin: 20px 0 6px;
+      padding-left: 10px;
+      border-left: 3px solid var(--primary);
+      line-height: 1.4;
+    }
+
+    .desc-wrap .d-title:first-child { margin-top: 0; }
+
+    .desc-wrap p { margin-bottom: 10px; color: #555; }
+
+    .desc-wrap .d-highlight {
+      background: var(--primary-light);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-dark);
+      line-height: 1.75;
+    }
+
+    .desc-wrap .d-check-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .desc-wrap .d-check-list li {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.55;
+    }
+
+    .desc-wrap .d-check-list li::before {
+      content: "✓";
+      color: var(--primary);
+      font-weight: 800;
+      flex: 0 0 auto;
+      margin-top: 1px;
+    }
+
+    .desc-wrap .d-spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--primary-border);
+    }
+
+    .desc-wrap .d-spec-table tr:nth-child(even) { background: var(--primary-light); }
+
+    .desc-wrap .d-spec-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--primary-border);
+      font-size: 13.5px;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .desc-wrap .d-spec-table td:first-child { color: #666; width: 46%; }
+    .desc-wrap .d-spec-table td:last-child { font-weight: 700; color: var(--text); }
+
+    .desc-wrap .d-box-set {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 10px;
+      padding: 13px 14px;
+      margin: 12px 0;
+    }
+
+    .desc-wrap .d-box-set-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 9px;
+    }
+
+    .desc-wrap .d-box-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      color: #333;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--primary-border);
+    }
+
+    .desc-wrap .d-box-item:last-child { border-bottom: none; }
+    .desc-wrap .d-box-item::before { content: "📦"; font-size: 13px; flex: 0 0 auto; }
+
+    .desc-wrap .d-cta-end {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 10px;
+      padding: 15px 14px;
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #333;
+    }
+
+    .desc-wrap .d-cta-end strong { color: var(--primary-dark); }
+
+    .img-placeholder {
+      width: 100%;
+      aspect-ratio: 1/1;
+      background: #eef2f7;
+      border-radius: 10px;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #bbb;
+      font-size: 13px;
+    }
+
+    .desc-preview { overflow: hidden; position: relative; }
+    .desc-preview.collapsed { max-height: 80px; }
+
+    .desc-preview.collapsed::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 40px;
+      background: linear-gradient(transparent, #fff);
+      pointer-events: none;
+    }
+
+    .desc-toggle-btn {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    /* ── REVIEWS ── */
+    .review-summary {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--primary-light);
+      border-radius: 10px;
+      padding: 13px;
+      margin-bottom: 16px;
+      border: 1px solid var(--primary-border);
+    }
+
+    .review-score { text-align: center; flex: 0 0 auto; }
+    .review-score-num { font-size: 34px; font-weight: 800; color: var(--primary); line-height: 1; }
+    .review-score-stars { color: #f59e0b; font-size: 13px; margin: 4px 0; }
+    .review-score-count { font-size: 11.5px; color: var(--text-meta); }
+
+    .review-bars { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+
+    .review-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-meta);
+    }
+
+    .review-bar-track {
+      flex: 1;
+      height: 5px;
+      background: #dce8f7;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .review-bar-fill { height: 100%; background: var(--primary); border-radius: 999px; }
+
+    .review-item { padding: 14px 0; border-bottom: 1px solid #f0f4f8; }
+    .review-top { display: flex; gap: 10px; align-items: flex-start; }
+
+    .review-avatar {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #eef2f7;
+      flex: 0 0 auto;
+    }
+
+    .review-main { flex: 1; }
+    .review-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+    .review-stars { color: #f59e0b; font-size: 13px; margin-bottom: 3px; }
+    .review-meta { font-size: 11.5px; color: var(--text-meta); margin-bottom: 6px; }
+
+    .review-classify {
+      font-size: 11.5px;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      border-radius: 4px;
+      padding: 3px 8px;
+      display: inline-block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .review-content { font-size: 13.5px; line-height: 1.7; color: #333; margin-bottom: 10px; }
+
+    .review-media {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 8px;
+    }
+
+    .review-media::-webkit-scrollbar { display: none; }
+
+    .review-media-item {
+      width: 70px; height: 70px;
+      border-radius: 8px;
+      background: #eef2f7;
+      flex: 0 0 auto;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .review-like { font-size: 12.5px; color: var(--text-meta); }
+
+    /* ── SHOP ── */
+    .shop-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+
+    .shop-avatar {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-border);
+      flex: 0 0 auto;
+    }
+
+    .shop-name { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+    .shop-status { font-size: 12px; color: var(--primary); font-weight: 600; }
+
+    .shop-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+    }
+
+    .shop-stat {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--primary-border);
+      font-size: 13px;
+    }
+
+    .shop-stat-label { color: #888; }
+    .shop-stat-value { font-weight: 700; color: var(--primary); }
+
+    /* ── INFO ── */
+    .info-block { margin-bottom: 16px; }
+    .info-block-title { font-size: 14px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+
+    .info-row {
+      display: flex;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px dashed #e8eef5;
+      font-size: 13.5px;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-row-icon { flex: 0 0 auto; font-size: 15px; }
+    .info-row-text { color: #555; line-height: 1.55; }
+    .info-row-text strong { color: var(--text); }
+
+    .faq-item { padding: 10px 0; border-bottom: 1px dashed #e8eef5; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q { font-size: 13.5px; font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; }
+    .faq-a { font-size: 13px; color: #555; line-height: 1.6; }
+
+    /* ── BOTTOM BAR ── */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100%;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 10px 14px;
+      z-index: 100;
+    }
+
+    .bottom-inner {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-bar-ghost {
+      flex: 1;
+      border: 1.5px solid var(--primary);
+      background: #fff;
+      color: var(--primary);
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-bar-solid {
+      flex: 1;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* ── MODAL ── */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal.show { display: flex; }
+
+    .modal-content {
+      width: 100%;
+      max-width: 500px;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 18px 16px 28px;
+      max-height: 92vh;
+      overflow-y: auto;
+      animation: slideUp 0.22s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title { font-size: 18px; font-weight: 800; }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 26px;
+      cursor: pointer;
+      color: #aaa;
+      line-height: 1;
+    }
+
+    .order-summary {
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .order-summary-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--primary-dark);
+    }
+
+    .cart-item {
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--primary-border);
+      font-size: 14px;
+    }
+
+    .cart-item:last-child { border-bottom: none; }
+    .cart-item-top { font-weight: 700; margin-bottom: 6px; color: var(--text); line-height: 1.45; }
+    .cart-item-price { font-size: 14px; font-weight: 700; color: var(--primary); }
+
+    .cart-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .cart-qty-btn {
+      width: 28px; height: 28px;
+      border: 1px solid var(--primary-border);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--primary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .cart-qty-display {
+      min-width: 26px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .cart-remove-btn {
+      margin-left: auto;
+      background: none;
+      border: none;
+      font-size: 12.5px;
+      color: #bbb;
+      cursor: pointer;
+      padding: 3px 6px;
+      border-radius: 5px;
+    }
+
+    .cart-remove-btn:hover { color: var(--primary); background: var(--primary-light); }
+
+    .order-totals {
+      padding-top: 10px;
+      border-top: 1px dashed var(--primary-border);
+      font-size: 14px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .order-totals-row { display: flex; justify-content: space-between; }
+
+    .order-totals-row.grand {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 4px;
+    }
+
+    .order-totals-row.freeship { color: #2e7d32; font-weight: 700; }
+
+    .form-group { margin-bottom: 12px; }
+
+    .form-group label {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-size: 14.5px;
+      outline: none;
+      background: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--primary); }
+
+    #orderNote { resize: vertical; min-height: 60px; }
+
+    .form-group select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 14px;
+      font-size: 14.5px;
+      outline: none;
+      background: #fff;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23999' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer;
+    }
+
+    .form-group select:focus { border-color: var(--primary); }
+    .form-group select:disabled { background-color: #f7f9fc; color: #bbb; cursor: not-allowed; }
+
+    .submit-btn {
+      width: 100%;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .mini-note { font-size: 12.5px; color: #aaa; margin-top: 8px; text-align: center; }
+    .status-message { margin-top: 10px; font-size: 13.5px; font-weight: 700; }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 106px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #1a2a4a;
+      color: #fff;
+      padding: 11px 20px;
+      border-radius: 999px;
+      font-size: 13.5px;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 9999;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── THANK MODAL ── */
+    .thank-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1100;
+      padding: 20px;
+    }
+
+    .thank-modal.show { display: flex; }
+
+    .thank-modal-content {
+      width: 100%;
+      max-width: 380px;
+      background: #fff;
+      border-radius: 20px;
+      padding: 36px 24px 28px;
+      text-align: center;
+      animation: slideUp 0.25s ease;
+    }
+
+    .thank-icon { font-size: 54px; margin-bottom: 14px; line-height: 1; }
+    .thank-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--primary-dark); }
+    .thank-body { font-size: 14px; line-height: 1.75; color: #555; margin-bottom: 22px; }
+
+    .thank-close-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 36px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* ── MEDIA LIGHTBOX ── */
+    .media-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .media-lightbox.show { display: flex; }
+
+    .media-lightbox-content {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .media-lightbox-content img,
+    .media-lightbox-content video {
+      width: 100%;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .media-lightbox-close {
+      position: absolute;
+      top: -10px; right: -4px;
+      width: 38px; height: 38px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    @media (max-width: 420px) {
+      .product-title { font-size: 16px; }
+      .price { font-size: 26px; }
+    }
+  </style>
+
+  <!-- FACEBOOK PIXEL -->
+  <script>
+    const FB_PIXEL_ID = "958914646618702";
+
+    const EXTERNAL_ID = (function () {
+      let id = localStorage.getItem("nino_eid");
+      if (!id) {
+        id = Date.now().toString(36) + Math.random().toString(36).slice(2);
+        localStorage.setItem("nino_eid", id);
+      }
+      return id;
+    })();
+
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', FB_PIXEL_ID);
+    fbq('track', 'PageView');
+
+    fbq('track', 'ViewContent', {
+      content_name:     'Gối Mây Đan Thoáng Khí 35x55cm – Giảm Nóng Đầu, Hỗ Trợ Cổ Vai, Giúp Dễ Vào Giấc Ngủ Và Ngủ Sâu Hơn (Kèm Ruột Gối)',
+      content_category: 'Gia dụng',
+      content_ids:      ['goi-may-dan-001'],
+      content_type:     'product',
+      value:            255000,
+      currency:         'VND'
+    }, {
+      external_id: EXTERNAL_ID
+    });
+  </script>
+</head>
+<body>
+<div class="app">
+
+  <!-- GALLERY -->
+  <section class="gallery-wrap">
+    <div class="slider" id="slider">
+      <div class="slides" id="slides"></div>
+      <div class="dots" id="dots"></div>
+    </div>
+    <div class="thumbs" id="thumbs"></div>
+    <div class="sale-bar">
+      <span>🔥 Ưu đãi hôm nay</span>
+      <span>Kết thúc sau <strong id="countdown">15:00</strong></span>
+    </div>
+  </section>
+
+  <!-- INFO -->
+  <section class="section">
+    <div class="price-row">
+      <span class="price" id="displayPrice">255.000đ</span>
+      <span class="old-price" id="displayOldPrice">435.000đ</span>
+      <span class="badge-discount" id="displayBadge">-41%</span>
+    </div>
+
+    <h1 class="product-title">Gối Mây Đan Thoáng Khí 35x55cm – Giảm Nóng Đầu, Hỗ Trợ Cổ Vai, Giúp Dễ Vào Giấc Ngủ Và Ngủ Sâu Hơn (Kèm Ruột Gối)</h1>
+
+    <div class="sold-tag">Đã bán 5.963+</div>
+
+    <div class="trust-grid">
+      <div class="trust-item"><span class="ti">🌬️</span>Thoáng khí tự nhiên</div>
+      <div class="trust-item"><span class="ti">🎁</span>Kèm ruột gối</div>
+      <div class="trust-item"><span class="ti">👨‍👩‍👧‍👦</span>Phù hợp mọi lứa tuổi</div>
+      <div class="trust-item"><span class="ti">🌿</span>Chất liệu mây an toàn</div>
+    </div>
+
+    <div class="social-row">
+      <span>⭐ 4.8/5</span>
+      <span style="color:#aaa;">|</span>
+      <span>Được nhiều gia đình tin dùng cho giấc ngủ mùa hè</span>
+    </div>
+  </section>
+
+  <!-- FREE SHIP -->
+  <section class="section" style="padding-top:10px; padding-bottom:10px;">
+    <div class="ship-bar">🚚 Miễn phí vận chuyển &amp; hoàn trả toàn quốc khi mua trong hôm nay</div>
+  </section>
+
+  <!-- RETURN POLICY -->
+  <section class="section">
+    <div class="collapse-head" id="returnHead">
+      <span>🛡️ Cam kết sản phẩm đúng mô tả &amp; Hoàn tiền nếu không đúng</span>
+      <span class="collapse-arrow">⌄</span>
+    </div>
+    <div class="collapse-body" id="returnBody">
+      <div style="display:flex; gap:10px; align-items:flex-start;">
+        <span style="font-size:20px; flex:0 0 auto;">📋</span>
+        <div>
+          <div style="font-weight:700; margin-bottom:6px; color:#222;">Cam kết từ Tâm Anh Shop</div>
+          Sản phẩm <strong>đúng mô tả</strong>, kiểm tra kỹ trước khi giao. Hoàn tiền 100% nếu sản phẩm không đúng mô tả.
+          Kiểm tra hàng trước khi thanh toán (COD) — không gây khó dễ.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMBO SELECTOR -->
+  <section class="section">
+    <div class="section-label">Chọn số lượng</div>
+    <div class="combo-grid">
+
+      <div class="combo-item" data-combo="1" data-price="255000" data-old="435000" data-label="Mua lẻ · 1 gối">
+        <div class="combo-name">Mua lẻ · 1 gối</div>
+        <div class="combo-price">255.000đ</div>
+        <div class="combo-old-price">435.000đ</div>
+        <div class="combo-save">Tiết kiệm 180.000đ</div>
+      </div>
+
+      <div class="combo-item" data-combo="2" data-price="475000" data-old="870000" data-label="Combo 2 gối">
+        <div class="combo-tag">Bán chạy nhất</div>
+        <div class="combo-name">Combo 2 gối</div>
+        <div class="combo-price">475.000đ</div>
+        <div class="combo-old-price">870.000đ</div>
+        <div class="combo-save">Tiết kiệm 395.000đ</div>
+      </div>
+
+      <div class="combo-item" data-combo="3" data-price="699000" data-old="1305000" data-label="Combo 3 gối">
+        <div class="combo-name">Combo 3 gối</div>
+        <div class="combo-price">699.000đ</div>
+        <div class="combo-old-price">1.305.000đ</div>
+        <div class="combo-save">Tiết kiệm 606.000đ</div>
+      </div>
+
+      <div class="combo-item" data-combo="4" data-price="950000" data-old="1740000" data-label="Combo 4 gối">
+        <div class="combo-name">Combo 4 gối</div>
+        <div class="combo-price">950.000đ</div>
+        <div class="combo-old-price">1.740.000đ</div>
+        <div class="combo-save">Tiết kiệm 790.000đ</div>
+      </div>
+
+    </div>
+
+    <div class="cta-row">
+      <button class="btn-ghost" id="inlineAddToCartBtn">Thêm vào giỏ</button>
+      <button class="btn-solid" id="inlineBuyNowBtn">Mua ngay</button>
+    </div>
+  </section>
+
+  <!-- DESCRIPTION -->
+  <section class="section">
+    <div style="font-size:15px; font-weight:800; margin-bottom:14px; color:var(--primary-dark);">Mô tả sản phẩm</div>
+    <div class="desc-preview collapsed" id="descPreview">
+      <div class="desc-wrap">
+
+        <div class="d-title">Ngủ không sâu, dễ tỉnh giấc giữa đêm… có thể không phải do bạn</div>
+        <p>Phần lớn mọi người chỉ chú ý đến nệm… mà quên rằng vùng đầu và cổ mới là nơi quyết định chất lượng giấc ngủ.</p>
+
+        <div class="img-placeholder">Hình ảnh 1 – Hero</div>
+
+        <div class="d-highlight">
+          Gối bí → giữ nhiệt → đổ mồ hôi<br>
+          Não không được "giải nhiệt" → ngủ không sâu<br>
+          Dễ tỉnh giấc, mệt mỏi khi thức dậy<br><br>
+          <strong>💡 Đây là lý do bạn ngủ đủ giờ nhưng vẫn không thấy khỏe</strong>
+        </div>
+
+        <div class="d-title">Gối Mây Đan Cao Cấp – Thiết Kế Thoáng Khí Tự Nhiên</div>
+        <p>Không phải làm mát bằng công nghệ phức tạp, mà bằng cấu trúc mây đan thủ công tạo hàng trăm lỗ thoáng khí tự nhiên — giúp không khí lưu thông liên tục quanh vùng đầu.</p>
+
+        <div class="img-placeholder">Hình ảnh 2 – Cận chất liệu</div>
+
+        <ul class="d-check-list">
+          <li><strong>Thoáng khí chủ động</strong> — không tích nhiệt, giữ đầu luôn khô ráo, dễ chịu suốt đêm</li>
+          <li><strong>Mát tự nhiên</strong> — không cần điều hòa hay quạt, tiết kiệm điện, bền vững</li>
+          <li><strong>Chất liệu mây tự nhiên</strong> — không hóa chất, không gây kích ứng, phù hợp mọi lứa tuổi</li>
+          <li><strong>Trải nghiệm "thoáng" khác biệt ngay lần đầu</strong> — nằm là cảm nhận được sự khác biệt</li>
+        </ul>
+
+        <div class="img-placeholder">Hình ảnh 3 – So sánh trực quan</div>
+
+        <div class="d-title">Sau khi dùng gối mây đan</div>
+        <ul class="d-check-list">
+          <li>Ngủ sâu hơn, ít tỉnh giấc giữa đêm</li>
+          <li>Giảm cảm giác nóng đầu, khó chịu</li>
+          <li>Thức dậy nhẹ đầu, không uể oải</li>
+          <li>Đặc biệt hiệu quả trong mùa nóng</li>
+        </ul>
+
+        <div class="img-placeholder">Hình ảnh 4 – Ngữ cảnh sử dụng</div>
+
+        <div class="d-title">Thông số kỹ thuật</div>
+        <table class="d-spec-table">
+          <tbody>
+            <tr><td>Kích thước</td><td>35 x 55 cm</td></tr>
+            <tr><td>Chất liệu</td><td>Mây đan tự nhiên</td></tr>
+            <tr><td>Thiết kế</td><td>Cấu trúc thoáng khí</td></tr>
+          </tbody>
+        </table>
+
+        <div class="img-placeholder">Hình ảnh 5 – Sản phẩm thực tế</div>
+
+        <div class="d-box-set">
+          <div class="d-box-set-title">🎁 Bộ sản phẩm bao gồm</div>
+          <div class="d-box-item">Gối mây đan thoáng khí 35x55cm</div>
+          <div class="d-box-item">Ruột gối</div>
+        </div>
+
+        <div class="d-highlight">
+          ✔️ Sản phẩm đúng mô tả<br>
+          ✔️ Kiểm tra kỹ trước khi giao<br>
+          ✔️ Đóng gói cẩn thận
+        </div>
+
+        <div class="d-cta-end">
+          <strong>Một chiếc gối phù hợp có thể thay đổi hoàn toàn chất lượng giấc ngủ của bạn.</strong><br><br>
+          Trải nghiệm gối mây đan — giải pháp đơn giản nhưng hiệu quả cho những đêm ngủ sâu và dễ chịu hơn.
+          Kiểm tra hàng trước khi thanh toán, giao toàn quốc miễn phí.
+        </div>
+
+      </div>
+    </div>
+    <button class="desc-toggle-btn" id="descToggleBtn">Xem thêm ▾</button>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section">
+    <div class="collapse-head active" id="reviewHead">
+      <span>Đánh giá từ khách hàng</span>
+      <span class="collapse-arrow">⌄</span>
+    </div>
+    <div class="collapse-body show" id="reviewBody">
+      <div class="review-summary">
+        <div class="review-score">
+          <div class="review-score-num">4.8</div>
+          <div class="review-score-stars">★★★★★</div>
+          <div class="review-score-count">7 đánh giá</div>
+        </div>
+        <div class="review-bars">
+          <div class="review-bar-row"><span>5★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:85%"></div></div><span>6</span></div>
+          <div class="review-bar-row"><span>4★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:15%"></div></div><span>1</span></div>
+          <div class="review-bar-row"><span>3★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:0"></div></div><span>0</span></div>
+          <div class="review-bar-row"><span>2★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:0"></div></div><span>0</span></div>
+          <div class="review-bar-row"><span>1★</span><div class="review-bar-track"><div class="review-bar-fill" style="width:0"></div></div><span>0</span></div>
+        </div>
+      </div>
+      <div id="reviewList"></div>
+    </div>
+  </section>
+
+  <!-- SHOP INFO -->
+  <section class="section">
+    <div class="shop-row">
+      <img class="shop-avatar"
+        src="https://res.cloudinary.com/dezednxpz/image/upload/v1776179146/Ng%C6%B0%E1%BB%9Di_b%C3%A1n_gi%E1%BB%9Bi_202604142145_gpum9g.jpg"
+        alt="Tâm Anh Shop" loading="lazy" decoding="async" />
+      <div>
+        <div class="shop-name">Tâm Anh Shop</div>
+        <div class="shop-status">● Online 4 giờ trước</div>
+      </div>
+    </div>
+    <div class="shop-stats">
+      <div class="shop-stat"><span class="shop-stat-label">Đánh giá</span><span class="shop-stat-value">3.9k</span></div>
+      <div class="shop-stat"><span class="shop-stat-label">Sản phẩm</span><span class="shop-stat-value">37</span></div>
+      <div class="shop-stat"><span class="shop-stat-label">Tỉ lệ phản hồi</span><span class="shop-stat-value">99%</span></div>
+      <div class="shop-stat"><span class="shop-stat-label">Thời gian p/h</span><span class="shop-stat-value">Vài giờ</span></div>
+      <div class="shop-stat"><span class="shop-stat-label">Theo dõi</span><span class="shop-stat-value">43.6k</span></div>
+      <div class="shop-stat"><span class="shop-stat-label">Kinh doanh</span><span class="shop-stat-value">5 năm</span></div>
+    </div>
+  </section>
+
+  <!-- SUPPORT & POLICY -->
+  <section class="section">
+    <div style="font-size:15px; font-weight:800; margin-bottom:14px; color:var(--primary-dark);">Hỗ trợ &amp; chính sách</div>
+
+    <div class="info-block">
+      <div class="info-block-title">Liên hệ</div>
+      <div class="info-row"><span class="info-row-icon">📞</span><span class="info-row-text"><strong>Hotline:</strong> 0798.658.600</span></div>
+      <div class="info-row"><span class="info-row-icon">💬</span><span class="info-row-text"><strong>Zalo:</strong> zalo.me/ninoshop</span></div>
+      <div class="info-row"><span class="info-row-icon">📲</span><span class="info-row-text"><strong>Messenger:</strong> m.me/920062987858914</span></div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-title">Hệ thống cửa hàng</div>
+      <div class="info-row"><span class="info-row-icon">📍</span><span class="info-row-text">39 Đường Láng, Đống Đa, Hà Nội</span></div>
+      <div class="info-row"><span class="info-row-icon">📍</span><span class="info-row-text">268 Hoàng Hoa Thám, Hà Nội</span></div>
+      <div class="info-row"><span class="info-row-icon">📍</span><span class="info-row-text">85 Nguyễn Trãi, Quận 1, TP.HCM</span></div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1774966653/Screenshot_2026-03-31_063159_j3ckds.png"
+        style="width:100%; border-radius:10px;" loading="lazy" decoding="async" alt="Bản đồ cửa hàng" />
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-title">Chính sách</div>
+      <div class="info-row"><span class="info-row-icon">✅</span><span class="info-row-text">Sản phẩm <strong>đúng mô tả</strong>, kiểm tra kỹ trước khi giao</span></div>
+      <div class="info-row"><span class="info-row-icon">🚚</span><span class="info-row-text">Giao toàn quốc 2–5 ngày. Nội thành HN/HCM 1–2 ngày. <strong>Miễn phí ship &amp; trả hàng</strong></span></div>
+      <div class="info-row"><span class="info-row-icon">💳</span><span class="info-row-text">Thanh toán khi nhận hàng (COD) — kiểm tra trước khi trả tiền</span></div>
+      <div class="info-row"><span class="info-row-icon">↩️</span><span class="info-row-text">Hoàn tiền ngay nếu sản phẩm không đúng mô tả</span></div>
+    </div>
+
+    <div class="info-block">
+      <div class="info-block-title">Câu hỏi thường gặp</div>
+      <div class="faq-item">
+        <div class="faq-q">Gối có kèm ruột gối không?</div>
+        <div class="faq-a">Có — bộ sản phẩm bao gồm gối mây đan và ruột gối, dùng được ngay.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Gối có cứng không, nằm có thoải mái không?</div>
+        <div class="faq-a">Có ruột gối đệm bên trong nên vẫn êm, không quá cứng. Cấu trúc mây thoáng khí tự nhiên.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Combo có thể giao nhiều địa chỉ không?</div>
+        <div class="faq-a">Mỗi đơn giao 1 địa chỉ. Nếu cần giao nhiều nơi vui lòng đặt đơn riêng.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Có kiểm tra hàng trước khi thanh toán không?</div>
+        <div class="faq-a">Có — kiểm tra tại chỗ trước khi trả tiền cho shipper.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Vệ sinh gối như thế nào?</div>
+        <div class="faq-a">Lau nhẹ bằng khăn ẩm, để khô tự nhiên. Không ngâm nước.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- BOTTOM BAR -->
+<div class="bottom-bar">
+  <div class="bottom-inner">
+    <button class="btn-bar-ghost" id="goToCartBtn">Giỏ hàng</button>
+    <button class="btn-bar-solid" id="buyNowBtn">Mua ngay</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ORDER MODAL -->
+<div class="modal" id="orderModal">
+  <div class="modal-content">
+    <div class="modal-top">
+      <div class="modal-title">Thông tin đặt hàng</div>
+      <button class="close-btn" id="closeModal">&times;</button>
+    </div>
+
+    <div class="order-summary">
+      <div class="order-summary-title">Giỏ hàng</div>
+      <div id="cartSummaryList"></div>
+      <div class="order-totals">
+        <div class="order-totals-row"><span>Tạm tính</span><span id="summarySubTotal">0đ</span></div>
+        <div class="order-totals-row freeship"><span>🚚 Miễn phí vận chuyển</span></div>
+        <div class="order-totals-row grand"><span>Tổng thanh toán</span><span id="summaryGrandTotal">0đ</span></div>
+        <p style="font-size:12px; color:#aaa; font-style:italic; margin-top:6px;">Vui lòng kiểm tra số lượng trước khi đặt hàng.</p>
+      </div>
+    </div>
+
+    <form id="orderForm">
+      <div class="form-group">
+        <label>Họ và tên</label>
+        <input type="text" id="fullName" required placeholder="Nguyễn Văn A" />
+      </div>
+      <div class="form-group">
+        <label>Số điện thoại</label>
+        <input type="tel" id="phone" required
+          pattern="(0[3|5|7|8|9])[0-9]{8}"
+          maxlength="10"
+          inputmode="numeric"
+          placeholder="09xxxxxxxx" />
+      </div>
+      <div class="form-group">
+        <label>Tỉnh/Thành Phố <span style="color:var(--primary)">*</span></label>
+        <select id="province" required>
+          <option value="">-- Chọn Tỉnh/Thành Phố --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Quận/Huyện <span style="color:var(--primary)">*</span></label>
+        <select id="district" required disabled>
+          <option value="">-- Chọn Quận/Huyện --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Xã/Phường <span style="color:var(--primary)">*</span></label>
+        <select id="ward" required disabled>
+          <option value="">-- Chọn Xã/Phường --</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Địa chỉ chi tiết (số nhà, tên đường) <span style="color:var(--primary)">*</span></label>
+        <input type="text" id="address" required placeholder="VD: 123 Lê Lợi" />
+      </div>
+      <div class="form-group">
+        <label>Ghi chú đơn hàng <span style="font-weight:400; color:#aaa;">(tuỳ chọn)</span></label>
+        <textarea id="orderNote" rows="2" placeholder="VD: Giao hàng buổi trưa, gọi trước khi giao..."></textarea>
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">XÁC NHẬN ĐẶT HÀNG</button>
+      <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
+      <div class="status-message" id="statusMessage"></div>
+    </form>
+  </div>
+</div>
+
+<!-- THANK MODAL -->
+<div class="thank-modal" id="thankModal">
+  <div class="thank-modal-content">
+    <div class="thank-icon">✅</div>
+    <div class="thank-title">Đặt hàng thành công!</div>
+    <div class="thank-body">
+      Cảm ơn bạn đã tin tưởng Tâm Anh Shop.<br>
+      Vui lòng kiểm tra Zalo — shop sẽ liên hệ xác nhận đơn.<br>
+      Hỗ trợ 24/7.
+    </div>
+    <button class="thank-close-btn" id="thankCloseBtn">Đã hiểu</button>
+  </div>
+</div>
+
+<!-- MEDIA LIGHTBOX -->
+<div class="media-lightbox" id="mediaLightbox">
+  <div class="media-lightbox-content" id="mediaLightboxContent">
+    <button class="media-lightbox-close" id="closeMediaLightbox">&times;</button>
+  </div>
+</div>
+
+<script>
+  /* ===================================================
+     CẤU HÌNH SẢN PHẨM
+  =================================================== */
+  const PRODUCT = {
+    id:        "goi-may-dan-001",
+    name:      "Gối Mây Đan Thoáng Khí 35x55cm – Giảm Nóng Đầu, Hỗ Trợ Cổ Vai, Giúp Dễ Vào Giấc Ngủ Và Ngủ Sâu Hơn (Kèm Ruột Gối)",
+    price:     255000,
+    currency:  "VND",
+    sheetname: "goi"
+  };
+
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbxodCpNkfJejRKjfk5IvJ4xmtdg_ti6rn_8e7NFleNkIPApNSreA0aJhuPpcWUaD4FQ/exec";
+
+  /* combo data — dùng cho cart & tracking */
+  const COMBOS = {
+    1: { label: "Mua lẻ · 1 gối",  price: 255000,  oldPrice: 435000  },
+    2: { label: "Combo 2 gối",      price: 475000,  oldPrice: 870000  },
+    3: { label: "Combo 3 gối",      price: 699000,  oldPrice: 1305000 },
+    4: { label: "Combo 4 gối",      price: 950000,  oldPrice: 1740000 }
+  };
+
+  const PRODUCT_EXTRA_IMAGES = [
+    /* Thêm link ảnh tại đây */
+  ];
+
+  const PRODUCT_VIDEOS = [
+    /* Thêm link video tại đây */
+  ];
+
+  /* ===================================================
+     REVIEWS
+  =================================================== */
+  const REVIEWS = [
+    {
+      name: "minhchau_nguyen82",
+      avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668042/538167066_24575065288755198_3598154797602927391_n_twatvu.jpg",
+      stars: 5, date: "2026-03-15 09:22",
+      classify: "Gối mây đan · Mua lẻ",
+      content: "Gối đẹp và mát lắm ạ. Nhìn gọn gàng, rất ok. Gối nằm mùa hè quá hợp lý, nên mua ạ. Người bán trả lời tin nhanh lắm, dễ tính nữa. Sẽ ủng hộ tiếp nha.",
+      media: [],
+      likes: 24
+    },
+    {
+      name: "Lan Anh",
+      avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668044/637761832_26138729435757097_3914838421337340387_n_1_vslodw.jpg",
+      stars: 5, date: "2026-02-28 14:07",
+      classify: "Gối mây đan · Combo 2",
+      content: "Shop đóng gói sản phẩm cẩn thận. Sản phẩm đẹp chất mát sẽ quay lại ủng hộ shop.",
+      media: [],
+      likes: 41
+    },
+    {
+      name: "tranvanhung_hp",
+      avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668484/655123654_4399537900363500_7679473754360228153_n_jb2ppc.jpg",
+      stars: 5, date: "2026-03-08 20:31",
+      classify: "Gối mây đan · Mua lẻ",
+      content: "Đẹp nha. Khá chắc chắn. Giá cả oke rẻ bền đẹp. Quá oke oke la.",
+      media: [],
+      likes: 18
+    },
+    {
+      name: "Hương Trần",
+      avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666154/528684809_10234145965525107_1862972145806632462_n_pjnnbt.jpg",
+      stars: 5, date: "2026-01-19 11:55",
+      classify: "Gối mây đan · Mua lẻ",
+      content: "Đẹp lắm ạ. Gối vừa ko cao quá ko to quá. Ưng ý lắm ạ.",
+      media: [],
+      likes: 33
+    },
+    {
+      name: "bacsi_noidru",
+      avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666153/515438282_10161038595011631_4166789956527747626_n_c3roiy.jpg",
+      stars: 5, date: "2026-03-21 16:44",
+      classify: "Gối mây đan · Combo 2",
+      content: "Mình hay bị nóng đầu khi ngủ, từ khi dùng gối mây thấy dễ chịu hơn hẳn. Ngủ ít tỉnh giữa đêm hơn trước rõ rệt. Chất mây đan cứng cáp, không bị biến dạng sau vài tuần dùng.",
+      media: [],
+      likes: 57
+    },
+    {
+      name: "nguyetanh_sg",
+      avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666157/632391822_10164165214234558_5477016556770594214_n_aalvtm.jpg",
+      stars: 4, date: "2026-02-11 08:19",
+      classify: "Gối mây đan · Mua lẻ",
+      content: "Ban đầu lo gối cứng khó nằm nhưng thật ra khá ổn, có ruột gối đệm vào nên vẫn êm. Mùa hè nằm mát hơn gối thường rõ ràng. Trừ 1 sao vì giao hơi lâu.",
+      media: [],
+      likes: 9
+    },
+    {
+      name: "phuong_thanh_hn",
+      avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666156/608669903_10236803308436120_5728387328273075460_n_we3otz.jpg",
+      stars: 5, date: "2026-03-30 21:03",
+      classify: "Gối mây đan · Combo 4",
+      content: "Mua cho ba mẹ dùng vì hai người hay than nóng đầu không ngủ được. Dùng được 2 tuần ba mẹ khen mát, thoáng. Shop giao nhanh, đóng gói chắc.",
+      media: [],
+      likes: 15
+    }
+  ];
+
+  /* ===================================================
+     STATE
+  =================================================== */
+  let selectedCombo  = null; /* null = chưa chọn */
+  let currentSlide   = 0;
+  let currentGallery = [];
+  let cartItems      = [];
+  let clientIp       = null;
+
+  /* ===================================================
+     DOM REFS
+  =================================================== */
+  const slidesEl           = document.getElementById("slides");
+  const dotsEl             = document.getElementById("dots");
+  const thumbsEl           = document.getElementById("thumbs");
+  const slider             = document.getElementById("slider");
+  const orderModal         = document.getElementById("orderModal");
+  const thankModal         = document.getElementById("thankModal");
+  const goToCartBtn        = document.getElementById("goToCartBtn");
+  const buyNowBtn          = document.getElementById("buyNowBtn");
+  const inlineAddToCartBtn = document.getElementById("inlineAddToCartBtn");
+  const inlineBuyNowBtn    = document.getElementById("inlineBuyNowBtn");
+  const closeModal         = document.getElementById("closeModal");
+  const statusMessage      = document.getElementById("statusMessage");
+  const toastEl            = document.getElementById("toast");
+  const submitBtn          = document.getElementById("submitBtn");
+  const thankCloseBtn      = document.getElementById("thankCloseBtn");
+  const provinceSelect     = document.getElementById("province");
+  const districtSelect     = document.getElementById("district");
+  const wardSelect         = document.getElementById("ward");
+  const displayPrice       = document.getElementById("displayPrice");
+  const displayOldPrice    = document.getElementById("displayOldPrice");
+  const displayBadge       = document.getElementById("displayBadge");
+
+  /* ===================================================
+     SHA256
+  =================================================== */
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(str.trim().toLowerCase())
+    );
+    return Array.from(new Uint8Array(buf))
+      .map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  /* ===================================================
+     UTILS
+  =================================================== */
+  function genEventId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2);
+  }
+
+  function formatPrice(num) {
+    return num.toLocaleString("vi-VN") + "đ";
+  }
+
+  function calcDiscount(price, oldPrice) {
+    return "-" + Math.round((1 - price / oldPrice) * 100) + "%";
+  }
+
+  let toastTimer = null;
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2000);
+  }
+
+  function getQueryParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? match[2] : null;
+  }
+
+  function setCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = name + "=" + value + "; expires=" + expires + "; path=/";
+  }
+
+  /* ===================================================
+     BUILD _fbc COOKIE
+  =================================================== */
+  (function () {
+    const fbclid = getQueryParam("fbclid");
+    if (fbclid) {
+      const fbc = "fb.1." + Math.floor(Date.now() / 1000) + "." + fbclid;
+      setCookie("_fbc", fbc, 90);
+    }
+  })();
+
+  /* ===================================================
+     LẤY CLIENT IP
+  =================================================== */
+  fetch("https://api.ipify.org?format=json")
+    .then(r => r.json())
+    .then(d => { clientIp = d.ip; })
+    .catch(() => {});
+
+  /* ===================================================
+     BUILD BASE PAYLOAD
+  =================================================== */
+  function buildBasePayload(eventIdObj) {
+    const _p = new URLSearchParams(window.location.search);
+    const combo = selectedCombo ? COMBOS[selectedCombo] : null;
+    return {
+      sheet_name:       PRODUCT.sheetname,
+      product_id:       PRODUCT.id,
+      product_name:     PRODUCT.name,
+      price:            combo ? combo.price : PRODUCT.price,
+      value:            combo ? combo.price : PRODUCT.price,
+      currency:         PRODUCT.currency,
+      event_source_url: window.location.href,
+      user_agent:       navigator.userAgent,
+      client_ip:        clientIp || null,
+      fbp:              getCookie("_fbp") || null,
+      fbc:              getCookie("_fbc") || null,
+      fbclid:           getQueryParam("fbclid") || null,
+      utm_source:       _p.get("utm_source")   || "",
+      utm_medium:       _p.get("utm_medium")   || "",
+      utm_campaign:     _p.get("utm_campaign") || "",
+      utm_content:      _p.get("utm_content")  || "",
+      ...eventIdObj
+    };
+  }
+
+  /* ===================================================
+     GỬI LÊN GAS
+  =================================================== */
+  function sendToGAS(payload) {
+    fetch(GAS_URL, {
+      method:  "POST",
+      mode:    "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify(payload)
+    }).catch(() => {});
+  }
+
+  /* ===================================================
+     COMBO SELECTOR
+  =================================================== */
+  function setupComboSelector() {
+    const items = document.querySelectorAll(".combo-item");
+    items.forEach(item => {
+      item.addEventListener("click", () => {
+        items.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+        selectedCombo = parseInt(item.dataset.combo);
+        const combo = COMBOS[selectedCombo];
+        displayPrice.textContent    = formatPrice(combo.price);
+        displayOldPrice.textContent = formatPrice(combo.oldPrice);
+        displayBadge.textContent    = calcDiscount(combo.price, combo.oldPrice);
+      });
+    });
+  }
+
+  /* ===================================================
+     GALLERY
+  =================================================== */
+  function buildFullGallery() {
+    slidesEl.innerHTML = "";
+    dotsEl.innerHTML   = "";
+    thumbsEl.innerHTML = "";
+    currentGallery     = [];
+
+    let index = 0;
+
+    function addSlide(src, label, isVideo) {
+      currentGallery.push(src);
+
+      const slide = document.createElement("div");
+      slide.className = "slide";
+
+      if (isVideo) {
+        slide.innerHTML = `<video controls playsinline preload="metadata"><source src="${src}" type="video/mp4" /></video>`;
+      } else {
+        const eager = index === 0 ? "eager" : "lazy";
+        const fp    = index === 0 ? "high"  : "low";
+        slide.innerHTML = `<img src="${src}" alt="${label}" loading="${eager}" fetchpriority="${fp}" decoding="async" />`;
+      }
+      slidesEl.appendChild(slide);
+
+      const capturedIndex = index;
+
+      const dot = document.createElement("div");
+      dot.className = "dot";
+      dot.addEventListener("click", () => goToSlide(capturedIndex));
+      dotsEl.appendChild(dot);
+
+      const thumbSrc = isVideo
+        ? "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='62' height='62'%3E%3Crect width='62' height='62' fill='%23eef2f7'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='%23aaa'%3E%E2%96%B6%3C/text%3E%3C/svg%3E"
+        : src;
+
+      const thumb = document.createElement("img");
+      thumb.className = "thumb";
+      thumb.src       = thumbSrc;
+      thumb.alt       = label;
+      thumb.loading   = "lazy";
+      thumb.decoding  = "async";
+      thumb.addEventListener("click", () => goToSlide(capturedIndex));
+      thumbsEl.appendChild(thumb);
+
+      index++;
+    }
+
+    PRODUCT_EXTRA_IMAGES.forEach(src => addSlide(src, "product", false));
+    PRODUCT_VIDEOS.forEach(src => addSlide(src, "video", true));
+
+    if (index === 0) {
+      /* placeholder khi chưa có ảnh */
+      const slide = document.createElement("div");
+      slide.className = "slide";
+      slide.innerHTML = `<div style="width:100%;aspect-ratio:1/1;background:#eef2f7;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:14px;">Ảnh sản phẩm</div>`;
+      slidesEl.appendChild(slide);
+      const dot = document.createElement("div");
+      dot.className = "dot active";
+      dotsEl.appendChild(dot);
+      const thumbDiv = document.createElement("div");
+      thumbDiv.className = "thumb active";
+      thumbDiv.style.cssText = "display:flex;align-items:center;justify-content:center;color:#ccc;font-size:11px;";
+      thumbDiv.textContent = "1";
+      thumbsEl.appendChild(thumbDiv);
+      currentGallery.push("");
+    } else {
+      goToSlide(0);
+    }
+  }
+
+  function updateSlider() {
+    slidesEl.style.transform = `translateX(-${currentSlide * 100}%)`;
+    document.querySelectorAll(".dot").forEach((dot, i) => {
+      dot.classList.toggle("active", i === currentSlide);
+    });
+    document.querySelectorAll("#thumbs .thumb").forEach((thumb, i) => {
+      thumb.classList.toggle("active", i === currentSlide);
+    });
+    const active = document.querySelectorAll("#thumbs .thumb")[currentSlide];
+    if (active) active.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+  }
+
+  function goToSlide(idx) {
+    currentSlide = idx;
+    updateSlider();
+  }
+
+  /* SWIPE */
+  let startX = 0, startY = 0, moveX = 0, moveY = 0;
+  let isDragging = false, isHorizontal = null;
+
+  slider.addEventListener("touchstart", e => {
+    startX = moveX = e.touches[0].clientX;
+    startY = moveY = e.touches[0].clientY;
+    isDragging   = true;
+    isHorizontal = null;
+  }, { passive: true });
+
+  slider.addEventListener("touchmove", e => {
+    if (!isDragging) return;
+    moveX = e.touches[0].clientX;
+    moveY = e.touches[0].clientY;
+    if (isHorizontal === null) {
+      const diffX = Math.abs(moveX - startX);
+      const diffY = Math.abs(moveY - startY);
+      if (diffX > 5 || diffY > 5) isHorizontal = diffX >= diffY;
+    }
+    if (isHorizontal === true) e.preventDefault();
+  }, { passive: false });
+
+  slider.addEventListener("touchend", () => {
+    if (!isDragging) return;
+    if (isHorizontal === true) {
+      const diff = startX - moveX;
+      if      (diff >  50 && currentSlide < currentGallery.length - 1) currentSlide++;
+      else if (diff < -50 && currentSlide > 0)                          currentSlide--;
+      updateSlider();
+    }
+    isDragging   = false;
+    isHorizontal = null;
+    startX = 0; startY = 0; moveX = 0; moveY = 0;
+  });
+
+  /* ===================================================
+     COLLAPSE
+  =================================================== */
+  function setupCollapse(headId, bodyId) {
+    const head = document.getElementById(headId);
+    const body = document.getElementById(bodyId);
+    head.addEventListener("click", () => {
+      head.classList.toggle("active");
+      body.classList.toggle("show");
+    });
+  }
+
+  setupCollapse("returnHead", "returnBody");
+  setupCollapse("reviewHead", "reviewBody");
+
+  /* ===================================================
+     DESC XEM THÊM
+  =================================================== */
+  const descPreview   = document.getElementById("descPreview");
+  const descToggleBtn = document.getElementById("descToggleBtn");
+  let descExpanded    = false;
+
+  descToggleBtn.addEventListener("click", () => {
+    descExpanded = !descExpanded;
+    descPreview.classList.toggle("collapsed", !descExpanded);
+    descToggleBtn.textContent = descExpanded ? "Thu gọn ▴" : "Xem thêm ▾";
+  });
+
+  /* ===================================================
+     MODAL — ORDER
+  =================================================== */
+  function openModal() {
+    orderModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+
+  function hideModal() {
+    orderModal.classList.remove("show");
+    document.body.style.overflow = "auto";
+  }
+
+  closeModal.addEventListener("click", hideModal);
+  orderModal.addEventListener("click", e => { if (e.target === orderModal) hideModal(); });
+
+  /* ===================================================
+     MODAL — THANK
+  =================================================== */
+  function openThankModal() {
+    thankModal.classList.add("show");
+    document.body.style.overflow = "hidden";
+  }
+
+  function hideThankModal() {
+    thankModal.classList.remove("show");
+    document.body.style.overflow = "auto";
+  }
+
+  thankCloseBtn.addEventListener("click", hideThankModal);
+  thankModal.addEventListener("click", e => { if (e.target === thankModal) hideThankModal(); });
+
+  /* ===================================================
+     CART — localStorage
+  =================================================== */
+  const CART_KEY = "nino_cart_goi_may";
+
+  function loadCartItems() {
+    const saved = localStorage.getItem(CART_KEY);
+    if (saved) {
+      try { cartItems = JSON.parse(saved) || []; }
+      catch (_) { cartItems = []; }
+    }
+  }
+
+  function saveCartItems() {
+    localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
+  }
+
+  function addCurrentSelectionToCart() {
+    if (!selectedCombo) {
+      showToast("⚠️ Vui lòng chọn số lượng");
+      return false;
+    }
+    loadCartItems();
+    const combo    = COMBOS[selectedCombo];
+    const cartId   = PRODUCT.id + "_combo" + selectedCombo;
+    const existing = cartItems.findIndex(item => item.cart_id === cartId);
+    if (existing > -1) {
+      cartItems[existing].quantity += 1;
+      cartItems[existing].total    = cartItems[existing].quantity * combo.price;
+    } else {
+      cartItems.push({
+        cart_id:      cartId,
+        product_id:   PRODUCT.id,
+        product_name: PRODUCT.name + " (" + combo.label + ")",
+        combo:        selectedCombo,
+        quantity:     1,
+        price:        combo.price,
+        total:        combo.price
+      });
+    }
+    saveCartItems();
+    return true;
+  }
+
+  function getCartSubTotal() {
+    return cartItems.reduce((sum, item) => sum + item.total, 0);
+  }
+
+  function getCartGrandTotal() {
+    return getCartSubTotal();
+  }
+
+  /* ===================================================
+     RENDER CART SUMMARY
+  =================================================== */
+  function renderCartSummary() {
+    const cartSummaryList = document.getElementById("cartSummaryList");
+    const subTotalEl      = document.getElementById("summarySubTotal");
+    const grandTotalEl    = document.getElementById("summaryGrandTotal");
+
+    if (!cartItems.length) {
+      cartSummaryList.innerHTML = `<div style="color:#aaa; padding:8px 0; font-size:13.5px;">Chưa có sản phẩm trong giỏ hàng.</div>`;
+      subTotalEl.textContent    = formatPrice(0);
+      grandTotalEl.textContent  = formatPrice(0);
+      return;
+    }
+
+    cartSummaryList.innerHTML = cartItems.map((item, idx) => `
+      <div class="cart-item">
+        <div class="cart-item-top">${item.product_name}</div>
+        <div class="cart-item-controls">
+          <button class="cart-qty-btn" data-action="minus" data-idx="${idx}">−</button>
+          <span class="cart-qty-display">${item.quantity}</span>
+          <button class="cart-qty-btn" data-action="plus" data-idx="${idx}">+</button>
+          <button class="cart-remove-btn" data-action="remove" data-idx="${idx}">🗑 Xoá</button>
+        </div>
+        <div class="cart-item-price">${formatPrice(item.total)}</div>
+      </div>
+    `).join("");
+
+    subTotalEl.textContent   = formatPrice(getCartSubTotal());
+    grandTotalEl.textContent = formatPrice(getCartGrandTotal());
+
+    cartSummaryList.querySelectorAll("[data-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const action = btn.dataset.action;
+        const idx    = parseInt(btn.dataset.idx);
+        if (action === "minus") {
+          if (cartItems[idx].quantity > 1) {
+            cartItems[idx].quantity--;
+            cartItems[idx].total = cartItems[idx].quantity * cartItems[idx].price;
+          } else {
+            cartItems.splice(idx, 1);
+          }
+        } else if (action === "plus") {
+          cartItems[idx].quantity++;
+          cartItems[idx].total = cartItems[idx].quantity * cartItems[idx].price;
+        } else if (action === "remove") {
+          cartItems.splice(idx, 1);
+        }
+        saveCartItems();
+        renderCartSummary();
+      });
+    });
+  }
+
+  /* ===================================================
+     OPEN CHECKOUT — InitiateCheckout
+  =================================================== */
+  function openCheckoutCart() {
+    loadCartItems();
+    renderCartSummary();
+
+    const eid = genEventId();
+
+    if (typeof fbq !== "undefined") {
+      fbq('track', 'InitiateCheckout', {
+        content_name: PRODUCT.name,
+        content_ids:  [PRODUCT.id],
+        content_type: 'product',
+        value:        getCartGrandTotal(),
+        currency:     PRODUCT.currency
+      }, {
+        eventID:     eid,
+        external_id: EXTERNAL_ID
+      });
+    }
+
+    sendToGAS({
+      ...buildBasePayload({ initiate_checkout_event_id: eid }),
+      event_type:         "initiate_checkout",
+      value:              getCartGrandTotal(),
+      external_id:        EXTERNAL_ID,
+      external_id_hashed: false
+    });
+
+    openModal();
+  }
+
+  /* ===================================================
+     CTA EVENTS
+  =================================================== */
+  inlineAddToCartBtn.addEventListener("click", () => {
+    if (!addCurrentSelectionToCart()) return;
+
+    const combo = COMBOS[selectedCombo];
+    const eid   = genEventId();
+
+    if (typeof fbq !== "undefined") {
+      fbq('track', 'AddToCart', {
+        content_name: PRODUCT.name,
+        content_ids:  [PRODUCT.id],
+        content_type: 'product',
+        value:        combo.price,
+        currency:     PRODUCT.currency
+      }, {
+        eventID:     eid,
+        external_id: EXTERNAL_ID
+      });
+    }
+
+    sendToGAS({
+      ...buildBasePayload({ add_to_cart_event_id: eid }),
+      event_type:         "add_to_cart",
+      value:              combo.price,
+      external_id:        EXTERNAL_ID,
+      external_id_hashed: false
+    });
+
+    showToast("✓ Đã thêm vào giỏ hàng");
+  });
+
+  goToCartBtn.addEventListener("click", () => {
+    loadCartItems();
+    if (!cartItems.length) {
+      showToast("⚠️ Giỏ hàng trống");
+      return;
+    }
+    openCheckoutCart();
+  });
+
+  buyNowBtn.addEventListener("click", () => {
+    if (!addCurrentSelectionToCart()) return;
+    openCheckoutCart();
+  });
+
+  inlineBuyNowBtn.addEventListener("click", () => {
+    if (!addCurrentSelectionToCart()) return;
+    openCheckoutCart();
+  });
+
+  /* ===================================================
+     COUNTDOWN
+  =================================================== */
+  let countdownSeconds = 15 * 60;
+  const countdownEl    = document.getElementById("countdown");
+
+  setInterval(() => {
+    const m = Math.floor(countdownSeconds / 60);
+    const s = countdownSeconds % 60;
+    countdownEl.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+    if (countdownSeconds > 0) countdownSeconds--;
+  }, 1000);
+
+  /* ===================================================
+     CASCADE DROPDOWN ĐỊA CHỈ
+  =================================================== */
+  async function loadProvinces() {
+    try {
+      const res  = await fetch("https://provinces.open-api.vn/api/?depth=1");
+      const data = await res.json();
+      data.sort((a, b) => a.name.localeCompare(b.name, "vi"));
+      data.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value       = p.code;
+        opt.textContent = p.name;
+        provinceSelect.appendChild(opt);
+      });
+    } catch (err) {
+      console.warn("Không tải được danh sách tỉnh:", err);
+    }
+  }
+
+  provinceSelect.addEventListener("change", async () => {
+    districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+    wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';
+    districtSelect.disabled  = true;
+    wardSelect.disabled      = true;
+    const code = provinceSelect.value;
+    if (!code) return;
+    try {
+      const res  = await fetch(`https://provinces.open-api.vn/api/p/${code}?depth=2`);
+      const data = await res.json();
+      (data.districts || [])
+        .sort((a, b) => a.name.localeCompare(b.name, "vi"))
+        .forEach(d => {
+          const opt = document.createElement("option");
+          opt.value       = d.code;
+          opt.textContent = d.name;
+          districtSelect.appendChild(opt);
+        });
+      districtSelect.disabled = false;
+    } catch (err) {
+      console.warn("Không tải được danh sách huyện:", err);
+    }
+  });
+
+  districtSelect.addEventListener("change", async () => {
+    wardSelect.innerHTML = '<option value="">-- Chọn Xã/Phường --</option>';
+    wardSelect.disabled  = true;
+    const code = districtSelect.value;
+    if (!code) return;
+    try {
+      const res  = await fetch(`https://provinces.open-api.vn/api/d/${code}?depth=2`);
+      const data = await res.json();
+      (data.wards || [])
+        .sort((a, b) => a.name.localeCompare(b.name, "vi"))
+        .forEach(w => {
+          const opt = document.createElement("option");
+          opt.value       = w.code;
+          opt.textContent = w.name;
+          wardSelect.appendChild(opt);
+        });
+      wardSelect.disabled = false;
+    } catch (err) {
+      console.warn("Không tải được danh sách xã:", err);
+    }
+  });
+
+  loadProvinces();
+
+  /* ===================================================
+     ORDER FORM SUBMIT — Purchase
+  =================================================== */
+  document.getElementById("orderForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const fullName     = document.getElementById("fullName").value.trim();
+    const phone        = document.getElementById("phone").value.trim();
+    const address      = document.getElementById("address").value.trim();
+    const orderNote    = document.getElementById("orderNote").value.trim();
+    const wardEl       = document.getElementById("ward");
+    const districtEl   = document.getElementById("district");
+    const provinceEl   = document.getElementById("province");
+    const wardName     = wardEl.options[wardEl.selectedIndex]?.text     || "";
+    const districtName = districtEl.options[districtEl.selectedIndex]?.text || "";
+    const provinceName = provinceEl.options[provinceEl.selectedIndex]?.text || "";
+
+    if (!fullName || !phone || !address || !provinceName || !districtName || !wardName
+        || provinceName === "-- Chọn Tỉnh/Thành Phố --"
+        || districtName === "-- Chọn Quận/Huyện --"
+        || wardName     === "-- Chọn Xã/Phường --") {
+      statusMessage.style.color = "red";
+      statusMessage.textContent = "Vui lòng nhập đầy đủ thông tin và chọn địa chỉ.";
+      return;
+    }
+
+    const phoneRegex = /^(0[35789])[0-9]{8}$/;
+    if (!phoneRegex.test(phone)) {
+      statusMessage.style.color = "red";
+      statusMessage.textContent = "Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng Việt Nam.";
+      return;
+    }
+
+    loadCartItems();
+    if (!cartItems.length) {
+      statusMessage.style.color = "red";
+      statusMessage.textContent = "Giỏ hàng trống. Vui lòng thêm sản phẩm trước khi đặt hàng.";
+      return;
+    }
+
+    submitBtn.disabled        = true;
+    submitBtn.textContent     = "Đang gửi...";
+    statusMessage.textContent = "";
+
+    const purchaseEventId = genEventId();
+    const hashedPhone     = await sha256(phone);
+    const finalGrandTotal = getCartGrandTotal();
+
+    const payload = {
+      ...buildBasePayload({ purchase_event_id: purchaseEventId }),
+      event_type:         "purchase",
+      items:              cartItems,
+      quantity:           cartItems.reduce((sum, item) => sum + item.quantity, 0),
+      subtotal:           getCartSubTotal(),
+      total:              finalGrandTotal,
+      value:              finalGrandTotal,
+      hashed_phone:       hashedPhone,
+      external_id:        hashedPhone,
+      external_id_hashed: true,
+      note:               orderNote,
+      customer: {
+        full_name: fullName,
+        phone,
+        address,
+        ward:      wardName,
+        district:  districtName,
+        province:  provinceName
+      }
+    };
+
+    document.getElementById("orderForm").reset();
+    districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+    districtSelect.disabled  = true;
+    wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';
+    wardSelect.disabled      = true;
+
+    localStorage.removeItem(CART_KEY);
+    cartItems = [];
+    renderCartSummary();
+    hideModal();
+    openThankModal();
+
+    submitBtn.disabled    = false;
+    submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
+
+    setTimeout(() => {
+      fetch(GAS_URL, {
+        method:  "POST",
+        mode:    "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify(payload)
+      }).catch(() => {});
+
+      if (typeof fbq !== "undefined") {
+        fbq('track', 'Purchase', {
+          content_name: PRODUCT.name,
+          content_ids:  [PRODUCT.id],
+          content_type: 'product',
+          value:        finalGrandTotal,
+          currency:     PRODUCT.currency
+        }, {
+          eventID:     purchaseEventId,
+          external_id: hashedPhone
+        });
+      }
+    }, 0);
+  });
+
+  /* ===================================================
+     REVIEWS
+  =================================================== */
+  function renderStars(stars) {
+    return "★".repeat(stars) + "☆".repeat(5 - stars);
+  }
+
+  function renderReviewMedia(media) {
+    if (!media || !media.length) return "";
+    return `
+      <div class="review-media">
+        ${media.map(item => {
+          const isVideo = item.toLowerCase().includes(".mp4");
+          return isVideo
+            ? `<div class="review-media-item" data-type="video" data-src="${item}" style="position:relative; cursor:pointer;">
+                <video playsinline preload="metadata" muted style="width:100%; height:100%; object-fit:cover; border-radius:8px; pointer-events:none;">
+                  <source src="${item}" type="video/mp4">
+                </video>
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;background:rgba(0,0,0,0.2);border-radius:8px;">▶</div>
+              </div>`
+            : `<img class="review-media-item" data-type="image" data-src="${item}" src="${item}" loading="lazy" decoding="async" style="cursor:pointer;" />`;
+        }).join("")}
+      </div>
+    `;
+  }
+
+  function renderReviews() {
+    const reviewList = document.getElementById("reviewList");
+    if (!reviewList) return;
+    reviewList.innerHTML = REVIEWS.map(review => `
+      <div class="review-item">
+        <div class="review-top">
+          <img class="review-avatar" src="${review.avatar}" alt="${review.name}" loading="lazy" decoding="async" />
+          <div class="review-main">
+            <div class="review-name">${review.name}</div>
+            <div class="review-stars">${renderStars(review.stars)}</div>
+            <div class="review-meta">${review.date}</div>
+            <span class="review-classify">${review.classify}</span>
+            <div class="review-content">${review.content}</div>
+            ${renderReviewMedia(review.media)}
+            <div class="review-like">👍 ${review.likes}</div>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  /* ===================================================
+     MEDIA LIGHTBOX
+  =================================================== */
+  function setupReviewMediaLightbox() {
+    const lightbox        = document.getElementById("mediaLightbox");
+    const lightboxContent = document.getElementById("mediaLightboxContent");
+    const closeBtn        = document.getElementById("closeMediaLightbox");
+
+    document.addEventListener("click", e => {
+      const target = e.target.closest(".review-media-item");
+      if (!target) return;
+      const type = target.dataset.type;
+      const src  = target.dataset.src;
+      if (!type || !src) return;
+
+      lightboxContent.querySelectorAll("img, video").forEach(el => el.remove());
+
+      let mediaEl;
+      if (type === "video") {
+        mediaEl             = document.createElement("video");
+        mediaEl.src         = src;
+        mediaEl.controls    = true;
+        mediaEl.autoplay    = true;
+        mediaEl.playsInline = true;
+      } else {
+        mediaEl     = document.createElement("img");
+        mediaEl.src = src;
+      }
+
+      lightboxContent.appendChild(mediaEl);
+      lightbox.classList.add("show");
+      document.body.style.overflow = "hidden";
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove("show");
+      document.body.style.overflow = "auto";
+      const video = lightboxContent.querySelector("video");
+      if (video) { video.pause(); video.currentTime = 0; }
+      lightboxContent.querySelectorAll("img, video").forEach(el => el.remove());
+    }
+
+    closeBtn.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", e => { if (e.target === lightbox) closeLightbox(); });
+  }
+
+  /* ===================================================
+     INIT — ViewContent GAS
+  =================================================== */
+  (function initViewContent() {
+    const eid = genEventId();
+    sendToGAS({
+      ...buildBasePayload({ view_content_event_id: eid }),
+      event_type:         "view_content",
+      value:              PRODUCT.price,
+      external_id:        EXTERNAL_ID,
+      external_id_hashed: false
+    });
+  })();
+
+  loadCartItems();
+  buildFullGallery();
+  setupComboSelector();
+  renderReviews();
+  setupReviewMediaLightbox();
+  renderCartSummary();
+</script>
+</body>
+</html>
