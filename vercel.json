@@ -4,6 +4,7 @@
     { "source": "/ao-nang-cotton", "destination": "/ao-nang-cotton.html" },
     { "source": "/nuochp",         "destination": "/nuochp.html" },
     { "source": "/dohp",         "destination": "/dohp.html" },
-    { "source": "/den",         "destination": "/den.html" }
+    { "source": "/den",         "destination": "/den.html" },
+    { "source": "/goi",         "destination": "/goi.html" }
   ]
 }
