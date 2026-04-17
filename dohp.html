@@ -983,6 +983,7 @@
       .product-title { font-size: 16px; }
       .price { font-size: 26px; }
     }
+
     .seal-badge {
       position: absolute;
       bottom: 12px;
@@ -992,7 +993,6 @@
       z-index: 10;
       pointer-events: none;
     }
-
   </style>
 
   <!-- FACEBOOK PIXEL -->
@@ -1048,7 +1048,6 @@
           decoding="async"
         />
       </div>
-
       <div class="thumbs" id="thumbs"></div>
       <div class="sale-bar">
         <span>🔥 Ưu đãi hôm nay</span>
@@ -1172,7 +1171,6 @@
           <div class="d-title">Bạn có chắc huyết áp đang an toàn?</div>
           <p>Huyết áp cao không có triệu chứng rõ ràng — nhiều người chỉ biết mình mắc bệnh sau khi đã xảy ra biến chứng nghiêm trọng. Đây là lý do huyết áp được gọi là <strong>"kẻ giết người thầm lặng"</strong>.</p>
 
-          <!-- HÌNH ẢNH 1 — thêm link tại đây -->
           <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1776179146/Girl_measures_father_s_202604142138_hyshj7.jpg" loading="lazy" decoding="async" style="width:100%; border-radius:10px; margin:12px 0;" />
 
           <div class="d-highlight">
@@ -1184,7 +1182,6 @@
           <div class="d-title">Theo dõi huyết áp tại nhà — đơn giản hơn bạn nghĩ</div>
           <p>Không cần đến bệnh viện, không cần kiến thức y tế chuyên sâu. Chỉ cần đeo vòng bít, bấm một nút — 30 giây sau máy đọc kết quả bằng tiếng Việt rõ ràng.</p>
 
-          <!-- HÌNH ẢNH 2 — thêm link tại đây -->
           <img src="https://res.cloudinary.com/dezednxpz/image/upload/v1776179312/vn-11134207-820l4-mhzpj3yiz3t222_ya2pxm.webp" loading="lazy" decoding="async" style="width:100%; border-radius:10px; margin:12px 0;" />
 
           <ul class="d-check-list">
@@ -1360,7 +1357,6 @@
         <div class="order-summary-title">Giỏ hàng</div>
         <div id="cartSummaryList"></div>
         <div class="order-totals">
-          
           <div class="order-totals-row freeship"><span>🚚 Miễn phí vận chuyển</span></div>
           <div class="order-totals-row grand"><span>Số tiền thanh toán khi nhận hàng</span><span id="summaryGrandTotal">0đ</span></div>
           <p style="font-size:12px; color:#aaa; font-style:italic; margin-top:6px;">Vui lòng kiểm tra số lượng trước khi đặt hàng.</p>
@@ -1375,7 +1371,7 @@
         <div class="form-group">
           <label>Số điện thoại</label>
           <input type="tel" id="phone" required
-            pattern="(0[3|5|7|8|9])[0-9]{8}"
+            pattern="(0[35789])[0-9]{8}"
             maxlength="10"
             inputmode="numeric"
             placeholder="09xxxxxxxx" />
@@ -1456,9 +1452,7 @@
       "https://res.cloudinary.com/dezednxpz/image/upload/v1776179146/Girl_measures_father_s_202604142138_hyshj7.jpg"
     ];
 
-    const PRODUCT_VIDEOS = [
-      // VIDEO_URL — thêm link tại đây (nếu có)
-    ];
+    const PRODUCT_VIDEOS = [];
 
     /* ===================================================
        REVIEWS
@@ -1466,79 +1460,78 @@
     const REVIEWS = [
       {
         name: "minhchau_nguyen82",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668042/538167066_24575065288755198_3598154797602927391_n_twatvu.jpg", // thêm link avatar tại đây
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668042/538167066_24575065288755198_3598154797602927391_n_twatvu.jpg",
         stars: 5, date: "2026-03-15 09:22",
         classify: "Máy đo huyết áp bắp tay",
         match: "Đúng như mô tả", material: "Chắc chắn",
         content: "Mua cho ba 72 tuổi dùng. Ba tự đo được ngay không cần hướng dẫn nhiều, giọng đọc tiếng Việt rõ ràng nghe rất dễ. Đo thử so với máy phòng khám gần nhà chênh không đáng kể. Hài lòng lắm, đáng tiền.",
-        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179673/7_u5mv2x.jpg"], // thêm link ảnh tại đây
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179673/7_u5mv2x.jpg"],
         likes: 24
       },
       {
         name: "Lan Anh",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668044/637761832_26138729435757097_3914838421337340387_n_1_vslodw.jpg", // thêm link avatar tại đây
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668044/637761832_26138729435757097_3914838421337340387_n_1_vslodw.jpg",
         stars: 5, date: "2026-02-28 14:07",
         classify: "Máy đo huyết áp bắp tay",
         match: "Đúng", material: "Tốt",
         content: "Mẹ mình bị huyết áp cao nên cần theo dõi hàng ngày. Máy đọc kết quả tiếng Việt nên mẹ không cần nhờ con đọc số nữa. Lưu được 99 lần đo rất tiện theo dõi lịch sử. Shop đóng gói cẩn thận, giao nhanh hơn dự kiến.",
-        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776177557/2_zq8dv3.jpg"], // thêm link ảnh tại đây
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776177557/2_zq8dv3.jpg"],
         likes: 41
       },
       {
         name: "tranvanhung_hp",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668484/655123654_4399537900363500_7679473754360228153_n_jb2ppc.jpg", // thêm link avatar tại đây
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775668484/655123654_4399537900363500_7679473754360228153_n_jb2ppc.jpg",
         stars: 5, date: "2026-03-08 20:31",
         classify: "Máy đo huyết áp bắp tay",
         match: "Đúng mô tả", material: "Ổn định",
         content: "Dùng được 3 tuần, đo sáng tối đều đặn. Kết quả ổn định, không thấy sai lệch giữa các lần đo liên tiếp. Cắm sạc qua USB tiện không cần mua pin. Màn hình to chữ rõ người già nhìn thoải mái.",
-        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179146/vn-11134103-7r98o-lotlcupjii4w73_emxoe9.webp"], // thêm link ảnh tại đây
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179146/vn-11134103-7r98o-lotlcupjii4w73_emxoe9.webp"],
         likes: 18
       },
       {
         name: "Hương Trần",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666154/528684809_10234145965525107_1862972145806632462_n_pjnnbt.jpg", // thêm link avatar tại đây
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666154/528684809_10234145965525107_1862972145806632462_n_pjnnbt.jpg",
         stars: 5, date: "2026-01-19 11:55",
         classify: "Máy đo huyết áp bắp tay",
         match: "Đúng mô tả", material: "Sang trọng",
         content: "Mua tặng bố dịp Tết. Hộp đựng đẹp, có túi đựng kèm rất tiện. Bố dùng thử ngay tại chỗ, máy đọc tiếng Việt rõ, bố thích lắm. Cảm ơn shop tư vấn nhiệt tình.",
-        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179145/vn-11134103-81ztc-ml75ugphw26ba5_ekha0j.webp"], // thêm link ảnh tại đây
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179145/vn-11134103-81ztc-ml75ugphw26ba5_ekha0j.webp"],
         likes: 33
       },
       {
         name: "bacsi_noidru",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666153/515438282_10161038595011631_4166789956527747626_n_c3roiy.jpg", // thêm link avatar tại đây
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666153/515438282_10161038595011631_4166789956527747626_n_c3roiy.jpg",
         stars: 5, date: "2026-03-21 16:44",
         classify: "Máy đo huyết áp bắp tay",
         match: "Kiểm chứng được", material: "Chính xác, ổn định",
         content: "Mình làm trong ngành y, khá khắt khe khi chọn máy đo huyết áp gia đình. Máy dùng phương pháp Oscillometric chuẩn, đo thử 5 lần so với máy thủy ngân — sai lệch trong ngưỡng cho phép. Phù hợp theo dõi tại nhà, đặc biệt người có tiền sử tim mạch.",
-        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179144/vn-11134103-7ras8-m0ydwpdbjxnx37_iun6r4.webp"], // thêm link ảnh tại đây
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179144/vn-11134103-7ras8-m0ydwpdbjxnx37_iun6r4.webp"],
         likes: 57
       },
       {
         name: "nguyetanh_sg",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666157/632391822_10164165214234558_5477016556770594214_n_aalvtm.jpg", // thêm link avatar tại đây
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666157/632391822_10164165214234558_5477016556770594214_n_aalvtm.jpg",
         stars: 4, date: "2026-02-11 08:19",
         classify: "Máy đo huyết áp bắp tay",
         match: "Tốt", material: "Ổn",
         content: "Máy dùng ổn, giọng đọc tiếng Việt rõ không bị ngọng. Trừ 1 sao vì lần đầu phải đọc hướng dẫn mới biết đeo băng đúng vị trí. Sau khi quen thì rất nhanh, 30 giây là có kết quả. Sẽ giới thiệu cho người thân.",
-        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179146/vn-11134103-7r98o-lzt88t30inc126_jjf1n0.webp"], // thêm link ảnh tại đây
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776179146/vn-11134103-7r98o-lzt88t30inc126_jjf1n0.webp"],
         likes: 9
       },
       {
         name: "phuong_thanh_hn",
-        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666156/608669903_10236803308436120_5728387328273075460_n_we3otz.jpg", // thêm link avatar tại đây
+        avatar: "https://res.cloudinary.com/dezednxpz/image/upload/v1775666156/608669903_10236803308436120_5728387328273075460_n_we3otz.jpg",
         stars: 5, date: "2026-03-30 21:03",
         classify: "Máy đo huyết áp bắp tay",
         match: "Đúng", material: "Bền, chắc",
         content: "Cả nhà 2 người già dùng chung được vì máy lưu riêng 2 tài khoản. Tự động tắt sau 1 phút tiết kiệm pin. Bảo hành 12 tháng yên tâm hơn nhiều chỗ khác chỉ 3 tháng. Đặt lần 2 rồi, mua thêm cho nhà ngoại.",
-        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776177557/5_xphrfb.jpg"], // thêm link ảnh tại đây
+        media: ["https://res.cloudinary.com/dezednxpz/image/upload/v1776177557/5_xphrfb.jpg"],
         likes: 15
       }
     ];
 
     /* ===================================================
        STATE
-       EXTERNAL_ID đã khai báo trong <head>, dùng lại ở đây
     =================================================== */
     let quantity       = 1;
     let currentSlide   = 0;
@@ -1625,7 +1618,6 @@
       if (fbclid) {
         const fbc = "fb.1." + Math.floor(Date.now() / 1000) + "." + fbclid;
         setCookie("_fbc", fbc, 90);
-
       }
     })();
 
@@ -1906,7 +1898,7 @@
     }
 
     function getCartGrandTotal() {
-      return getCartSubTotal() ;
+      return getCartSubTotal();
     }
 
     /* ===================================================
@@ -1914,13 +1906,11 @@
     =================================================== */
     function renderCartSummary() {
       const cartSummaryList = document.getElementById("cartSummaryList");
-      const subTotalEl      = document.getElementById("summarySubTotal");
       const grandTotalEl    = document.getElementById("summaryGrandTotal");
 
       if (!cartItems.length) {
         cartSummaryList.innerHTML = `<div style="color:#aaa; padding:8px 0; font-size:13.5px;">Chưa có sản phẩm trong giỏ hàng.</div>`;
-        subTotalEl.textContent   = formatPrice(0);
-        grandTotalEl.textContent = formatPrice(TAX);
+        grandTotalEl.textContent  = formatPrice(0);
         return;
       }
 
@@ -2132,109 +2122,117 @@
     document.getElementById("orderForm").addEventListener("submit", async e => {
       e.preventDefault();
 
-      const fullName     = document.getElementById("fullName").value.trim();
-      const phone        = document.getElementById("phone").value.trim();
-      const address      = document.getElementById("address").value.trim();
-      const orderNote    = document.getElementById("orderNote").value.trim();
-      const wardEl       = document.getElementById("ward");
-      const districtEl   = document.getElementById("district");
-      const provinceEl   = document.getElementById("province");
-      const wardName     = wardEl.options[wardEl.selectedIndex]?.text     || "";
-      const districtName = districtEl.options[districtEl.selectedIndex]?.text || "";
-      const provinceName = provinceEl.options[provinceEl.selectedIndex]?.text || "";
+      try {
+        const fullName     = document.getElementById("fullName").value.trim();
+        const phone        = document.getElementById("phone").value.trim();
+        const address      = document.getElementById("address").value.trim();
+        const orderNote    = document.getElementById("orderNote").value.trim();
+        const wardEl       = document.getElementById("ward");
+        const districtEl   = document.getElementById("district");
+        const provinceEl   = document.getElementById("province");
+        const wardName     = wardEl.options[wardEl.selectedIndex]?.text     || "";
+        const districtName = districtEl.options[districtEl.selectedIndex]?.text || "";
+        const provinceName = provinceEl.options[provinceEl.selectedIndex]?.text || "";
 
-      if (!fullName || !phone || !address || !provinceName || !districtName || !wardName
-          || provinceName === "-- Chọn Tỉnh/Thành Phố --"
-          || districtName === "-- Chọn Quận/Huyện --"
-          || wardName     === "-- Chọn Xã/Phường --") {
-        statusMessage.style.color = "red";
-        statusMessage.textContent = "Vui lòng nhập đầy đủ thông tin và chọn địa chỉ.";
-        return;
-      }
-
-      const phoneRegex = /^(0[35789])[0-9]{8}$/;
-      if (!phoneRegex.test(phone)) {
-        statusMessage.style.color = "red";
-        statusMessage.textContent = "Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng Việt Nam.";
-        return;
-      }
-
-      loadCartItems();
-      if (!cartItems.length) {
-        statusMessage.style.color = "red";
-        statusMessage.textContent = "Giỏ hàng trống. Vui lòng thêm sản phẩm trước khi đặt hàng.";
-        return;
-      }
-
-      submitBtn.disabled        = true;
-      submitBtn.textContent     = "Đang gửi...";
-      statusMessage.textContent = "";
-
-      const purchaseEventId = genEventId();
-      const hashedPhone     = await sha256(phone);
-      const finalGrandTotal = getCartGrandTotal();
-
-      const payload = {
-        ...buildBasePayload({ purchase_event_id: purchaseEventId }),
-        event_type:         "purchase",
-        items:              cartItems,
-        quantity:           cartItems.reduce((sum, item) => sum + item.quantity, 0),
-        subtotal:           getCartSubTotal(),
-        tax:                TAX,
-        total:              finalGrandTotal,
-        value:              finalGrandTotal,
-        hashed_phone:       hashedPhone,
-        external_id:        hashedPhone,
-        external_id_hashed: true,
-        note:               orderNote,
-        customer: {
-          full_name: fullName,
-          phone,
-          address,
-          ward:      wardName,
-          district:  districtName,
-          province:  provinceName
+        if (!fullName || !phone || !address || !provinceName || !districtName || !wardName
+            || provinceName === "-- Chọn Tỉnh/Thành Phố --"
+            || districtName === "-- Chọn Quận/Huyện --"
+            || wardName     === "-- Chọn Xã/Phường --") {
+          statusMessage.style.color = "red";
+          statusMessage.textContent = "Vui lòng nhập đầy đủ thông tin và chọn địa chỉ.";
+          return;
         }
-      };
 
-      document.getElementById("orderForm").reset();
-      districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
-      districtSelect.disabled  = true;
-      wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';
-      wardSelect.disabled      = true;
-
-      quantity = 1;
-      updateQtyDisplay();
-      localStorage.removeItem("nino_cart_huyet_ap");
-      cartItems = [];
-      renderCartSummary();
-      hideModal();
-      openThankModal();
-
-      submitBtn.disabled    = false;
-      submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
-
-      setTimeout(() => {
-        fetch(GAS_URL, {
-          method:  "POST",
-          mode:    "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body:    JSON.stringify(payload)
-        }).catch(() => {});
-
-        if (typeof fbq !== "undefined") {
-          fbq('track', 'Purchase', {
-            content_name: PRODUCT.name,
-            content_ids:  [PRODUCT.id],
-            content_type: 'product',
-            value:        finalGrandTotal,
-            currency:     PRODUCT.currency
-          }, {
-            eventID:     purchaseEventId,
-            external_id: hashedPhone
-          });
+        const phoneRegex = /^(0[35789])[0-9]{8}$/;
+        if (!phoneRegex.test(phone)) {
+          statusMessage.style.color = "red";
+          statusMessage.textContent = "Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng Việt Nam.";
+          return;
         }
-      }, 0);
+
+        loadCartItems();
+        if (!cartItems.length) {
+          statusMessage.style.color = "red";
+          statusMessage.textContent = "Giỏ hàng trống. Vui lòng thêm sản phẩm trước khi đặt hàng.";
+          return;
+        }
+
+        submitBtn.disabled        = true;
+        submitBtn.textContent     = "Đang gửi...";
+        statusMessage.textContent = "";
+
+        const purchaseEventId = genEventId();
+        const hashedPhone     = await sha256(phone);
+        const finalGrandTotal = getCartGrandTotal();
+
+        const payload = {
+          ...buildBasePayload({ purchase_event_id: purchaseEventId }),
+          event_type:         "purchase",
+          items:              cartItems,
+          quantity:           cartItems.reduce((sum, item) => sum + item.quantity, 0),
+          subtotal:           getCartSubTotal(),
+          total:              finalGrandTotal,
+          value:              finalGrandTotal,
+          hashed_phone:       hashedPhone,
+          external_id:        hashedPhone,
+          external_id_hashed: true,
+          note:               orderNote,
+          customer: {
+            full_name: fullName,
+            phone,
+            address,
+            ward:      wardName,
+            district:  districtName,
+            province:  provinceName
+          }
+        };
+
+        document.getElementById("orderForm").reset();
+        districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+        districtSelect.disabled  = true;
+        wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';
+        wardSelect.disabled      = true;
+
+        quantity = 1;
+        updateQtyDisplay();
+        localStorage.removeItem("nino_cart_huyet_ap");
+        cartItems = [];
+        renderCartSummary();
+        hideModal();
+        openThankModal();
+
+        submitBtn.disabled    = false;
+        submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
+
+        setTimeout(() => {
+          fetch(GAS_URL, {
+            method:  "POST",
+            mode:    "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify(payload)
+          }).catch(() => {});
+
+          if (typeof fbq !== "undefined") {
+            fbq('track', 'Purchase', {
+              content_name: PRODUCT.name,
+              content_ids:  [PRODUCT.id],
+              content_type: 'product',
+              value:        finalGrandTotal,
+              currency:     PRODUCT.currency
+            }, {
+              eventID:     purchaseEventId,
+              external_id: hashedPhone
+            });
+          }
+        }, 0);
+
+      } catch (err) {
+        console.error("Submit error:", err);
+        submitBtn.disabled    = false;
+        submitBtn.textContent = "XÁC NHẬN ĐẶT HÀNG";
+        statusMessage.style.color = "red";
+        statusMessage.textContent = "Có lỗi xảy ra, vui lòng thử lại.";
+      }
     });
 
     /* ===================================================
