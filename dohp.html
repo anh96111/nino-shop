@@ -1040,6 +1040,13 @@
       <div class="slider" id="slider">
         <div class="slides" id="slides"></div>
         <div class="dots" id="dots"></div>
+        <img
+          class="seal-badge"
+          src="https://res.cloudinary.com/dezednxpz/image/upload/v1776262966/a_a0ba8m.png"
+          alt="Cam kết 100% chính hãng"
+          loading="eager"
+          decoding="async"
+        />
       </div>
 
       <div class="thumbs" id="thumbs"></div>
@@ -1353,9 +1360,9 @@
         <div class="order-summary-title">Giỏ hàng</div>
         <div id="cartSummaryList"></div>
         <div class="order-totals">
-          <div class="order-totals-row"><span>Tạm tính</span><span id="summarySubTotal">0đ</span></div>
+          
           <div class="order-totals-row freeship"><span>🚚 Miễn phí vận chuyển</span></div>
-          <div class="order-totals-row grand"><span>Tổng thanh toán</span><span id="summaryGrandTotal">0đ</span></div>
+          <div class="order-totals-row grand"><span>Số tiền thanh toán khi nhận hàng</span><span id="summaryGrandTotal">0đ</span></div>
           <p style="font-size:12px; color:#aaa; font-style:italic; margin-top:6px;">Vui lòng kiểm tra số lượng trước khi đặt hàng.</p>
         </div>
       </div>
@@ -1927,10 +1934,12 @@
             <button class="cart-remove-btn" data-action="remove" data-idx="${idx}">🗑 Xoá</button>
           </div>
           <div class="cart-item-price">${formatPrice(item.total)}</div>
+          <div style="font-size:12px; color:#1565C0; font-style:italic; margin-top:3px;">
+            🎉 Bạn đã tiết kiệm được ${formatPrice((654000 - PRODUCT.price) * item.quantity)}
+          </div>
         </div>
       `).join("");
 
-      subTotalEl.textContent   = formatPrice(getCartSubTotal());
       grandTotalEl.textContent = formatPrice(getCartGrandTotal());
 
       cartSummaryList.querySelectorAll("[data-action]").forEach(btn => {
