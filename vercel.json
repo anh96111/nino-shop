@@ -1,0 +1,12 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/may-do-huyet-ap", "destination": "/index.html?p=may-do-huyet-ap" },
+    { "source": "/ao-nang-cotton",  "destination": "/index.html?p=ao-nang-cotton" },
+    { "source": "/nuochp",          "destination": "/index.html?p=nuochp" },
+    { "source": "/dohp",            "destination": "/index.html?p=dohp" },
+    { "source": "/den",             "destination": "/index.html?p=den" },
+    { "source": "/goi",             "destination": "/index.html?p=goi" },
+    { "source": "/xitmubh",         "destination": "/index.html?p=xitmubh" }
+  ]
+}

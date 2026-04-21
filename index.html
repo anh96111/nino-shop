@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta id="metaDesc" name="description" content="" />
+  <meta id="ogTitle" property="og:title" content="" />
+  <meta id="ogDesc" property="og:description" content="" />
+  <meta id="ogImage" property="og:image" content="" />
+  <meta property="og:type" content="product" />
+  <title id="pageTitle"></title>
+
+  <!-- CLARITY — load từ SHARED_CONFIG -->
+  <script id="clarityScript"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
+
+  <link rel="stylesheet" href="/css/core.css" />
+</head>
+<body>
+  <div class="app">
+
+    <!-- GALLERY -->
+    <section class="gallery-wrap">
+      <div class="slider" id="slider">
+        <div class="slides" id="slides"></div>
+        <div class="dots" id="dots"></div>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="sale-bar">
+        <span>🔥 Ưu đãi hôm nay</span>
+        <span>Kết thúc sau <strong id="countdown">15:00</strong></span>
+      </div>
+    </section>
+
+    <!-- HERO INFO -->
+    <section class="section" id="heroSection"></section>
+
+    <!-- FREE SHIP -->
+    <section class="section" style="padding-top:10px; padding-bottom:10px;">
+      <div class="ship-bar">🚚 Miễn phí vận chuyển &amp; hoàn trả toàn quốc khi mua trong hôm nay</div>
+    </section>
+
+    <!-- RETURN POLICY -->
+    <section class="section">
+      <div class="collapse-head" id="returnHead">
+        <span id="returnTitle"></span>
+        <span class="collapse-arrow">⌄</span>
+      </div>
+      <div class="collapse-body" id="returnBody"></div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section">
+      <div class="collapse-head active" id="featHead">
+        <span>⭐ Tính năng nổi bật</span>
+        <span class="collapse-arrow">⌄</span>
+      </div>
+      <div class="collapse-body show" id="featBody">
+        <div class="feature-grid" id="featureGrid"></div>
+      </div>
+    </section>
+
+    <!-- QTY -->
+    <section class="section">
+      <div class="section-label">Số lượng</div>
+      <div class="qty-wrap">
+        <button class="qty-btn" id="minusQty">−</button>
+        <input class="qty-input" type="number" id="quantity" value="1" min="1" />
+        <button class="qty-btn" id="plusQty">+</button>
+      </div>
+      <div class="cta-row">
+        <button class="btn-ghost" id="inlineAddToCartBtn">Thêm vào giỏ</button>
+        <button class="btn-solid" id="inlineBuyNowBtn">Mua ngay</button>
+      </div>
+    </section>
+
+    <!-- DESCRIPTION -->
+    <section class="section">
+      <div style="font-size:15px; font-weight:800; margin-bottom:14px; color:var(--primary-dark);">Mô tả sản phẩm</div>
+      <div class="desc-preview collapsed" id="descPreview">
+        <div class="desc-wrap" id="descContent"></div>
+      </div>
+      <button class="desc-toggle-btn" id="descToggleBtn">Xem thêm ▾</button>
+    </section>
+
+    <!-- REVIEWS -->
+    <section class="section">
+      <div class="collapse-head active" id="reviewHead">
+        <span>Đánh giá từ khách hàng</span>
+        <span class="collapse-arrow">⌄</span>
+      </div>
+      <div class="collapse-body show" id="reviewBody">
+        <div id="reviewSummary"></div>
+        <div id="reviewList"></div>
+      </div>
+    </section>
+
+    <!-- SHOP INFO -->
+    <section class="section" id="shopSection"></section>
+
+    <!-- SUPPORT & POLICY -->
+    <section class="section" id="supportSection"></section>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div class="bottom-bar">
+    <div class="bottom-inner">
+      <button class="btn-bar-ghost" id="goToCartBtn">Giỏ hàng</button>
+      <button class="btn-bar-solid" id="buyNowBtn">Mua ngay</button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ORDER MODAL -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content">
+      <div class="modal-top">
+        <div class="modal-title">Xác nhận đơn hàng</div>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+
+      <div class="order-summary">
+        <div class="order-summary-title">🛒 Giỏ hàng</div>
+        <div id="cartSummaryList"></div>
+        <div class="order-totals">
+          <div class="order-totals-row freeship">
+            <span>🚚 Miễn phí vận chuyển</span>
+            <span>0đ</span>
+          </div>
+          <div class="order-totals-row grand">
+            <span>Tổng thanh toán</span>
+            <span id="summaryGrandTotal">0đ</span>
+          </div>
+          <p style="font-size:12px; color:#aaa; font-style:italic; margin-top:6px;">Vui lòng kiểm tra số lượng trước khi đặt hàng.</p>
+        </div>
+      </div>
+
+      <div class="trust-strip">
+        <div class="trust-strip-item"><span>🔍</span>Xem hàng trước khi trả tiền</div>
+        <div class="trust-strip-item"><span>🛡️</span>BH 12 tháng 1 đổi 1</div>
+        <div class="trust-strip-item"><span>↩️</span>Hoàn tiền nếu sai mô tả</div>
+      </div>
+
+      <form id="orderForm" novalidate>
+        <div class="form-group">
+          <label>Họ và tên</label>
+          <input type="text" id="fullName" required placeholder="Nguyễn Văn A" />
+          <div class="field-error" id="fullNameError"></div>
+        </div>
+        <div class="form-group">
+          <label>Số điện thoại</label>
+          <input type="tel" id="phone" required maxlength="12" inputmode="numeric" placeholder="09xx xxx xxx" />
+          <span style="position:absolute; right:13px; top:42px; font-size:13px; color:#bbb; pointer-events:none;">🔒</span>
+          <div class="field-error" id="phoneError"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Tỉnh/Thành Phố <span style="color:var(--primary)">*</span></label>
+          <div class="searchable-select" id="provinceSelectWrap">
+            <div class="searchable-select-display placeholder" id="provinceDisplay" onclick="toggleProvinceDropdown()">
+              -- Chọn Tỉnh/Thành Phố --
+            </div>
+            <span class="searchable-select-arrow" id="provinceArrow">⌄</span>
+            <div class="searchable-dropdown" id="provinceDropdown">
+              <div class="searchable-input-wrap">
+                <input class="searchable-input" id="provinceSearch" type="text" placeholder="Gõ để tìm tỉnh..." oninput="filterProvinces()" onclick="event.stopPropagation()" autocomplete="off" />
+              </div>
+              <div class="searchable-list" id="provinceList"></div>
+            </div>
+          </div>
+          <input type="hidden" id="provinceCode" />
+          <input type="hidden" id="provinceName" />
+          <div class="field-error" id="provinceError"></div>
+        </div>
+
+        <div class="district-ward-wrap" id="districtWardWrap">
+          <div class="form-group">
+            <label>Quận/Huyện <span style="color:var(--primary)">*</span></label>
+            <select id="district" required disabled>
+              <option value="">-- Chọn Quận/Huyện --</option>
+            </select>
+            <div class="field-error" id="districtError"></div>
+          </div>
+          <div class="form-group">
+            <label>Xã/Phường <span style="color:var(--primary)">*</span></label>
+            <select id="ward" required disabled>
+              <option value="">-- Chọn Xã/Phường --</option>
+            </select>
+            <div class="field-error" id="wardError"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Địa chỉ chi tiết (số nhà, tên đường) <span style="color:var(--primary)">*</span></label>
+          <input type="text" id="address" required placeholder="VD: 123 Lê Lợi" />
+          <div class="field-error" id="addressError"></div>
+        </div>
+        <div class="form-group">
+          <label style="font-weight:400; color:#888;">Ghi chú <span style="color:#bbb;">(tuỳ chọn)</span></label>
+          <textarea id="orderNote" rows="2" placeholder="VD: Giao buổi trưa, gọi trước khi giao..."></textarea>
+        </div>
+
+        <div class="reassurance">
+          <span>✅</span>
+          <div>Bạn <strong>không mất tiền trước</strong> — chỉ thanh toán khi nhận và kiểm tra hàng xong.</div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn" disabled>
+          🔒 XÁC NHẬN ĐẶT HÀNG
+        </button>
+        <div class="submit-trust">
+          <div class="submit-trust-item">📦 Giao 2–5 ngày</div>
+          <div class="submit-trust-item">💳 COD — trả khi nhận hàng</div>
+          <div class="submit-trust-item">🔒 Thông tin được bảo mật</div>
+        </div>
+        <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
+        <div class="status-message" id="statusMessage"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- THANK MODAL -->
+  <div class="thank-modal" id="thankModal">
+    <div class="thank-modal-content">
+      <div class="thank-icon">✅</div>
+      <div class="thank-title">Đặt hàng thành công!</div>
+      <div class="thank-body">
+        Cảm ơn bạn đã tin tưởng <span id="thankShopName"></span>.<br>
+        Vui lòng kiểm tra Zalo — shop sẽ liên hệ xác nhận đơn và hỗ trợ theo dõi bảo hành.<br>
+        Hỗ trợ 24/7.
+      </div>
+      <button class="thank-close-btn" id="thankCloseBtn">Đã hiểu</button>
+    </div>
+  </div>
+
+  <!-- MEDIA LIGHTBOX -->
+  <div class="media-lightbox" id="mediaLightbox">
+    <div class="media-lightbox-content" id="mediaLightboxContent">
+      <button class="media-lightbox-close" id="closeMediaLightbox">&times;</button>
+    </div>
+  </div>
+
+  <!-- LOAD SCRIPTS: config.shared → product config → core -->
+  <script src="/js/config.shared.js"></script>
+  <script id="productScript"></script>
+  <script>
+    /* ===================================================
+       BOOTSTRAP — load product config theo URL param ?p=
+       rồi inject core.js
+    =================================================== */
+    (function bootstrap() {
+      const slug = new URLSearchParams(window.location.search).get("p");
+      if (!slug) {
+        document.body.innerHTML = "<h2 style='text-align:center;padding:40px;'>Không tìm thấy sản phẩm.</h2>";
+        return;
+      }
+
+      const productScript = document.getElementById("productScript");
+      productScript.src = `/products/${slug}.js`;
+
+      productScript.onload = function () {
+        if (typeof PRODUCT_CONFIG === "undefined") {
+          document.body.innerHTML = "<h2 style='text-align:center;padding:40px;'>Không tìm thấy sản phẩm.</h2>";
+          return;
+        }
+
+        /* ── Clarity ── */
+        if (SHARED_CONFIG.clarityId) {
+          (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", SHARED_CONFIG.clarityId);
+        }
+
+        /* ── SEO / OG ── */
+        document.getElementById("pageTitle").textContent = PRODUCT_CONFIG.seo.title;
+        document.getElementById("metaDesc").content       = PRODUCT_CONFIG.seo.description;
+        document.getElementById("ogTitle").content         = PRODUCT_CONFIG.seo.title;
+        document.getElementById("ogDesc").content          = PRODUCT_CONFIG.seo.description;
+        document.getElementById("ogImage").content         = PRODUCT_CONFIG.seo.ogImage;
+
+        /* ── HERO ── */
+        const P = PRODUCT_CONFIG;
+        document.getElementById("heroSection").innerHTML = `
+          <div class="price-row">
+            <span class="price">${Number(P.price).toLocaleString("vi-VN")}đ</span>
+            <span class="old-price">${Number(P.oldPrice).toLocaleString("vi-VN")}đ</span>
+            <span class="badge-discount">${P.discount}</span>
+          </div>
+          <h1 class="product-title">${P.shortName}</h1>
+          <div class="product-sub">${P.subHeading}</div>
+          <div class="hero-bullets">
+            ${P.heroBullets.map(b => `<div class="hero-bullet"><span class="hb-icon">${b.icon}</span>${b.text}</div>`).join("")}
+          </div>
+          <div class="warning-tag">${P.warningTag}</div>
+          <div class="sold-tag">Đã bán ${P.soldCount}</div>
+          <div class="social-row">
+            <span>⭐ ${P.socialRow.rating}</span>
+            <span style="color:#aaa;">|</span>
+            <span>${P.socialRow.text}</span>
+          </div>
+        `;
+
+        /* ── RETURN POLICY ── */
+        document.getElementById("returnTitle").innerHTML = P.returnPolicy.title;
+        document.getElementById("returnBody").innerHTML = `
+          <div style="display:flex; gap:10px; align-items:flex-start;">
+            <span style="font-size:20px; flex:0 0 auto;">📋</span>
+            <div>
+              <div style="font-weight:700; margin-bottom:6px; color:#222;">Cam kết từ ${SHARED_CONFIG.shop.name}</div>
+              ${P.returnPolicy.content}
+            </div>
+          </div>
+        `;
+
+        /* ── FEATURES ── */
+        document.getElementById("featureGrid").innerHTML = P.features.map(f => `
+          <div class="feature-item">
+            <span class="fi-icon">${f.icon}</span>
+            <span class="fi-title">${f.title}</span>
+            <span class="fi-sub">${f.sub}</span>
+          </div>
+        `).join("");
+
+        /* ── DESCRIPTION ── */
+        document.getElementById("descContent").innerHTML = P.descriptionHTML;
+
+        /* ── REVIEW SUMMARY ── */
+        const R = P.reviews;
+        document.getElementById("reviewSummary").innerHTML = `
+          <div class="review-summary">
+            <div class="review-score">
+              <div class="review-score-num">${R.avgScore}</div>
+              <div class="review-score-stars">★★★★★</div>
+              <div class="review-score-count">${R.totalCount} đánh giá</div>
+            </div>
+            <div class="review-bars">
+              ${R.bars.map(b => `
+                <div class="review-bar-row">
+                  <span>${b.star}★</span>
+                  <div class="review-bar-track"><div class="review-bar-fill" style="width:${b.percent}%"></div></div>
+                  <span>${b.count}</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+
+        /* ── SHOP INFO ── */
+        const S = SHARED_CONFIG.shop;
+        document.getElementById("shopSection").innerHTML = `
+          <div class="shop-row">
+            <img class="shop-avatar" src="${S.avatar}" alt="${S.name}" loading="lazy" decoding="async" />
+            <div>
+              <div class="shop-name">${S.name}</div>
+              <div class="shop-status">● ${S.onlineStatus}</div>
+            </div>
+          </div>
+          <div class="shop-stats">
+            ${S.stats.map(s => `
+              <div class="shop-stat">
+                <span class="shop-stat-label">${s.label}</span>
+                <span class="shop-stat-value">${s.value}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+
+        /* ── SUPPORT & POLICY ── */
+        const C = SHARED_CONFIG;
+        document.getElementById("supportSection").innerHTML = `
+          <div style="font-size:15px; font-weight:800; margin-bottom:14px; color:var(--primary-dark);">Hỗ trợ &amp; chính sách</div>
+
+          <div class="info-block">
+            <div class="info-block-title">Liên hệ</div>
+            ${C.contact.map(c => `
+              <div class="info-row">
+                <span class="info-row-icon">${c.icon}</span>
+                <span class="info-row-text"><strong>${c.label}:</strong> ${c.value}</span>
+              </div>
+            `).join("")}
+          </div>
+
+          <div class="info-block">
+            <div class="info-block-title">Hệ thống cửa hàng</div>
+            ${C.stores.map(s => `
+              <div class="info-row">
+                <span class="info-row-icon">📍</span>
+                <span class="info-row-text">${s}</span>
+              </div>
+            `).join("")}
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <img src="${C.storeMapImage}" loading="lazy" decoding="async" width="600" height="300" style="width:100%; border-radius:10px;" alt="Bản đồ cửa hàng" />
+          </div>
+
+          <div class="info-block">
+            <div class="info-block-title">Chính sách</div>
+            ${P.policies.map(p => `
+              <div class="info-row">
+                <span class="info-row-icon">${p.icon}</span>
+                <span class="info-row-text">${p.text}</span>
+              </div>
+            `).join("")}
+          </div>
+
+          <div class="info-block">
+            <div class="info-block-title">Câu hỏi thường gặp</div>
+            ${P.faqs.map(f => `
+              <div class="faq-item">
+                <div class="faq-q">${f.q}</div>
+                <div class="faq-a">${f.a}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+
+        /* ── THANK MODAL — shop name ── */
+        document.getElementById("thankShopName").textContent = SHARED_CONFIG.shop.name;
+
+        /* ── LOAD CORE.JS ── */
+        const coreScript = document.createElement("script");
+        coreScript.src = "/js/core.js";
+        document.body.appendChild(coreScript);
+      };
+
+      productScript.onerror = function () {
+        document.body.innerHTML = "<h2 style='text-align:center;padding:40px;'>Không tìm thấy sản phẩm.</h2>";
+      };
+    })();
+  </script>
+</body>
+</html>
