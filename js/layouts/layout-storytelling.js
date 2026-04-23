@@ -12,8 +12,9 @@
   const root = document.getElementById("layoutRoot");
 
   /* ── Discount number (lấy số từ "-50%" → "50") ── */
-  const discountNum = P.discount.replace(/[^0-9]/g, "");
-
+  const discountNum = P.discount
+    ? P.discount.replace(/[^0-9]/g, "")
+    : Math.round((1 - P.price / P.oldPrice) * 100);
   root.innerHTML = `
 
     <!-- ============ P1 — HERO: Gallery + Tên SP ============ -->
@@ -70,7 +71,7 @@
         <span class="price-label">Giá chỉ:</span>
         <span class="price">${Number(P.price).toLocaleString("vi-VN")}đ</span>
         <span class="old-price">${Number(P.oldPrice).toLocaleString("vi-VN")}đ</span>
-        <span class="badge-discount">${P.discount}</span>
+        <span class="badge-discount">-${discountNum}%</span>
       </div>
 
       <!-- VARIANTS -->
