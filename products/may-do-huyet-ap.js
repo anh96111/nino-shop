@@ -20,7 +20,7 @@ const PRODUCT_CONFIG = {
   },
 
   // ── SUB HEADING ──
-  subHeading: "Đo sau 30 giây · Màn hình lớn · Bảo hành 12 tháng",
+  subHeading: "Đo nhanh tại nhà, màn hình rõ dễ nhìn, phù hợp cho cả người lớn tuổi.",
 
   // ── GALLERY ──
   images: [
@@ -31,7 +31,7 @@ const PRODUCT_CONFIG = {
   // ── HOOK (P2) ──
   hookTitle: "5 lý do nhiều gia đình chọn mua máy đo huyết áp tại nhà.",
   hooks: [
-    { icon: "👵", text: "Nhà có người lớn tuổi nên có sẵn máy để đo khi cần, đỡ chạy đi chạy lại" },
+    { icon: "👵", text: "Nhà có người lớn tuổi nên có sẵn máy để đo khi cần, đỡ chạy đi chạy lại." },
     { icon: "🏠", text: "Có máy ở nhà tiện hơn nhiều, nhất là lúc muốn kiểm tra nhanh mà không muốn ra tiệm thuốc." },
     { icon: "📈", text: "Người cần theo dõi huyết áp thường xuyên thì dùng ở nhà vẫn chủ động hơn." },
     { icon: "❤️", text: "Có sẵn máy cũng thấy yên tâm hơn cho bố mẹ và người thân trong nhà." },
