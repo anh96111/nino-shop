@@ -12,7 +12,6 @@ const PRODUCT_CONFIG = {
   currency:  "VND",
   sheetName: "may do hp",
   category:  "Sức khỏe",
-  soldCount: "12.000+",
 
   // ── SEO / OG ──
   seo: {

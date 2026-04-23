@@ -580,18 +580,6 @@ inlineBuyNowBtn.addEventListener("click", () => {
   openCheckout();
 });
 
-/* ===================================================
-   COUNTDOWN
-=================================================== */
-let countdownSeconds = 15 * 60;
-const countdownEl    = document.getElementById("countdown");
-
-setInterval(() => {
-  const m = Math.floor(countdownSeconds / 60);
-  const s = countdownSeconds % 60;
-  countdownEl.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-  if (countdownSeconds > 0) countdownSeconds--;
-}, 1000);
 
 /* ===================================================
    Phone auto-format

@@ -11,6 +11,9 @@
   const C = SHARED_CONFIG;
   const root = document.getElementById("layoutRoot");
 
+  /* ── Discount number (lấy số từ "-50%" → "50") ── */
+  const discountNum = P.discount.replace(/[^0-9]/g, "");
+
   root.innerHTML = `
 
     <!-- ============ P1 — HERO: Gallery + Tên SP ============ -->
@@ -45,7 +48,7 @@
       ${P.benefits.map((b, i) => `
         <div class="benefit-block ${i % 2 === 0 ? "img-left" : "img-right"}">
           <div class="benefit-img">
-            <img src="${b.image}" alt="${b.title}" loading="lazy" decoding="async" width="600" height="600" />
+            <img src="${b.image}" alt="${b.title}" loading="lazy" decoding="async" width="600" height="338" />
           </div>
           <div class="benefit-content">
             <div class="benefit-title">${b.title}</div>
@@ -64,7 +67,11 @@
         <span class="badge-discount">${P.discount}</span>
       </div>
 
-      <div class="sold-tag">Đã bán ${P.soldCount}</div>
+      <!-- NOTIFICATION BAR (thay sold-tag) -->
+      <div class="order-notification">
+        <span class="order-notification-icon">🔔</span>
+        <span class="order-notification-text" id="orderNotifText"></span>
+      </div>
 
       <!-- VARIANTS -->
       ${P.variants.length ? `
@@ -104,12 +111,6 @@
       <div class="return-policy-bar">
         <span class="return-policy-icon">🛡️</span>
         <span class="return-policy-text">${P.returnPolicy.content}</span>
-      </div>
-
-      <!-- SALE COUNTDOWN -->
-      <div class="sale-bar">
-        <span>🔥 Ưu đãi hôm nay</span>
-        <span>Kết thúc sau <strong id="countdown">15:00</strong></span>
       </div>
 
       <!-- QTY + CTA -->
@@ -203,8 +204,35 @@
       </div>
     </section>
   `;
+  
+  /* ── SALE NOTIFICATION (fixed top, ngoài layoutRoot) ── */
+  const saleNotif = document.createElement("div");
+  saleNotif.className = "sale-notification";
+  saleNotif.innerHTML = `<div class="sale-notification-inner">🔥 Giảm ${discountNum}% và miễn phí vận chuyển khi đặt hàng trong hôm nay</div>`;
+  document.body.appendChild(saleNotif);
 
-  /* ── REVIEW SUMMARY (render riêng vì cần logic bars) ── */
+  (function loopSaleNotification() {
+    function randomBetween(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function showThenHide() {
+      saleNotif.classList.add("show");
+
+      const showDuration = randomBetween(4000, 8000);
+      setTimeout(() => {
+        saleNotif.classList.remove("show");
+
+        const hideDuration = randomBetween(5000, 15000);
+        setTimeout(showThenHide, hideDuration);
+      }, showDuration);
+    }
+
+    const initialDelay = randomBetween(2000, 5000);
+    setTimeout(showThenHide, initialDelay);
+  })();
+
+  /* ── REVIEW SUMMARY ── */
   const R = P.reviews;
   document.getElementById("reviewSummary").innerHTML = `
     <div class="review-summary">
@@ -231,12 +259,10 @@
       const idx = head.dataset.faq;
       const body = document.getElementById("faqBody" + idx);
       const isOpen = head.classList.contains("active");
-      
-      // Đóng tất cả
+
       document.querySelectorAll(".faq-head").forEach(h => h.classList.remove("active"));
       document.querySelectorAll(".faq-body").forEach(b => b.classList.remove("show"));
 
-      // Mở cái được click (nếu đang đóng)
       if (!isOpen) {
         head.classList.add("active");
         body.classList.add("show");
@@ -260,5 +286,38 @@
       btn.classList.add("active");
     });
   });
+
+  /* ── ORDER NOTIFICATION SLIDE ── */
+  (function initOrderNotification() {
+    const names = [
+      "Nguyễn Văn Hùng", "Trần Thị Mai", "Lê Minh Tuấn", "Phạm Thị Hoa",
+      "Hoàng Văn Đức", "Ngô Thị Lan", "Vũ Đình Khoa", "Đặng Thị Ngọc",
+      "Bùi Quang Hải", "Đỗ Thị Thanh", "Phan Văn Long", "Lý Thị Hương",
+      "Trịnh Minh Phát", "Hồ Thị Yến", "Dương Văn Tâm", "Mai Thị Linh",
+      "Nguyễn Thị Bích", "Lê Văn Sơn", "Trần Quốc Bảo", "Phạm Minh Châu",
+      "Võ Thị Diệu", "Huỳnh Văn Thắng", "Đinh Thị Thu", "Lương Văn Hòa",
+      "Tạ Thị Kim", "Châu Minh Trí", "Nguyễn Hữu Phước", "Trần Thị Ánh",
+      "Lê Thị Tuyết", "Phạm Văn Nghĩa"
+    ];
+
+    const textEl = document.getElementById("orderNotifText");
+    let lastIndex = -1;
+
+    function showRandom() {
+      let idx;
+      do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIndex);
+      lastIndex = idx;
+
+      textEl.classList.add("fade-out");
+
+      setTimeout(() => {
+        textEl.textContent = names[idx] + " vừa đặt hàng";
+        textEl.classList.remove("fade-out");
+      }, 400);
+    }
+
+    showRandom();
+    setInterval(showRandom, 3000);
+  })();
 
 })();
