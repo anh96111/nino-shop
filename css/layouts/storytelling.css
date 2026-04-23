@@ -267,6 +267,21 @@
 =================================================== */
 .pricing-section { padding-top: 20px; }
 
+.pricing-product-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.price-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-sub);
+}
+
+
 .price-row {
   display: flex;
   align-items: baseline;

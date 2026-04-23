@@ -61,10 +61,14 @@
     <!-- ============ P4 — GIÁ + BIẾN THỂ + COMBO + QTY + CTA ============ -->
     <section class="section pricing-section">
 
+      <!-- TÊN SP -->
+      <div class="pricing-product-name">${P.shortName}</div>
+
       <!-- SALE BAR (tĩnh, trước giá) -->
       <div class="sale-bar">🔥 Giảm ${discountNum}% và miễn phí vận chuyển khi đặt hàng trong hôm nay</div>
 
       <div class="price-row">
+        <span class="price-label">Giá chỉ:</span>
         <span class="price">${Number(P.price).toLocaleString("vi-VN")}đ</span>
         <span class="old-price">${Number(P.oldPrice).toLocaleString("vi-VN")}đ</span>
         <span class="badge-discount">${P.discount}</span>
