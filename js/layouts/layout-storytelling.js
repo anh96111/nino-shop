@@ -61,16 +61,13 @@
     <!-- ============ P4 — GIÁ + BIẾN THỂ + COMBO + QTY + CTA ============ -->
     <section class="section pricing-section">
 
+      <!-- SALE BAR (tĩnh, trước giá) -->
+      <div class="sale-bar">🔥 Giảm ${discountNum}% và miễn phí vận chuyển khi đặt hàng trong hôm nay</div>
+
       <div class="price-row">
         <span class="price">${Number(P.price).toLocaleString("vi-VN")}đ</span>
         <span class="old-price">${Number(P.oldPrice).toLocaleString("vi-VN")}đ</span>
         <span class="badge-discount">${P.discount}</span>
-      </div>
-
-      <!-- NOTIFICATION BAR (thay sold-tag) -->
-      <div class="order-notification">
-        <span class="order-notification-icon">🔔</span>
-        <span class="order-notification-text" id="orderNotifText"></span>
       </div>
 
       <!-- VARIANTS -->
@@ -204,24 +201,46 @@
       </div>
     </section>
   `;
-  
-  /* ── SALE NOTIFICATION (fixed top, ngoài layoutRoot) ── */
-  const saleNotif = document.createElement("div");
-  saleNotif.className = "sale-notification";
-  saleNotif.innerHTML = `<div class="sale-notification-inner">🔥 Giảm ${discountNum}% và miễn phí vận chuyển khi đặt hàng trong hôm nay</div>`;
-  document.body.appendChild(saleNotif);
 
-  (function loopSaleNotification() {
+  /* ── ORDER NOTIFICATION (fixed top, ngoài layoutRoot) ── */
+  const orderNotifTop = document.createElement("div");
+  orderNotifTop.className = "order-notif-top";
+  orderNotifTop.innerHTML = `<div class="order-notif-top-inner"><span class="order-notif-top-icon">🔔</span><span class="order-notif-top-text" id="orderNotifTopText"></span></div>`;
+  document.body.appendChild(orderNotifTop);
+
+  (function loopOrderNotification() {
+    const names = [
+      "Nguyễn Văn Hùng", "Trần Thị Mai", "Lê Minh Tuấn", "Phạm Thị Hoa",
+      "Hoàng Văn Đức", "Ngô Thị Lan", "Vũ Đình Khoa", "Đặng Thị Ngọc",
+      "Bùi Quang Hải", "Đỗ Thị Thanh", "Phan Văn Long", "Lý Thị Hương",
+      "Trịnh Minh Phát", "Hồ Thị Yến", "Dương Văn Tâm", "Mai Thị Linh",
+      "Nguyễn Thị Bích", "Lê Văn Sơn", "Trần Quốc Bảo", "Phạm Minh Châu",
+      "Võ Thị Diệu", "Huỳnh Văn Thắng", "Đinh Thị Thu", "Lương Văn Hòa",
+      "Tạ Thị Kim", "Châu Minh Trí", "Nguyễn Hữu Phước", "Trần Thị Ánh",
+      "Lê Thị Tuyết", "Phạm Văn Nghĩa"
+    ];
+
+    const textEl = document.getElementById("orderNotifTopText");
+    let lastIndex = -1;
+
     function randomBetween(min, max) {
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
+    function pickRandomName() {
+      let idx;
+      do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIndex);
+      lastIndex = idx;
+      return names[idx];
+    }
+
     function showThenHide() {
-      saleNotif.classList.add("show");
+      textEl.textContent = pickRandomName() + " vừa đặt hàng";
+      orderNotifTop.classList.add("show");
 
       const showDuration = randomBetween(4000, 8000);
       setTimeout(() => {
-        saleNotif.classList.remove("show");
+        orderNotifTop.classList.remove("show");
 
         const hideDuration = randomBetween(5000, 15000);
         setTimeout(showThenHide, hideDuration);
@@ -286,38 +305,5 @@
       btn.classList.add("active");
     });
   });
-
-  /* ── ORDER NOTIFICATION SLIDE ── */
-  (function initOrderNotification() {
-    const names = [
-      "Nguyễn Văn Hùng", "Trần Thị Mai", "Lê Minh Tuấn", "Phạm Thị Hoa",
-      "Hoàng Văn Đức", "Ngô Thị Lan", "Vũ Đình Khoa", "Đặng Thị Ngọc",
-      "Bùi Quang Hải", "Đỗ Thị Thanh", "Phan Văn Long", "Lý Thị Hương",
-      "Trịnh Minh Phát", "Hồ Thị Yến", "Dương Văn Tâm", "Mai Thị Linh",
-      "Nguyễn Thị Bích", "Lê Văn Sơn", "Trần Quốc Bảo", "Phạm Minh Châu",
-      "Võ Thị Diệu", "Huỳnh Văn Thắng", "Đinh Thị Thu", "Lương Văn Hòa",
-      "Tạ Thị Kim", "Châu Minh Trí", "Nguyễn Hữu Phước", "Trần Thị Ánh",
-      "Lê Thị Tuyết", "Phạm Văn Nghĩa"
-    ];
-
-    const textEl = document.getElementById("orderNotifText");
-    let lastIndex = -1;
-
-    function showRandom() {
-      let idx;
-      do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIndex);
-      lastIndex = idx;
-
-      textEl.classList.add("fade-out");
-
-      setTimeout(() => {
-        textEl.textContent = names[idx] + " vừa đặt hàng";
-        textEl.classList.remove("fade-out");
-      }, 400);
-    }
-
-    showRandom();
-    setInterval(showRandom, 3000);
-  })();
 
 })();

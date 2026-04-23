@@ -297,38 +297,19 @@
   font-weight: 700;
 }
 
-/* NOTIFICATION BAR (thay sold-tag) */
-.order-notification {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #FFF8E1;
-  border: 1px solid #FFE082;
-  border-radius: 8px;
-  padding: 8px 12px;
-  margin-bottom: 16px;
-  min-height: 38px;
-  overflow: hidden;
-  position: relative;
-}
-
-.order-notification-icon {
-  font-size: 16px;
-  flex: 0 0 auto;
-}
-
-.order-notification-text {
-  font-size: 13px;
-  font-weight: 600;
-  color: #E65100;
+/* SALE BAR (tĩnh, trong pricing-section) */
+.sale-bar {
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary-mid));
+  color: #fff;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 14px;
   line-height: 1.4;
-  opacity: 1;
-  transition: opacity 0.4s ease;
 }
 
-.order-notification-text.fade-out {
-  opacity: 0;
-}
 
 /* VARIANTS */
 .variants-wrap {
@@ -730,9 +711,9 @@
 }
 
 /* ===================================================
-   SALE NOTIFICATION (fixed top)
+   ORDER NOTIFICATION (fixed top)
 =================================================== */
-.sale-notification {
+.order-notif-top {
   position: fixed;
   top: 0;
   left: 0;
@@ -746,23 +727,36 @@
   transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
-.sale-notification.show {
+.order-notif-top.show {
   transform: translateY(0);
   opacity: 1;
 }
 
-.sale-notification-inner {
+.order-notif-top-inner {
   width: 100%;
   max-width: 500px;
-  background: linear-gradient(90deg, var(--primary-dark), var(--primary-mid));
-  color: #fff;
+  background: #FFF8E1;
+  border-bottom: 1px solid #FFE082;
   padding: 10px 14px;
   font-size: 13px;
   font-weight: 700;
   text-align: center;
   line-height: 1.4;
+  color: #E65100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
+.order-notif-top-icon {
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+.order-notif-top-text {
+  flex: 0 1 auto;
+}
 
 /* ===================================================
    RESPONSIVE
