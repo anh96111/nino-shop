@@ -23,7 +23,23 @@
 /* ===================================================
    P1 — GALLERY (ảnh theo tỷ lệ gốc)
 =================================================== */
-.gallery-wrap { position: relative; background: #fff; }
+.gallery-wrap {
+  background: #fff;
+  margin-bottom: 8px;
+  position: relative;
+}
+.gallery-wrap::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, #fff);
+  pointer-events: none;
+  z-index: 2;
+}
+
 
 .slider {
   width: 100%;
@@ -80,28 +96,6 @@
 
 .dot.active { width: 18px; background: #fff; }
 
-.thumbs {
-  display: flex;
-  gap: 8px;
-  padding: 10px 14px;
-  overflow-x: auto;
-  background: #fff;
-}
-
-.thumbs::-webkit-scrollbar { display: none; }
-
-.thumb {
-  width: 62px; height: 62px;
-  border-radius: 8px;
-  object-fit: cover;
-  border: 2px solid transparent;
-  cursor: pointer;
-  flex: 0 0 auto;
-  background: #eef2f7;
-  transition: 0.15s;
-}
-
-.thumb.active { border-color: var(--primary); }
 
 /* ===================================================
    P1 — HERO (tên SP + sub)

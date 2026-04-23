@@ -25,26 +25,24 @@ const PRODUCT_CONFIG = {
 
   // ── GALLERY ──
   images: [
-    "https://res.cloudinary.com/dezednxpz/image/upload/v1776736352/33_sxegbo.jpg",
-    "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179181/vn-11134207-820l4-mijjqwi3l6o1e7_kylibz.webp",
-    "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179181/vn-11134207-820l4-mhzpj3yj0idi96_ffyb9b.webp",
-    "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179146/Girl_measures_father_s_202604142138_hyshj7.jpg"
+    "https://res.cloudinary.com/dezednxpz/image/upload/v1776968294/1_mwxyhi.jpg"
   ],
   videos: [],
 
   // ── HOOK (P2) ──
+  hookTitle: "5 lý do nhiều gia đình chọn mua máy đo huyết áp tại nhà.",
   hooks: [
-    { icon: "⚠️", text: "7/10 người trên 35 tuổi không biết mình bị cao huyết áp" },
-    { icon: "🧠", text: "Huyết áp cao là nguyên nhân hàng đầu gây đột quỵ, tai biến" },
-    { icon: "🏠", text: "Đo tại nhà mỗi ngày giúp phát hiện bất thường sớm — không cần đến viện" },
-    { icon: "👴", text: "Người lớn tuổi tự dùng được — bấm 1 nút, máy tự đọc tiếng Việt" },
-    { icon: "💰", text: "Chi phí chỉ bằng 1 lần khám — nhưng dùng được cả năm cho cả gia đình" }
+    { icon: "👵", text: "Nhà có người lớn tuổi nên có sẵn máy để đo khi cần, đỡ chạy đi chạy lại" },
+    { icon: "🏠", text: "Có máy ở nhà tiện hơn nhiều, nhất là lúc muốn kiểm tra nhanh mà không muốn ra tiệm thuốc." },
+    { icon: "📈", text: "Người cần theo dõi huyết áp thường xuyên thì dùng ở nhà vẫn chủ động hơn." },
+    { icon: "❤️", text: "Có sẵn máy cũng thấy yên tâm hơn cho bố mẹ và người thân trong nhà." },
+    { icon: "💰", text: "Mua một lần dùng lâu, cả nhà dùng được, khá hợp lý." }
   ],
 
   // ── BENEFITS / CHỨNG MINH CÔNG DỤNG (P3) ──
   benefits: [
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179181/vn-11134207-820l4-mijjqwi3l6o1e7_kylibz.webp",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1776968293/2_x3bzc4.jpg",
       title: "Đọc kết quả bằng giọng nói tiếng Việt",
       description: "Người lớn tuổi không cần nhờ con cháu đọc số. Máy tự đọc to, rõ ràng, chuẩn giọng Việt — bấm 1 nút là xong."
     },
@@ -64,9 +62,9 @@ const PRODUCT_CONFIG = {
       description: "Bộ nhớ lưu riêng 2 tài khoản, mỗi người 99 lần đo. Tiện theo dõi xu hướng huyết áp theo thời gian — mang kết quả cho bác sĩ khi cần."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1776736352/33_sxegbo.jpg",
-      title: "Sạc USB tiện lợi — không lo hết pin",
-      description: "Dùng cổng Mini USB, sạc bằng sạc điện thoại thông thường. Hoặc dùng 4 pin AAA khi mang đi xa."
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1776968294/3_zp9zwi.jpg",
+      title: " Tiện lợi khi mang đi du lịch hoặc đi xa nhà",
+      description: "Có thể lắp pin hoặc dùng trực tiếp bằng dây nsx tặng kèm."
     }
   ],
 

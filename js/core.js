@@ -78,7 +78,7 @@ let allProvinces         = [];
 =================================================== */
 const slidesEl           = document.getElementById("slides");
 const dotsEl             = document.getElementById("dots");
-const thumbsEl           = document.getElementById("thumbs");
+const thumbsEl           = document.getElementById("thumbs") || document.createElement("div");
 const slider             = document.getElementById("slider");
 const orderModal         = document.getElementById("orderModal");
 const thankModal         = document.getElementById("thankModal");
@@ -228,21 +228,6 @@ function buildFullGallery() {
     dot.className = "dot";
     dot.addEventListener("click", () => goToSlide(capturedIndex));
     dotsEl.appendChild(dot);
-
-    const thumbSrc = isVideo
-      ? "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='62' height='62'%3E%3Crect width='62' height='62' fill='%23eef2f7'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='18' fill='%23aaa'%3E%E2%96%B6%3C/text%3E%3C/svg%3E"
-      : src;
-
-    const thumb = document.createElement("img");
-    thumb.className = "thumb";
-    thumb.src       = thumbSrc;
-    thumb.alt       = label;
-    thumb.loading   = "lazy";
-    thumb.decoding  = "async";
-    thumb.width     = 62;
-    thumb.height    = 62;
-    thumb.addEventListener("click", () => goToSlide(capturedIndex));
-    thumbsEl.appendChild(thumb);
     index++;
   }
 
@@ -255,8 +240,16 @@ function buildFullGallery() {
       "placeholder", false
     );
   }
+
+  if (currentGallery.length <= 1) {
+    dotsEl.style.display = "none";
+  } else {
+    dotsEl.style.display = "";
+  }
+
   goToSlide(0);
 }
+
 
 function updateSlider() {
   slidesEl.style.transform = `translateX(-${currentSlide * 100}%)`;

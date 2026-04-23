@@ -22,7 +22,6 @@
         <div class="slides" id="slides"></div>
         <div class="dots" id="dots"></div>
       </div>
-      <div class="thumbs" id="thumbs"></div>
     </section>
 
     <section class="section hero-section">
@@ -32,7 +31,7 @@
 
     <!-- ============ P2 — HOOK ============ -->
     <section class="section hook-section">
-      <div class="hook-title">${P.hooks.length} lý do bạn nên chọn sản phẩm này</div>
+      <div class="hook-title">${P.hookTitle || (P.hooks.length + " lý do bạn nên chọn sản phẩm này")}</div>
       <div class="hook-list">
         ${P.hooks.map(h => `
           <div class="hook-item">
