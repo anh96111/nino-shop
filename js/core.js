@@ -219,7 +219,7 @@ function buildFullGallery() {
     } else {
       const eager = index === 0 ? "eager" : "lazy";
       const fp    = index === 0 ? "high"  : "low";
-      slide.innerHTML = `<img src="${src}" alt="${label}" loading="${eager}" fetchpriority="${fp}" decoding="async" width="600" height="600" />`;
+      slide.innerHTML = `<img src="${src}" alt="${label}" loading="${eager}" fetchpriority="${fp}" decoding="async" width="600" />`;
     }
     slidesEl.appendChild(slide);
 
@@ -312,6 +312,53 @@ slider.addEventListener("touchend", () => {
 });
 
 /* ===================================================
+   VARIANT / COMBO HELPERS
+=================================================== */
+function getSelectedVariants() {
+  const result = {};
+  document.querySelectorAll(".variant-group").forEach(group => {
+    const type = group.dataset.type;
+    const active = group.querySelector(".variant-option.active");
+    if (active) result[type] = active.dataset.value;
+  });
+  return result;
+}
+
+function getSelectedCombo() {
+  const active = document.querySelector(".combo-option.active");
+  if (!active) return null;
+  return {
+    index: parseInt(active.dataset.index),
+    name:  active.querySelector(".combo-name")?.textContent || "",
+    price: parseInt(active.dataset.price)
+  };
+}
+
+function getCurrentPrice() {
+  const combo = getSelectedCombo();
+  return combo ? combo.price : PRODUCT.price;
+}
+
+function updatePriceDisplay() {
+  const priceEl    = document.querySelector(".price");
+  const oldPriceEl = document.querySelector(".old-price");
+  const badgeEl    = document.querySelector(".badge-discount");
+  const combo      = getSelectedCombo();
+
+  if (priceEl) {
+    priceEl.textContent = formatPrice(getCurrentPrice());
+  }
+
+  if (combo) {
+    if (oldPriceEl) oldPriceEl.style.display = "none";
+    if (badgeEl)    badgeEl.style.display    = "none";
+  } else {
+    if (oldPriceEl) oldPriceEl.style.display = "";
+    if (badgeEl)    badgeEl.style.display    = "";
+  }
+}
+
+/* ===================================================
    QTY
 =================================================== */
 document.getElementById("minusQty").addEventListener("click", () => {
@@ -379,20 +426,41 @@ function saveCartItems() {
   localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
 }
 
+function buildCartItemKey(productId, variants, combo) {
+  let key = productId;
+  if (variants && Object.keys(variants).length) {
+    key += "|" + Object.entries(variants).sort((a,b) => a[0].localeCompare(b[0])).map(([k,v]) => k + ":" + v).join(",");
+  }
+  if (combo) {
+    key += "|combo:" + combo.index;
+  }
+  return key;
+}
+
 function addCurrentSelectionToCart() {
   loadCartItems();
-  const existingIndex = cartItems.findIndex(item => item.product_id === PRODUCT.id);
+
+  const variants  = getSelectedVariants();
+  const combo     = getSelectedCombo();
+  const unitPrice = getCurrentPrice();
+  const itemKey   = buildCartItemKey(PRODUCT.id, variants, combo);
+
+  const existingIndex = cartItems.findIndex(item => item._key === itemKey);
   if (existingIndex > -1) {
     cartItems[existingIndex].quantity += quantity;
-    cartItems[existingIndex].total = cartItems[existingIndex].quantity * PRODUCT.price;
+    cartItems[existingIndex].total = cartItems[existingIndex].quantity * unitPrice;
   } else {
-    cartItems.push({
+    const item = {
+      _key:         itemKey,
       product_id:   PRODUCT.id,
       product_name: PRODUCT.name,
       quantity:     quantity,
-      price:        PRODUCT.price,
-      total:        PRODUCT.price * quantity
-    });
+      price:        unitPrice,
+      total:        unitPrice * quantity
+    };
+    if (Object.keys(variants).length) item.variants = variants;
+    if (combo)                         item.combo    = combo.name;
+    cartItems.push(item);
   }
   saveCartItems();
 }
@@ -424,9 +492,19 @@ function renderCartSummary() {
     return;
   }
 
-  cartSummaryList.innerHTML = activeItems.map((item, idx) => `
+  cartSummaryList.innerHTML = activeItems.map((item, idx) => {
+    let meta = "";
+    if (item.variants) {
+      meta += Object.entries(item.variants).map(([k,v]) => v).join(", ");
+    }
+    if (item.combo) {
+      meta += (meta ? " · " : "") + item.combo;
+    }
+    const metaHtml = meta ? `<div class="cart-item-meta" style="font-size:12px;color:#888;margin-top:2px;">${meta}</div>` : "";
+
+    return `
     <div class="cart-item">
-      <div class="cart-item-top">${item.product_name}</div>
+      <div class="cart-item-top">${item.product_name}${metaHtml}</div>
       <div class="cart-item-controls">
         <button class="cart-qty-btn" data-action="minus" data-idx="${idx}">−</button>
         <span class="cart-qty-display">${item.quantity}</span>
@@ -435,7 +513,8 @@ function renderCartSummary() {
       </div>
       <div class="cart-item-price">${formatPrice(item.total)}</div>
     </div>
-  `).join("");
+  `;
+  }).join("");
 
   grandTotalEl.textContent = formatPrice(getActiveGrandTotal());
   updateSubmitBtnPrice();
@@ -517,14 +596,15 @@ function openCheckout() {
 inlineAddToCartBtn.addEventListener("click", () => {
   addCurrentSelectionToCart();
 
-  const eid = genEventId();
+  const eid       = genEventId();
+  const unitPrice = getCurrentPrice();
 
   if (typeof fbq !== "undefined") {
     fbq('track', 'AddToCart', {
       content_name: PRODUCT.name,
       content_ids:  [PRODUCT.id],
       content_type: 'product',
-      value:        PRODUCT.price * quantity,
+      value:        unitPrice * quantity,
       currency:     PRODUCT.currency
     }, {
       eventID:     eid,
@@ -535,7 +615,7 @@ inlineAddToCartBtn.addEventListener("click", () => {
   sendToGAS({
     ...buildBasePayload({ add_to_cart_event_id: eid }),
     event_type:         "add_to_cart",
-    value:              PRODUCT.price * quantity,
+    value:              unitPrice * quantity,
     external_id:        EXTERNAL_ID,
     external_id_hashed: false
   });
@@ -557,29 +637,46 @@ goToCartBtn.addEventListener("click", () => {
 /* Mua ngay (bottom bar) */
 buyNowBtn.addEventListener("click", () => {
   checkoutMode = "buynow";
-  buyNowItems = [{
+
+  const variants  = getSelectedVariants();
+  const combo     = getSelectedCombo();
+  const unitPrice = getCurrentPrice();
+
+  const item = {
     product_id:   PRODUCT.id,
     product_name: PRODUCT.name,
     quantity:     quantity,
-    price:        PRODUCT.price,
-    total:        PRODUCT.price * quantity
-  }];
+    price:        unitPrice,
+    total:        unitPrice * quantity
+  };
+  if (Object.keys(variants).length) item.variants = variants;
+  if (combo)                         item.combo    = combo.name;
+
+  buyNowItems = [item];
   openCheckout();
 });
 
 /* Mua ngay (inline) */
 inlineBuyNowBtn.addEventListener("click", () => {
   checkoutMode = "buynow";
-  buyNowItems = [{
+
+  const variants  = getSelectedVariants();
+  const combo     = getSelectedCombo();
+  const unitPrice = getCurrentPrice();
+
+  const item = {
     product_id:   PRODUCT.id,
     product_name: PRODUCT.name,
     quantity:     quantity,
-    price:        PRODUCT.price,
-    total:        PRODUCT.price * quantity
-  }];
+    price:        unitPrice,
+    total:        unitPrice * quantity
+  };
+  if (Object.keys(variants).length) item.variants = variants;
+  if (combo)                         item.combo    = combo.name;
+
+  buyNowItems = [item];
   openCheckout();
 });
-
 
 /* ===================================================
    Phone auto-format
@@ -910,10 +1007,17 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     const hashedPhone     = await sha256(phoneRaw);
     const finalGrandTotal = getActiveGrandTotal();
 
+    /* Chuẩn bị items cho payload (loại bỏ _key nội bộ) */
+    const payloadItems = activeItems.map(item => {
+      const clean = { ...item };
+      delete clean._key;
+      return clean;
+    });
+
     const payload = {
       ...buildBasePayload({ purchase_event_id: purchaseEventId }),
       event_type:         "purchase",
-      items:              activeItems,
+      items:              payloadItems,
       quantity:           activeItems.reduce((sum, item) => sum + item.quantity, 0),
       subtotal:           getActiveSubTotal(),
       total:              finalGrandTotal,
@@ -1117,4 +1221,11 @@ function setupReviewMediaLightbox() {
   setupReviewMediaLightbox();
   renderCartSummary();
   updateQtyDisplay();
+
+  /* Bind combo selector → cập nhật giá realtime */
+  document.querySelectorAll(".combo-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      updatePriceDisplay();
+    });
+  });
 })();
