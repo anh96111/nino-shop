@@ -24,7 +24,7 @@ const PRODUCT_CONFIG = {
 
   // ── GALLERY ──
   images: [
-    "https://res.cloudinary.com/dezednxpz/image/upload/v1776968294/1_mwxyhi.jpg"
+    "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/v1776968294/1_mwxyhi.jpg"
   ],
   videos: [],
 
@@ -41,7 +41,7 @@ const PRODUCT_CONFIG = {
   // ── BENEFITS / CHỨNG MINH CÔNG DỤNG (P3) ──
   benefits: [
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1776968293/2_x3bzc4.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/v1776968293/2_x3bzc4.jpg",
       title: "Đọc kết quả bằng giọng nói tiếng Việt",
       description: "Người lớn tuổi không cần nhờ con cháu đọc số. Máy tự đọc to, rõ ràng, chuẩn giọng Việt — bấm 1 nút là xong."
     },
@@ -61,7 +61,7 @@ const PRODUCT_CONFIG = {
       description: "Bộ nhớ lưu riêng 2 tài khoản, mỗi người 99 lần đo. Tiện theo dõi xu hướng huyết áp theo thời gian — mang kết quả cho bác sĩ khi cần."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1776968294/3_zp9zwi.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/v1776968294/3_zp9zwi.jpg",
       title: " Tiện lợi khi mang đi du lịch hoặc đi xa nhà",
       description: "Có thể lắp pin hoặc dùng trực tiếp bằng dây nsx tặng kèm."
     }
