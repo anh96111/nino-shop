@@ -3,6 +3,7 @@ const PRODUCT_CONFIG = {
   // ── CƠ BẢN ──
   id:        "may-do-huyet-ap-bap-tay-001",
   slug:      "may-do-huyet-ap",
+  layout:    "storytelling",
   name:      "Chỉ 30 Giây Đo Tại Nhà – Máy Đo Huyết Áp Bắp Tay Giọng Nói Tiếng Việt Giúp Phát Hiện Sớm Nguy Cơ Đột Quỵ, Tim Mạch - BH 12 tháng.",
   shortName: "Máy Đo Huyết Áp Bắp Tay Giọng Nói Tiếng Việt",
   price:     259000,
@@ -23,22 +24,6 @@ const PRODUCT_CONFIG = {
   // ── SUB HEADING ──
   subHeading: "Đo sau 30 giây · Màn hình lớn · Bảo hành 12 tháng",
 
-  // ── HERO BULLETS ──
-  heroBullets: [
-    { icon: "👴", text: "Người lớn tuổi tự dùng được — bấm 1 nút, máy tự đọc" },
-    { icon: "🔊", text: "Đọc kết quả tiếng Việt rõ ràng" },
-    { icon: "📦", text: "COD — kiểm tra hàng trước khi thanh toán" }
-  ],
-
-  // ── CẢNH BÁO ──
-  warningTag: "⚠️ 7/10 người trên 35 tuổi không biết mình bị cao huyết áp",
-
-  // ── SOCIAL PROOF ──
-  socialRow: {
-    rating: "4.8/5",
-    text:   "Được nhiều gia đình tin dùng theo dõi huyết áp tại nhà"
-  },
-
   // ── GALLERY ──
   images: [
     "https://res.cloudinary.com/dezednxpz/image/upload/v1776736352/33_sxegbo.jpg",
@@ -48,14 +33,49 @@ const PRODUCT_CONFIG = {
   ],
   videos: [],
 
-  // ── COMBO / BIẾN THỂ ──
-  // Mảng rỗng = SP không có biến thể
-  // Ví dụ SP có biến thể:
-  // variants: [
-  //   { type: "color", label: "Màu sắc", options: ["Đen", "Trắng", "Xanh"] },
-  //   { type: "size",  label: "Size",     options: ["S", "M", "L", "XL"] }
-  // ]
+  // ── HOOK (P2) ──
+  hooks: [
+    { icon: "⚠️", text: "7/10 người trên 35 tuổi không biết mình bị cao huyết áp" },
+    { icon: "🧠", text: "Huyết áp cao là nguyên nhân hàng đầu gây đột quỵ, tai biến" },
+    { icon: "🏠", text: "Đo tại nhà mỗi ngày giúp phát hiện bất thường sớm — không cần đến viện" },
+    { icon: "👴", text: "Người lớn tuổi tự dùng được — bấm 1 nút, máy tự đọc tiếng Việt" },
+    { icon: "💰", text: "Chi phí chỉ bằng 1 lần khám — nhưng dùng được cả năm cho cả gia đình" }
+  ],
+
+  // ── BENEFITS / CHỨNG MINH CÔNG DỤNG (P3) ──
+  benefits: [
+    {
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179181/vn-11134207-820l4-mijjqwi3l6o1e7_kylibz.webp",
+      title: "Đọc kết quả bằng giọng nói tiếng Việt",
+      description: "Người lớn tuổi không cần nhờ con cháu đọc số. Máy tự đọc to, rõ ràng, chuẩn giọng Việt — bấm 1 nút là xong."
+    },
+    {
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179181/vn-11134207-820l4-mhzpj3yj0idi96_ffyb9b.webp",
+      title: "Kết quả chính xác chỉ sau 30 giây",
+      description: "Sử dụng phương pháp Oscillometric chuẩn y tế. Sai lệch chỉ ± 3 mmHg — ngang với máy dùng tại phòng khám."
+    },
+    {
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179312/vn-11134207-820l4-mhzpj3yiz3t222_ya2pxm.webp",
+      title: "Màn hình LCD lớn — hiển thị rõ ràng",
+      description: "Hiển thị đồng thời huyết áp tâm thu, tâm trương và nhịp tim. Chữ to, người già nhìn thoải mái không cần kính."
+    },
+    {
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179146/Girl_measures_father_s_202604142138_hyshj7.jpg",
+      title: "Lưu 99 kết quả — theo dõi lịch sử cho 2 người",
+      description: "Bộ nhớ lưu riêng 2 tài khoản, mỗi người 99 lần đo. Tiện theo dõi xu hướng huyết áp theo thời gian — mang kết quả cho bác sĩ khi cần."
+    },
+    {
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1776736352/33_sxegbo.jpg",
+      title: "Sạc USB tiện lợi — không lo hết pin",
+      description: "Dùng cổng Mini USB, sạc bằng sạc điện thoại thông thường. Hoặc dùng 4 pin AAA khi mang đi xa."
+    }
+  ],
+
+  // ── BIẾN THỂ ──
   variants: [],
+
+  // ── COMBO ──
+  combos: [],
 
   // ── TÍNH NĂNG ──
   features: [
@@ -66,66 +86,6 @@ const PRODUCT_CONFIG = {
     { icon: "⏱️", title: "30 giây có kết quả",    sub: "Nhanh, chính xác, không mất thời gian" },
     { icon: "🛡️", title: "BH 12 tháng",           sub: "1 đổi 1 nếu lỗi kỹ thuật" }
   ],
-
-  // ── MÔ TẢ CHI TIẾT (HTML) ──
-  descriptionHTML: `
-    <div class="d-title">Bạn có chắc huyết áp đang an toàn?</div>
-    <p>Huyết áp cao không có triệu chứng rõ ràng — nhiều người chỉ biết mình mắc bệnh sau khi đã xảy ra biến chứng nghiêm trọng. Đây là lý do huyết áp được gọi là <strong>"kẻ giết người thầm lặng"</strong>.</p>
-
-    <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179146/Girl_measures_father_s_202604142138_hyshj7.jpg" loading="lazy" decoding="async" width="600" height="600" style="width:100%; border-radius:10px; margin:12px 0;" />
-
-    <div class="d-highlight">
-      Bạn thường xuyên đau đầu, chóng mặt, mất ngủ — hay tê tay chân, tim đập nhanh bất thường?<br>
-      Gia đình có người từng cao huyết áp hoặc đột quỵ?<br><br>
-      <strong>70% người 35+ tại Việt Nam không biết mình bị cao huyết áp cho đến khi quá muộn.</strong>
-    </div>
-
-    <div class="d-title">Theo dõi huyết áp tại nhà — đơn giản hơn bạn nghĩ</div>
-    <p>Không cần đến bệnh viện, không cần kiến thức y tế chuyên sâu. Chỉ cần đeo vòng bít, bấm một nút — 30 giây sau máy đọc kết quả bằng tiếng Việt rõ ràng.</p>
-
-    <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/v1776179312/vn-11134207-820l4-mhzpj3yiz3t222_ya2pxm.webp" loading="lazy" decoding="async" width="600" height="600" style="width:100%; border-radius:10px; margin:12px 0;" />
-
-    <ul class="d-check-list">
-      <li>Đo chính xác huyết áp &amp; nhịp tim chỉ sau 30 giây</li>
-      <li>Giọng đọc tiếng Việt — người lớn tuổi không cần nhờ con cháu đọc số</li>
-      <li>Theo dõi liên tục, phát hiện bất thường sớm</li>
-      <li>Chủ động kiểm soát sức khỏe mỗi ngày tại nhà</li>
-    </ul>
-
-    <div class="d-title">Đặc biệt phù hợp</div>
-    <ul class="d-check-list">
-      <li>Người từ 35 tuổi trở lên</li>
-      <li>Người có tiền sử huyết áp, tim mạch</li>
-      <li>Gia đình có người lớn tuổi cần theo dõi sức khỏe thường xuyên</li>
-    </ul>
-
-    <div class="d-title">Thông số kỹ thuật</div>
-    <table class="d-spec-table">
-      <tbody>
-        <tr><td>Phương pháp đo</td><td>Oscillometric</td></tr>
-        <tr><td>Độ chính xác</td><td>± 3 mmHg</td></tr>
-        <tr><td>Khoảng đo</td><td>0 – 280 mmHg</td></tr>
-        <tr><td>Đo nhịp tim</td><td>40 – 195 lần/phút (± 5%)</td></tr>
-        <tr><td>Lưu trữ</td><td>99 kết quả / 2 người dùng</td></tr>
-        <tr><td>Nguồn điện</td><td>4 pin AAA hoặc Mini USB</td></tr>
-        <tr><td>Tự động tắt</td><td>Sau 1 phút không thao tác</td></tr>
-        <tr><td>Bảo hành</td><td>12 tháng — 1 đổi 1</td></tr>
-      </tbody>
-    </table>
-
-    <div class="d-box-set">
-      <div class="d-box-set-title">🎁 Bộ sản phẩm bao gồm</div>
-      <div class="d-box-item">Máy đo huyết áp điện tử bắp tay</div>
-      <div class="d-box-item">Vòng bít bắp tay</div>
-      <div class="d-box-item">Hướng dẫn sử dụng tiếng Việt</div>
-      <div class="d-box-item">Túi đựng tiện lợi</div>
-    </div>
-
-    <div class="d-cta-end">
-      <strong>Đừng đợi cơ thể "lên tiếng" mới bắt đầu quan tâm đến sức khỏe.</strong><br><br>
-      Đặt hàng hôm nay — kiểm tra hàng trước khi thanh toán, bảo hành 12 tháng 1 đổi 1, giao toàn quốc miễn phí.
-    </div>
-  `,
 
   // ── CHÍNH SÁCH TRẢ HÀNG ──
   returnPolicy: {

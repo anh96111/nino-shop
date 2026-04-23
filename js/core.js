@@ -1,12 +1,11 @@
 /* ===================================================
-   core.js — Phần 1/2
-   Logic dùng chung cho tất cả sản phẩm.
-   Phụ thuộc: PRODUCT_CONFIG (products/xxx.js), SHARED_CONFIG (config.shared.js)
-   Cả 2 file trên phải được load TRƯỚC core.js
+   core.js — Logic dùng chung cho mọi layout
+   Phụ thuộc: PRODUCT_CONFIG, SHARED_CONFIG
+   Layout JS phải render DOM TRƯỚC khi core.js chạy
 =================================================== */
 
 /* ===================================================
-   PRODUCT REF — map từ PRODUCT_CONFIG sang cấu trúc cũ
+   PRODUCT REF
 =================================================== */
 const PRODUCT = {
   id:        PRODUCT_CONFIG.id,
@@ -23,7 +22,6 @@ const REVIEWS              = PRODUCT_CONFIG.reviews.items;
 
 /* ===================================================
    FACEBOOK PIXEL — init + PageView + ViewContent
-   (chạy ngay khi load, giống code gốc)
 =================================================== */
 const FB_PIXEL_ID = SHARED_CONFIG.fbPixelId;
 
@@ -331,35 +329,6 @@ document.getElementById("quantity").addEventListener("input", e => {
 });
 
 /* ===================================================
-   COLLAPSE
-=================================================== */
-function setupCollapse(headId, bodyId) {
-  const head = document.getElementById(headId);
-  const body = document.getElementById(bodyId);
-  head.addEventListener("click", () => {
-    head.classList.toggle("active");
-    body.classList.toggle("show");
-  });
-}
-
-setupCollapse("returnHead", "returnBody");
-setupCollapse("featHead",   "featBody");
-setupCollapse("reviewHead", "reviewBody");
-
-/* ===================================================
-   DESC XEM THÊM
-=================================================== */
-const descPreview   = document.getElementById("descPreview");
-const descToggleBtn = document.getElementById("descToggleBtn");
-let descExpanded    = false;
-
-descToggleBtn.addEventListener("click", () => {
-  descExpanded = !descExpanded;
-  descPreview.classList.toggle("collapsed", !descExpanded);
-  descToggleBtn.textContent = descExpanded ? "Thu gọn ▴" : "Xem thêm ▾";
-});
-
-/* ===================================================
    MODAL — ORDER
 =================================================== */
 function openModal() {
@@ -506,10 +475,6 @@ function updateSubmitBtnPrice() {
     submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(total)}`;
   }
 }
-/* ===================================================
-   core.js — Phần 2/2
-   (nối tiếp phần 1, cùng 1 file)
-=================================================== */
 
 /* ===================================================
    OPEN CHECKOUT — InitiateCheckout
@@ -645,6 +610,18 @@ phoneInput.addEventListener("input", function () {
   }
 
   this.value = formatted;
+
+  const phoneRegex = /^(0[35789])[0-9]{8}$/;
+  if (raw.length === 0) {
+    clearFieldError("phone", "phoneError");
+  } else if (raw.length === 10 && !phoneRegex.test(raw)) {
+    showFieldError("phone", "phoneError", "Số điện thoại không hợp lệ");
+  } else if (raw.length < 10) {
+    clearFieldError("phone", "phoneError");
+  } else {
+    clearFieldError("phone", "phoneError");
+  }
+
   checkFormValidity();
 });
 
@@ -967,10 +944,8 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       }
     };
 
-    // Reset form
     document.getElementById("orderForm").reset();
 
-    // Reset province searchable
     selectedProvinceCode = "";
     selectedProvinceName = "";
     document.getElementById("provinceCode").value = "";
@@ -979,7 +954,6 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     display.textContent = "-- Chọn Tỉnh/Thành Phố --";
     display.classList.add("placeholder");
 
-    // Reset district/ward
     districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
     districtSelect.disabled  = true;
     wardSelect.innerHTML     = '<option value="">-- Chọn Xã/Phường --</option>';
