@@ -21,6 +21,11 @@ const PRODUCT_VIDEOS       = PRODUCT_CONFIG.videos;
 const REVIEWS              = PRODUCT_CONFIG.reviews.items;
 
 /* ===================================================
+   DETECT: SP có biến thể màu không?
+=================================================== */
+const HAS_COLOR_VARIANT = window.__variantPopup && window.__variantPopup.hasColorVariant;
+
+/* ===================================================
    FACEBOOK PIXEL — init + PageView + ViewContent
 =================================================== */
 const FB_PIXEL_ID = SHARED_CONFIG.fbPixelId;
@@ -72,6 +77,9 @@ let buyNowItems    = [];
 let selectedProvinceCode = "";
 let selectedProvinceName = "";
 let allProvinces         = [];
+
+/* Lưu lại hành động chờ sau khi chọn biến thể trong popup */
+let vpPendingAction = null; /* "addtocart" | "buynow" | null */
 
 /* ===================================================
    DOM REFS
@@ -253,7 +261,7 @@ function buildFullGallery() {
 
 function updateSlider() {
   slidesEl.style.transform = `translateX(-${currentSlide * 100}%)`;
-  document.querySelectorAll(".dot").forEach((dot, i) => {
+  document.querySelectorAll("#dots .dot").forEach((dot, i) => {
     dot.classList.toggle("active", i === currentSlide);
   });
   document.querySelectorAll("#thumbs .thumb").forEach((thumb, i) => {
@@ -308,6 +316,11 @@ slider.addEventListener("touchend", () => {
    VARIANT / COMBO HELPERS
 =================================================== */
 function getSelectedVariants() {
+  /* Nếu có biến thể màu → lấy từ popup */
+  if (HAS_COLOR_VARIANT && window.__variantPopup) {
+    return window.__variantPopup.getSelectedVariants();
+  }
+  /* Không có biến thể màu → lấy từ ngoài trang (logic cũ) */
   const result = {};
   document.querySelectorAll(".variant-group").forEach(group => {
     const type = group.dataset.type;
@@ -582,11 +595,9 @@ function openCheckout() {
 }
 
 /* ===================================================
-   CTA EVENTS
+   HELPER: Thực hiện hành động "Thêm giỏ hàng" (dùng chung)
 =================================================== */
-
-/* Thêm vào giỏ */
-inlineAddToCartBtn.addEventListener("click", () => {
+function doAddToCart() {
   addCurrentSelectionToCart();
 
   const eid       = genEventId();
@@ -614,9 +625,49 @@ inlineAddToCartBtn.addEventListener("click", () => {
   });
 
   showToast("✓ Đã thêm vào giỏ hàng");
+}
+
+/* ===================================================
+   HELPER: Thực hiện hành động "Mua ngay" (dùng chung)
+=================================================== */
+function doBuyNow() {
+  checkoutMode = "buynow";
+
+  const variants  = getSelectedVariants();
+  const combo     = getSelectedCombo();
+  const unitPrice = getCurrentPrice();
+
+  const item = {
+    product_id:   PRODUCT.id,
+    product_name: PRODUCT.name,
+    quantity:     quantity,
+    price:        unitPrice,
+    total:        unitPrice * quantity
+  };
+  if (Object.keys(variants).length) item.variants = variants;
+  if (combo)                         item.combo    = combo.name;
+
+  buyNowItems = [item];
+  openCheckout();
+}
+
+/* ===================================================
+   CTA EVENTS
+=================================================== */
+
+/* Nút "Thêm vào giỏ" hoặc "Chọn màu" (inline) */
+inlineAddToCartBtn.addEventListener("click", () => {
+  if (HAS_COLOR_VARIANT) {
+    /* SP có biến thể màu → mở popup, chờ user chọn xong rồi thêm giỏ */
+    vpPendingAction = "addtocart";
+    window.__variantPopup.open();
+  } else {
+    /* SP không có biến thể màu → thêm giỏ luôn (logic cũ) */
+    doAddToCart();
+  }
 });
 
-/* Giỏ hàng */
+/* Giỏ hàng (bottom bar) */
 goToCartBtn.addEventListener("click", () => {
   loadCartItems();
   if (!cartItems.length) {
@@ -629,47 +680,47 @@ goToCartBtn.addEventListener("click", () => {
 
 /* Mua ngay (bottom bar) */
 buyNowBtn.addEventListener("click", () => {
-  checkoutMode = "buynow";
-
-  const variants  = getSelectedVariants();
-  const combo     = getSelectedCombo();
-  const unitPrice = getCurrentPrice();
-
-  const item = {
-    product_id:   PRODUCT.id,
-    product_name: PRODUCT.name,
-    quantity:     quantity,
-    price:        unitPrice,
-    total:        unitPrice * quantity
-  };
-  if (Object.keys(variants).length) item.variants = variants;
-  if (combo)                         item.combo    = combo.name;
-
-  buyNowItems = [item];
-  openCheckout();
+  if (HAS_COLOR_VARIANT) {
+    /* SP có biến thể màu → mở popup, chờ user chọn xong rồi mua */
+    vpPendingAction = "buynow";
+    window.__variantPopup.open();
+  } else {
+    /* SP không có biến thể màu → mua luôn (logic cũ) */
+    doBuyNow();
+  }
 });
 
 /* Mua ngay (inline) */
 inlineBuyNowBtn.addEventListener("click", () => {
-  checkoutMode = "buynow";
-
-  const variants  = getSelectedVariants();
-  const combo     = getSelectedCombo();
-  const unitPrice = getCurrentPrice();
-
-  const item = {
-    product_id:   PRODUCT.id,
-    product_name: PRODUCT.name,
-    quantity:     quantity,
-    price:        unitPrice,
-    total:        unitPrice * quantity
-  };
-  if (Object.keys(variants).length) item.variants = variants;
-  if (combo)                         item.combo    = combo.name;
-
-  buyNowItems = [item];
-  openCheckout();
+  if (HAS_COLOR_VARIANT) {
+    vpPendingAction = "buynow";
+    window.__variantPopup.open();
+  } else {
+    doBuyNow();
+  }
 });
+
+/* ===================================================
+   VARIANT POPUP — CTA BUTTONS (chỉ khi có biến thể màu)
+=================================================== */
+if (HAS_COLOR_VARIANT) {
+  const vpAddToCartBtn = document.getElementById("vpAddToCartBtn");
+  const vpBuyNowBtn    = document.getElementById("vpBuyNowBtn");
+
+  /* Nút "Thêm vào giỏ" trong popup */
+  vpAddToCartBtn.addEventListener("click", () => {
+    doAddToCart();
+    window.__variantPopup.close();
+    vpPendingAction = null;
+  });
+
+  /* Nút "Mua ngay" trong popup */
+  vpBuyNowBtn.addEventListener("click", () => {
+    window.__variantPopup.close();
+    vpPendingAction = null;
+    doBuyNow();
+  });
+}
 
 /* ===================================================
    Phone auto-format

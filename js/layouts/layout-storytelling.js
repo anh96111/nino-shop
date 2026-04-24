@@ -11,10 +11,85 @@
   const C = SHARED_CONFIG;
   const root = document.getElementById("layoutRoot");
 
+  /* ── Kiểm tra SP có biến thể màu không ── */
+  const hasColorVariant = P.variants.some(v => v.type === "color");
+
   /* ── Discount number (lấy số từ "-50%" → "50") ── */
   const discountNum = P.discount
     ? P.discount.replace(/[^0-9]/g, "")
     : Math.round((1 - P.price / P.oldPrice) * 100);
+
+  /* ── Build variant popup HTML nếu có biến thể màu ── */
+  let variantPopupHTML = "";
+  if (hasColorVariant) {
+    const colorVariant = P.variants.find(v => v.type === "color");
+    const otherVariants = P.variants.filter(v => v.type !== "color");
+
+    variantPopupHTML = `
+    <div class="variant-popup-overlay" id="variantPopupOverlay">
+      <div class="variant-popup" id="variantPopup">
+        <div class="variant-popup-top">
+          <div class="variant-popup-title">Chọn phân loại</div>
+          <button class="variant-popup-close" id="variantPopupClose">&times;</button>
+        </div>
+
+        <!-- SLIDER ẢNH TRONG POPUP -->
+        <div class="variant-popup-gallery">
+          <div class="variant-popup-slider" id="vpSlider">
+            <div class="variant-popup-slides" id="vpSlides">
+              ${colorVariant.options.map(opt => `
+                <div class="variant-popup-slide">
+                  <img src="${opt.image}" alt="${opt.name}" loading="lazy" decoding="async" />
+                </div>
+              `).join("")}
+            </div>
+          </div>
+          <div class="variant-popup-dots" id="vpDots">
+            ${colorVariant.options.map((opt, idx) => `
+              <div class="variant-popup-dot ${idx === 0 ? "active" : ""}" data-index="${idx}"></div>
+            `).join("")}
+          </div>
+          <div class="variant-popup-thumbs" id="vpThumbs">
+            ${colorVariant.options.map((opt, idx) => `
+              <div class="variant-popup-thumb ${idx === 0 ? "active" : ""}" data-index="${idx}">
+                <img src="${opt.image}" alt="${opt.name}" loading="lazy" decoding="async" />
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <!-- BIẾN THỂ MÀU -->
+        <div class="variant-popup-section">
+          <div class="variant-popup-label">${colorVariant.label}</div>
+          <div class="variant-popup-options">
+            ${colorVariant.options.map((opt, idx) => `
+              <button class="variant-popup-option vp-color-option ${idx === 0 ? "active" : ""}" data-type="color" data-value="${opt.name}" data-index="${idx}">${opt.name}</button>
+            `).join("")}
+          </div>
+        </div>
+
+        <!-- BIẾN THỂ KHÁC (size, v.v.) -->
+        ${otherVariants.map(v => `
+          <div class="variant-popup-section">
+            <div class="variant-popup-label">${v.label}</div>
+            <div class="variant-popup-options">
+              ${v.options.map((opt, idx) => `
+                <button class="variant-popup-option vp-other-option ${idx === 0 ? "active" : ""}" data-type="${v.type}" data-value="${opt}">${opt}</button>
+              `).join("")}
+            </div>
+          </div>
+        `).join("")}
+
+        <!-- 2 NÚT CTA TRONG POPUP -->
+        <div class="variant-popup-cta">
+          <button class="btn-ghost" id="vpAddToCartBtn">Thêm vào giỏ</button>
+          <button class="btn-solid" id="vpBuyNowBtn">Mua ngay</button>
+        </div>
+      </div>
+    </div>
+    `;
+  }
+
   root.innerHTML = `
 
     <!-- ============ P1 — HERO: Gallery + Tên SP ============ -->
@@ -74,8 +149,8 @@
         <span class="badge-discount">-${discountNum}%</span>
       </div>
 
-      <!-- VARIANTS -->
-      ${P.variants.length ? `
+      <!-- VARIANTS (chỉ render ngoài trang nếu KHÔNG có biến thể màu) -->
+      ${(P.variants.length && !hasColorVariant) ? `
         <div class="variants-wrap">
           ${P.variants.map(v => `
             <div class="variant-group" data-type="${v.type}">
@@ -122,10 +197,16 @@
         <button class="qty-btn" id="plusQty">+</button>
       </div>
       <div class="cta-row">
-        <button class="btn-ghost" id="inlineAddToCartBtn">Thêm vào giỏ</button>
+        ${hasColorVariant
+          ? `<button class="btn-ghost" id="inlineAddToCartBtn">Chọn màu</button>`
+          : `<button class="btn-ghost" id="inlineAddToCartBtn">Thêm vào giỏ</button>`
+        }
         <button class="btn-solid" id="inlineBuyNowBtn">Mua ngay</button>
       </div>
     </section>
+
+    <!-- ============ VARIANT POPUP (chỉ render nếu có biến thể màu) ============ -->
+    ${variantPopupHTML}
 
     <!-- ============ P5 — REVIEWS ============ -->
     <section class="section review-section">
@@ -293,7 +374,7 @@
     });
   });
 
-  /* ── VARIANT SELECTOR ── */
+  /* ── VARIANT SELECTOR (cho SP không có biến thể màu) ── */
   document.querySelectorAll(".variant-option").forEach(btn => {
     btn.addEventListener("click", () => {
       const type = btn.dataset.type;
@@ -309,5 +390,130 @@
       btn.classList.add("active");
     });
   });
+
+  /* ── VARIANT POPUP — EVENT LISTENERS (chỉ khi có biến thể màu) ── */
+  if (hasColorVariant) {
+    const vpOverlay  = document.getElementById("variantPopupOverlay");
+    const vpCloseBtn = document.getElementById("variantPopupClose");
+    const vpSlides   = document.getElementById("vpSlides");
+    const vpDots     = document.querySelectorAll(".variant-popup-dot");
+    const vpThumbs   = document.querySelectorAll(".variant-popup-thumb");
+    const vpColorBtns = document.querySelectorAll(".vp-color-option");
+    let vpCurrentSlide = 0;
+    const vpTotalSlides = P.variants.find(v => v.type === "color").options.length;
+
+    /* Cập nhật slider trong popup */
+    function vpGoToSlide(idx) {
+      vpCurrentSlide = idx;
+      vpSlides.style.transform = `translateX(-${idx * 100}%)`;
+      vpDots.forEach((dot, i) => dot.classList.toggle("active", i === idx));
+      vpThumbs.forEach((thumb, i) => thumb.classList.toggle("active", i === idx));
+      vpColorBtns.forEach((btn, i) => btn.classList.toggle("active", i === idx));
+      const activeThumb = document.querySelectorAll(".variant-popup-thumb")[idx];
+      if (activeThumb) activeThumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+
+    /* Click dot → đổi slide */
+    vpDots.forEach(dot => {
+      dot.addEventListener("click", () => {
+        vpGoToSlide(parseInt(dot.dataset.index));
+      });
+    });
+
+    /* Click thumbnail → đổi slide */
+    vpThumbs.forEach(thumb => {
+      thumb.addEventListener("click", () => {
+        vpGoToSlide(parseInt(thumb.dataset.index));
+      });
+    });
+
+    /* Click nút màu → đổi slide */
+    vpColorBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        vpGoToSlide(parseInt(btn.dataset.index));
+      });
+    });
+
+    /* Click nút biến thể khác (size, v.v.) */
+    document.querySelectorAll(".vp-other-option").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const type = btn.dataset.type;
+        document.querySelectorAll(`.vp-other-option[data-type="${type}"]`).forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+
+    /* Swipe trong popup */
+    let vpStartX = 0, vpMoveX = 0, vpIsDragging = false, vpIsHorizontal = null;
+    const vpSlider = document.getElementById("vpSlider");
+
+    vpSlider.addEventListener("touchstart", e => {
+      vpStartX = vpMoveX = e.touches[0].clientX;
+      vpIsDragging = true;
+      vpIsHorizontal = null;
+    }, { passive: true });
+
+    vpSlider.addEventListener("touchmove", e => {
+      if (!vpIsDragging) return;
+      vpMoveX = e.touches[0].clientX;
+      const diffX = Math.abs(vpMoveX - vpStartX);
+      const diffY = Math.abs(e.touches[0].clientY - vpStartX);
+      if (vpIsHorizontal === null && (diffX > 5 || diffY > 5)) {
+        vpIsHorizontal = diffX >= diffY;
+      }
+      if (vpIsHorizontal === true) e.preventDefault();
+    }, { passive: false });
+
+    vpSlider.addEventListener("touchend", () => {
+      if (!vpIsDragging) return;
+      if (vpIsHorizontal === true) {
+        const diff = vpStartX - vpMoveX;
+        if (diff > 50 && vpCurrentSlide < vpTotalSlides - 1) vpGoToSlide(vpCurrentSlide + 1);
+        else if (diff < -50 && vpCurrentSlide > 0) vpGoToSlide(vpCurrentSlide - 1);
+      }
+      vpIsDragging = false;
+      vpIsHorizontal = null;
+    });
+
+    /* Mở popup */
+    function openVariantPopup() {
+      vpOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    /* Đóng popup */
+    function closeVariantPopup() {
+      vpOverlay.classList.remove("show");
+      document.body.style.overflow = "auto";
+    }
+
+    vpCloseBtn.addEventListener("click", closeVariantPopup);
+    vpOverlay.addEventListener("click", e => {
+      if (e.target === vpOverlay) closeVariantPopup();
+    });
+
+    /* Gắn hàm mở popup vào window để core.js truy cập */
+    window.__variantPopup = {
+      open: openVariantPopup,
+      close: closeVariantPopup,
+      getSelectedVariants: function () {
+        const result = {};
+        /* Lấy màu đang chọn */
+        const activeColor = document.querySelector(".vp-color-option.active");
+        if (activeColor) result["color"] = activeColor.dataset.value;
+        /* Lấy các biến thể khác */
+        document.querySelectorAll(".variant-popup-section").forEach(section => {
+          const activeOther = section.querySelector(".vp-other-option.active");
+          if (activeOther) result[activeOther.dataset.type] = activeOther.dataset.value;
+        });
+        return result;
+      },
+      hasColorVariant: true
+    };
+  } else {
+    window.__variantPopup = {
+      hasColorVariant: false
+    };
+  }
 
 })();
