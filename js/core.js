@@ -682,6 +682,19 @@ inlineBuyNowBtn.addEventListener("click", () => {
   }
 });
 
+const midCtaBtn = document.getElementById("midCtaBtn");
+if (midCtaBtn) {
+  midCtaBtn.addEventListener("click", () => {
+    if (HAS_COLOR_VARIANT) {
+      vpPendingAction = "buynow";
+      window.__variantPopup.open();
+    } else {
+      doBuyNow();
+    }
+  });
+}
+
+
 /* ===================================================
    VARIANT POPUP — CTA BUTTONS
 =================================================== */
@@ -1031,6 +1044,11 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     const payloadItems = activeItems.map(item => {
       const clean = { ...item };
       delete clean._key;
+      if (clean.variants) {
+        if (clean.variants.color) clean.color = clean.variants.color;
+        if (clean.variants.size)  clean.size  = clean.variants.size;
+        delete clean.variants;
+      }
       return clean;
     });
 

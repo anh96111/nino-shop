@@ -33,6 +33,18 @@
           <button class="variant-popup-close" id="variantPopupClose">&times;</button>
         </div>
 
+        <!-- GIÁ BÁN + GIÁ GỐC + % GIẢM + FREE SHIP -->
+        <div style="padding:0 16px 12px; border-bottom:1px solid #f0f0f0; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:20px; font-weight:800; color:#e53e3e;">${Number(P.price).toLocaleString("vi-VN")}đ</span>
+            <span style="font-size:14px; color:#aaa; text-decoration:line-through;">${Number(P.oldPrice).toLocaleString("vi-VN")}đ</span>
+            <span style="font-size:12px; font-weight:700; color:#fff; background:#e53e3e; padding:2px 7px; border-radius:4px;">-${discountNum}%</span>
+          </div>
+          <div style="margin-top:6px; display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#38a169; font-weight:600; background:#f0fff4; padding:3px 8px; border-radius:4px;">
+            🚚 Miễn phí vận chuyển
+          </div>
+        </div>
+
         <!-- SLIDER ẢNH TRONG POPUP -->
         <div class="variant-popup-gallery">
           <div class="variant-popup-slider" id="vpSlider">
@@ -115,6 +127,14 @@
             <span class="hook-text">${h.text}</span>
           </div>
         `).join("")}
+      </div>
+    </section>
+
+    <!-- ============ MID CTA — Nhận ưu đãi ============ -->
+    <section style="padding:0 16px; margin-bottom:0;">
+      <div id="midCtaBanner" style="display:flex; align-items:center; justify-content:space-between; gap:12px; background:linear-gradient(135deg,#fff7ed,#ffedd5); border:1px solid #fed7aa; border-radius:12px; padding:14px 16px;">
+        <div style="font-size:14px; font-weight:600; color:#c2410c; line-height:1.45;">🔥 Nhận giảm giá ${discountNum}% và miễn phí vận chuyển ngay</div>
+        <button id="midCtaBtn" style="flex-shrink:0; background:#e53e3e; color:#fff; border:none; border-radius:8px; padding:10px 18px; font-size:14px; font-weight:700; cursor:pointer; white-space:nowrap;">Nhận ưu đãi</button>
       </div>
     </section>
 
