@@ -78,8 +78,7 @@ let selectedProvinceCode = "";
 let selectedProvinceName = "";
 let allProvinces         = [];
 
-/* Lưu lại hành động chờ sau khi chọn biến thể trong popup */
-let vpPendingAction = null; /* "addtocart" | "buynow" | null */
+let vpPendingAction = null;
 
 /* ===================================================
    DOM REFS
@@ -209,7 +208,7 @@ function sendToGAS(payload) {
 }
 
 /* ===================================================
-   GALLERY
+   GALLERY (trang chính)
 =================================================== */
 function buildFullGallery() {
   slidesEl.innerHTML = "";
@@ -258,17 +257,11 @@ function buildFullGallery() {
   goToSlide(0);
 }
 
-
 function updateSlider() {
   slidesEl.style.transform = `translateX(-${currentSlide * 100}%)`;
   document.querySelectorAll("#dots .dot").forEach((dot, i) => {
     dot.classList.toggle("active", i === currentSlide);
   });
-  document.querySelectorAll("#thumbs .thumb").forEach((thumb, i) => {
-    thumb.classList.toggle("active", i === currentSlide);
-  });
-  const active = document.querySelectorAll("#thumbs .thumb")[currentSlide];
-  if (active) active.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
 }
 
 function goToSlide(idx) {
@@ -276,7 +269,7 @@ function goToSlide(idx) {
   updateSlider();
 }
 
-/* SWIPE */
+/* SWIPE (trang chính) */
 let startX = 0, startY = 0, moveX = 0, moveY = 0;
 let isDragging = false, isHorizontal = null;
 
@@ -316,11 +309,9 @@ slider.addEventListener("touchend", () => {
    VARIANT / COMBO HELPERS
 =================================================== */
 function getSelectedVariants() {
-  /* Nếu có biến thể màu → lấy từ popup */
   if (HAS_COLOR_VARIANT && window.__variantPopup) {
     return window.__variantPopup.getSelectedVariants();
   }
-  /* Không có biến thể màu → lấy từ ngoài trang (logic cũ) */
   const result = {};
   document.querySelectorAll(".variant-group").forEach(group => {
     const type = group.dataset.type;
@@ -595,7 +586,7 @@ function openCheckout() {
 }
 
 /* ===================================================
-   HELPER: Thực hiện hành động "Thêm giỏ hàng" (dùng chung)
+   HELPER: Thực hiện hành động "Thêm giỏ hàng"
 =================================================== */
 function doAddToCart() {
   addCurrentSelectionToCart();
@@ -628,7 +619,7 @@ function doAddToCart() {
 }
 
 /* ===================================================
-   HELPER: Thực hiện hành động "Mua ngay" (dùng chung)
+   HELPER: Thực hiện hành động "Mua ngay"
 =================================================== */
 function doBuyNow() {
   checkoutMode = "buynow";
@@ -654,20 +645,15 @@ function doBuyNow() {
 /* ===================================================
    CTA EVENTS
 =================================================== */
-
-/* Nút "Thêm vào giỏ" hoặc "Chọn màu" (inline) */
 inlineAddToCartBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
-    /* SP có biến thể màu → mở popup, chờ user chọn xong rồi thêm giỏ */
     vpPendingAction = "addtocart";
     window.__variantPopup.open();
   } else {
-    /* SP không có biến thể màu → thêm giỏ luôn (logic cũ) */
     doAddToCart();
   }
 });
 
-/* Giỏ hàng (bottom bar) */
 goToCartBtn.addEventListener("click", () => {
   loadCartItems();
   if (!cartItems.length) {
@@ -678,19 +664,15 @@ goToCartBtn.addEventListener("click", () => {
   openCheckout();
 });
 
-/* Mua ngay (bottom bar) */
 buyNowBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
-    /* SP có biến thể màu → mở popup, chờ user chọn xong rồi mua */
     vpPendingAction = "buynow";
     window.__variantPopup.open();
   } else {
-    /* SP không có biến thể màu → mua luôn (logic cũ) */
     doBuyNow();
   }
 });
 
-/* Mua ngay (inline) */
 inlineBuyNowBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
     vpPendingAction = "buynow";
@@ -701,21 +683,16 @@ inlineBuyNowBtn.addEventListener("click", () => {
 });
 
 /* ===================================================
-   VARIANT POPUP — CTA BUTTONS (chỉ khi có biến thể màu)
+   VARIANT POPUP — CTA BUTTONS
 =================================================== */
 if (HAS_COLOR_VARIANT) {
-  const vpAddToCartBtn = document.getElementById("vpAddToCartBtn");
-  const vpBuyNowBtn    = document.getElementById("vpBuyNowBtn");
-
-  /* Nút "Thêm vào giỏ" trong popup */
-  vpAddToCartBtn.addEventListener("click", () => {
+  document.getElementById("vpAddToCartBtn").addEventListener("click", () => {
     doAddToCart();
     window.__variantPopup.close();
     vpPendingAction = null;
   });
 
-  /* Nút "Mua ngay" trong popup */
-  vpBuyNowBtn.addEventListener("click", () => {
+  document.getElementById("vpBuyNowBtn").addEventListener("click", () => {
     window.__variantPopup.close();
     vpPendingAction = null;
     doBuyNow();
@@ -1051,7 +1028,6 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     const hashedPhone     = await sha256(phoneRaw);
     const finalGrandTotal = getActiveGrandTotal();
 
-    /* Chuẩn bị items cho payload (loại bỏ _key nội bộ) */
     const payloadItems = activeItems.map(item => {
       const clean = { ...item };
       delete clean._key;
@@ -1266,7 +1242,6 @@ function setupReviewMediaLightbox() {
   renderCartSummary();
   updateQtyDisplay();
 
-  /* Bind combo selector → cập nhật giá realtime */
   document.querySelectorAll(".combo-option").forEach(btn => {
     btn.addEventListener("click", () => {
       updatePriceDisplay();

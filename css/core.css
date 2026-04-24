@@ -613,7 +613,6 @@ button, input, textarea, select { font: inherit; }
   animation: slideUp 0.22s ease;
 }
 
-/* Header */
 .variant-popup-top {
   display: flex;
   justify-content: space-between;
@@ -636,7 +635,6 @@ button, input, textarea, select { font: inherit; }
   line-height: 1;
 }
 
-/* Gallery trong popup */
 .variant-popup-gallery {
   margin-bottom: 16px;
 }
@@ -673,7 +671,6 @@ button, input, textarea, select { font: inherit; }
   border-radius: 12px;
 }
 
-/* Dots trong popup */
 .variant-popup-dots {
   display: flex;
   justify-content: center;
@@ -695,7 +692,6 @@ button, input, textarea, select { font: inherit; }
   background: var(--primary);
 }
 
-/* Thumbnails trong popup */
 .variant-popup-thumbs {
   display: flex;
   gap: 8px;
@@ -735,7 +731,6 @@ button, input, textarea, select { font: inherit; }
   display: block;
 }
 
-/* Section biến thể (màu, size) */
 .variant-popup-section {
   margin-bottom: 14px;
 }
@@ -775,9 +770,16 @@ button, input, textarea, select { font: inherit; }
   color: var(--primary);
 }
 
-/* CTA trong popup */
 .variant-popup-cta {
   display: flex;
   gap: 10px;
   margin-top: 16px;
+}
+
+.variant-popup-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 14px;
+  padding: 0 2px;
 }

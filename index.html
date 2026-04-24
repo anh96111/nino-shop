@@ -171,7 +171,6 @@
       const pathname = window.location.pathname.replace(/^\/+|\/+$/g, "");
       const slug = pathname || new URLSearchParams(window.location.search).get("p");
 
-
       if (!slug) {
         document.body.innerHTML = "<h2 style='text-align:center;padding:40px;'>Không tìm thấy sản phẩm.</h2>";
         return;
