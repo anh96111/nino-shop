@@ -15,8 +15,8 @@ const PRODUCT_CONFIG = {
   // ── SEO / OG ──
   seo: {
     title:       "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6 – Đệm Lưng 3D, Phản Quang 360°, Chống Nước – BH 12 Tháng",
-    description: "Balo học sinh chống gù cột sống – đệm lưng 3D, quai chữ S, phản quang 360°, chống nước lá sen, 6 ngăn riêng biệt. Size nhỏ lớp 1–3, size lớn lớp 3–6. Giao toàn quốc, COD, miễn phí ship.",
-    ogImage:     "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/placeholder_balo.jpg"
+    description: "Balo học sinh chống gù cột sống – đệm lưng 3D, quai chữ S, phản quang 360°, chống nước lá sen, 6 ngăn riêng biệt. Size nhỏ lớp 1–3, size lớn lớp 4–6. Giao toàn quốc, COD, miễn phí ship.",
+    ogImage:     "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/placeholder_balo_og.jpg"
   },
 
   // ── SUB HEADING ──
@@ -24,55 +24,54 @@ const PRODUCT_CONFIG = {
 
   // ── GALLERY ──
   images: [
-    "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_1.jpg",
-    "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_2.jpg",
-    "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_3.jpg"
+    "https://res.cloudinary.com/dezednxpz/image/upload/v1777046284/12_oh5yi0.jpg"
   ],
   videos: [],
 
   // ── HOOK (P2) ──
-  hookTitle: "Balo con đang đeo — có thật sự xứng với mỗi ngày con đến trường không?",
+  hookTitle: "70% chiều cao và dáng của trẻ phụ thuộc vào quyết định và lựa chọn của bạn.",
   hooks: [
     {
       icon: "🦴",
-      text: "Balo rẻ tiền có thể làm cong cột sống con — mà bạn không nhìn thấy ngay. Cột sống trẻ tiểu học còn đang phát triển, chỉ cần dây đeo kém chất lượng hoặc lưng balo không có đệm — lưng con bắt đầu cong mà không ai để ý cho đến khi đã muộn."
+      text: "Cột sống trẻ tiểu học đang trong giai đoạn phát triển mạnh nhất. Chỉ cần dây đeo kém chất lượng hoặc lưng balo không có đệm — lưng con bắt đầu cong dần mà không ai nhận ra cho đến khi đã muộn. Chọn đúng balo từ đầu, bạn giúp con giữ dáng thẳng tự nhiên mỗi ngày."
     },
     {
       icon: "🎒",
-      text: "Con mang balo đi học cả ngày — tối về mẹ mở ra thấy đồ nhét lộn tùng phèo. Không phải con cẩu thả. Mà vì balo không có chỗ cố định cho từng thứ. Cái này có 6 ngăn riêng biệt, mỗi ngăn đúng một việc — con dùng một tuần là quen, tự soạn được mà không cần mẹ kiểm tra lại nữa."
-    },
-    {
-      icon: "💪",
-      text: "Con hay kêu mỏi vai, về nhà là quăng balo xuống sàn ngay — mẹ thấy mà xót. Con không kêu vì không biết đó là bất thường, con chỉ thấy mệt. Quai chữ S rộng 7cm, đệm lưng 3D, khóa ngực giữ thăng bằng — con đeo cả ngày về vẫn chạy nhảy bình thường."
+      text: "Con mang balo đi học cả ngày — tối về mẹ mở ra thấy đồ nhét lộn tùng phèo. Không phải con cẩu thả, mà vì balo không có chỗ cố định cho từng thứ."
     }
   ],
 
   // ── BENEFITS / CHỨNG MINH CÔNG DỤNG (P3) ──
   benefits: [
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_benefit_1.jpg",
-      title: "Hệ thống giảm tải khoa học — bảo vệ cột sống từ lớp 1",
-      description: "Quai đeo hình chữ S rộng 7cm ôm vai tự nhiên không tì vết. Đệm lưng 3D co giãn thoáng khí, lõi rỗng không áp lực, khóa ngực thăng bằng điều chỉnh tự do — phân bổ lực đều toàn thân, con đứng thẳng cả ngày dài mà không mỏi vai."
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777046282/7_gzneof.jpg",
+      title: "Bảo vệ cột sống đúng cách — bảo vệ tương lai con",
+      description: "Cột sống của trẻ yếu hơn bạn nghĩ rất nhiều. Dây đeo kém chất lượng gây lệch vai, balo quá nặng khiến lưng cong gù, đeo lâu quá sức gây đau lưng thoái hoá sớm."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_benefit_2.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777046281/4_g1h7ej.jpg",
+      title: "Dây đeo chữ S – Khóa ngực chống trượt – Đệm lưng 3D lập thể",
+      description: "Ôm sát vai không hằn, không đau, không lệch vai. Khóa ngực giữ cân bằng balo khi bé chạy nhảy. Đệm nổi khoa học giảm áp lực lên cột sống, thông thoáng không đổ mồ hôi."
+    },
+    {
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777046282/6_xjux0t.jpg",
       title: "6 ngăn riêng biệt — cất gọn mọi thứ, bé tự tìm được ngay",
-      description: "Ngăn chính dung tích lớn chứa sách A4, ngăn phụ khóa kéo, ngăn trước khóa kéo, túi nhỏ dán magic, túi bên trái khóa kéo, túi bên phải đàn hồi đựng bình nước. Mỗi ngăn một nhiệm vụ — bé nhìn vào là biết ngay cái gì để ở đâu."
+      description: "Ngăn chính dung tích lớn, ngăn phụ khoá kéo, ngăn trước khoá kéo, túi nhỏ dán magic, túi bên trái khoá kéo, túi bên phải đàn hồi đựng bình nước. Mỗi ngăn một công dụng — bé nhìn vào là biết ngay cái gì để ở đâu."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_benefit_3.jpg",
-      title: "Phản quang 360° — nhìn thấy từ khoảng cách 200m",
-      description: "Dải phản quang phía trước, hai bên và phía sau balo. Buổi sáng sớm, trời tối hay trời mưa — xe cộ vẫn nhìn thấy con rõ ràng từ xa. Thứ bảo vệ con trên đường đến trường khi mẹ không ở bên."
-    },
-    {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_benefit_4.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777046285/1_i409ck.jpg",
       title: "Chống nước kiểu lá sen — mưa lớn cũng không lo",
-      description: "Vải Polyester Nylon mật độ cao xử lý công nghệ chống thấm lá sen. Nước bắn vào lăn tròn, không ngấm vào trong. Sách vở bên trong khô ráo hoàn toàn dù trời đổ mưa giữa đường."
+      description: "Vải mật độ cao chống thấm nước công nghệ lá sen. Nước bắn vào lăn tròn, không ngấm vào trong. Sách vở bên trong khô ráo hoàn toàn dù trời đổ mưa giữa đường."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,f_webp,q_auto/placeholder_balo_benefit_5.jpg",
-      title: "Chất liệu bền — dùng cả năm học không sờn rách",
-      description: "Vải Polyester Nylon cao cấp, đường may chắc chắn, khóa kéo trượt mượt. Size nhỏ 550g phù hợp lớp 1–3, size lớn 650g phù hợp lớp 3–6 — nhẹ vừa đủ, không thêm tải cho con."
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777046282/8_vmqhx4.jpg",
+      title: "Phản quang 360° — nhìn thấy từ khoảng cách 200m",
+      description: "Dải phản quang phía trước, hai bên và phía sau balo. Buổi sáng sớm, trời tối hay trời mưa — xe cộ vẫn nhìn thấy con rõ ràng từ xa."
+    },
+    {
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777046282/9_qezl4k.jpg",
+      title: "Siêu nhẹ — đeo mãi không mỏi",
+      description: "Balo chỉ nặng 550g — nhẹ như một chai nước. Chuyên gia xương khớp khuyến nghị balo không nên vượt quá 10% cân nặng của trẻ."
     }
   ],
 
@@ -84,19 +83,19 @@ const PRODUCT_CONFIG = {
       options: [
         {
           name:  "Navy Phối Xanh Lá",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/placeholder_balo_navy_xanhla.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777058700/13_cqnoto.jpg"
         },
         {
           name:  "Navy",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/placeholder_balo_navy.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777058700/14_p5n76h.jpg"
         },
         {
           name:  "Navy Phối Hồng",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/placeholder_balo_navy_hong.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777058700/16_urqk3f.jpg"
         },
         {
           name:  "Tím Lavender",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_600,h_600,c_fill,f_webp,q_80/placeholder_balo_tim.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777058700/15_kgeqxz.jpg"
         }
       ]
     },
@@ -105,7 +104,7 @@ const PRODUCT_CONFIG = {
       label: "Size",
       options: [
         "Nhỏ — Lớp 1–3 (39×28×18cm)",
-        "Lớn — Lớp 3–6 (42×32×20cm)"
+        "Lớn — Lớp 4–6 (42×32×20cm)"
       ]
     }
   ],
@@ -133,23 +132,23 @@ const PRODUCT_CONFIG = {
   faqs: [
     {
       q: "Balo phù hợp với lớp mấy?",
-      a: "Size nhỏ (39×28×18cm, 550g) dành cho lớp 1–3. Size lớn (42×32×20cm, 650g) dành cho lớp 3–6. Lớp 3 có thể dùng cả hai size tùy chiều cao và lượng sách của bé."
+      a: "Size nhỏ (39×28×18cm, 550g) dành cho lớp 1–3. Size lớn (42×32×20cm, 650g) dành cho lớp 4–6."
     },
     {
       q: "Chất liệu có thật sự chống nước không?",
-      a: "Có — vải Polyester Nylon mật độ cao xử lý công nghệ chống thấm lá sen. Nước bắn vào lăn tròn, không ngấm vào trong. Phù hợp mưa bắn nhỏ và vừa khi đi ngoài trời."
+      a: "Có — vải Polyester Nylon mật độ cao xử lý công nghệ chống thấm lá sen. Nước bắn vào lăn tròn, không ngấm vào trong."
     },
     {
       q: "Dây đeo có êm không, bé đeo cả ngày có mỏi vai không?",
-      a: "Quai hình chữ S rộng 7cm, đệm dày mềm, ôm vai tự nhiên không hằn đỏ. Kết hợp khóa ngực thăng bằng và đệm lưng 3D giúp phân bổ lực đều — bé đeo cả buổi học về vẫn thoải mái."
+      a: "Quai hình chữ S rộng 7cm, đệm dày mềm, ôm vai tự nhiên không hằn đỏ. Kết hợp khóa ngực thăng bằng và đệm lưng 3D giúp phân bổ lực đều."
     },
     {
       q: "Có kiểm tra hàng trước khi thanh toán không?",
-      a: "Có — kiểm tra tại chỗ, xem màu sắc, chất liệu, kéo thử khóa trước khi trả tiền cho shipper. Không vừa ý không cần nhận."
+      a: "Có — kiểm tra tại chỗ, xem màu sắc, chất liệu, kéo thử khóa trước khi trả tiền cho shipper."
     },
     {
       q: "Bảo hành như thế nào?",
-      a: "12 tháng — 1 đổi 1 nếu lỗi kỹ thuật về đường may, khóa kéo, quai đeo. Liên hệ shop qua Zalo hoặc Messenger để được hỗ trợ nhanh nhất."
+      a: "12 tháng — 1 đổi 1 nếu lỗi kỹ thuật về đường may, khóa kéo, quai đeo. Liên hệ shop qua Zalo hoặc Messenger để được hỗ trợ."
     }
   ],
 
@@ -170,7 +169,7 @@ const PRODUCT_CONFIG = {
         avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/placeholder_avatar_1.jpg",
         stars:    5,
         date:     "2026-03-10 09:15",
-        classify: "Balo học sinh – Navy Phối Xanh Lá – Size Nhỏ",
+        classify: "Navy Phối Xanh Lá – Size Nhỏ",
         match:    "Đúng như mô tả",
         material: "Dày dặn, chắc chắn",
         content:  "Sản phẩm dày dặn, tốt. Có nhiều ngăn nhỏ để đựng dụng cụ học tập, hợp lý. Con gái mình thích lắm, đeo vào trông rất xinh.",
@@ -182,7 +181,7 @@ const PRODUCT_CONFIG = {
         avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/placeholder_avatar_2.jpg",
         stars:    4,
         date:     "2026-02-20 14:30",
-        classify: "Balo học sinh – Navy – Size Lớn",
+        classify: "Navy – Size Lớn",
         match:    "Đúng mô tả",
         material: "Tốt",
         content:  "Balo to, màu sắc đẹp, quai đeo dày và êm. Mình tưởng có con gấu tặng kèm nhưng không có, bù lại được tặng cây viết chì cũng ok.",
@@ -194,7 +193,7 @@ const PRODUCT_CONFIG = {
         avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/placeholder_avatar_3.jpg",
         stars:    5,
         date:     "2026-03-05 20:00",
-        classify: "Balo học sinh – Navy Phối Hồng – Size Nhỏ",
+        classify: "Navy Phối Hồng – Size Nhỏ",
         match:    "Đúng mô tả",
         material: "Chắc chắn",
         content:  "Shop chu đáo. Sản phẩm rất hài lòng. Còn tặng kèm quà dễ thương cho bé. Sẽ ủng hộ lần sau 😘😘",
@@ -206,7 +205,7 @@ const PRODUCT_CONFIG = {
         avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/placeholder_avatar_4.jpg",
         stars:    5,
         date:     "2026-01-28 11:00",
-        classify: "Balo học sinh – Tím Lavender – Size Nhỏ",
+        classify: "Tím Lavender – Size Nhỏ",
         match:    "Đúng như hình",
         material: "Chắc chắn",
         content:  "Sản phẩm đúng với hình ảnh mô tả. Bé nhà mình rất thích. Cặp to chắc chắn còn kèm quà tặng.",
@@ -218,7 +217,7 @@ const PRODUCT_CONFIG = {
         avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/placeholder_avatar_5.jpg",
         stars:    5,
         date:     "2026-02-14 16:45",
-        classify: "Balo học sinh – Navy – Size Lớn",
+        classify: "Navy – Size Lớn",
         match:    "Đúng mô tả",
         material: "Bền, đẹp",
         content:  "Shop giao hàng nhanh chóng và đóng gói sản phẩm như hình. Shop tặng quà đồng hồ đeo tay bé rất thích. Cám ơn Shop.",
@@ -230,7 +229,7 @@ const PRODUCT_CONFIG = {
         avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/placeholder_avatar_6.jpg",
         stars:    3,
         date:     "2026-03-18 08:30",
-        classify: "Balo học sinh – Navy Phối Xanh Lá – Size Lớn",
+        classify: "Navy Phối Xanh Lá – Size Lớn",
         match:    "Giao sai màu",
         material: "Phù hợp giá thành",
         content:  "Đặt màu xanh lá mà giao màu nâu, sản phẩm phù hợp với giá thành.",
