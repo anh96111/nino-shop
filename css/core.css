@@ -783,3 +783,18 @@ button, input, textarea, select { font: inherit; }
   margin-bottom: 14px;
   padding: 0 2px;
 }
+
+/* ===================================================
+   ANIMATION — Mua ngay button wiggle
+=================================================== */
+@keyframes wiggle-pulse {
+  0%, 85%, 100% { transform: translateX(0); }
+  88%            { transform: translateX(-3px); }
+  91%            { transform: translateX(3px); }
+  94%            { transform: translateX(-3px); }
+  97%            { transform: translateX(3px); }
+}
+
+.btn-bar-solid {
+  animation: wiggle-pulse 4s ease-in-out 2s infinite;
+}
