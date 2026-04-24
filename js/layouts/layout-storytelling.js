@@ -43,6 +43,17 @@
           <div style="margin-top:6px; display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#38a169; font-weight:600; background:#f0fff4; padding:3px 8px; border-radius:4px;">
             🚚 Miễn phí vận chuyển
           </div>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
+              <span style="font-size:14px;">🔍</span> Xem hàng trước khi trả tiền
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
+              <span style="font-size:14px;">🛡️</span> BH 12 tháng 1 đổi 1
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
+              <span style="font-size:14px;">↩️</span> Hoàn tiền nếu sai mô tả
+            </div>
+          </div>
         </div>
 
         <!-- SLIDER ẢNH TRONG POPUP -->
