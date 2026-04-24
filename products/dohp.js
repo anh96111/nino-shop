@@ -2,7 +2,7 @@ const PRODUCT_CONFIG = {
 
   // ── CƠ BẢN ──
   id:        "may-do-huyet-ap-bap-tay-001",
-  slug:      "may-do-huyet-ap",
+  slug:      "dohp",
   layout:    "storytelling",
   name:      "Chỉ 30 Giây Đo Tại Nhà – Máy Đo Huyết Áp Bắp Tay Giọng Nói Tiếng Việt Giúp Phát Hiện Sớm Nguy Cơ Đột Quỵ, Tim Mạch - BH 12 tháng.",
   shortName: "Máy Đo Huyết Áp Bắp Tay Giọng Nói Tiếng Việt",
