@@ -212,7 +212,29 @@
       ` : ""}
 
       <!-- FREE SHIP -->
-      <div class="ship-bar">🚚 Miễn phí vận chuyển &amp; hoàn trả toàn quốc khi mua trong hôm nay</div>
+      <div class="ship-bar" style="color:#16a34a; background:linear-gradient(135deg,#f0fff4,#dcfce7); border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; font-weight:600; font-size:14px; position:relative; overflow:hidden;">
+        <span class="ship-bar-shimmer"></span>
+        <span style="position:relative; z-index:1;">🎁 ${P.shipBar || 'Miễn phí vận chuyển &amp; hoàn trả toàn quốc khi mua trong hôm nay'}</span>
+      </div>
+      <style>
+      .ship-bar-shimmer {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+        animation: shipBarShimmer 2s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+      }
+      @keyframes shipBarShimmer {
+        0%   { left: -100%; }
+        100% { left: 100%; }
+      }
+      </style>
+
+
 
       <!-- RETURN POLICY -->
       <div class="return-policy-bar">

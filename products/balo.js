@@ -5,11 +5,12 @@ const PRODUCT_CONFIG = {
   slug:      "balo",
   layout:    "storytelling",
   name:      "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6 – Đệm Lưng 3D, Phản Quang 360°, Chống Nước – BH 12 Tháng",
-  shortName: "Balo Chống Gù Học Sinh Tiểu Học ( Bao gồm phụ kiện tặng kèm )",
+  shortName: "Balo Chống Gù Học Sinh Tiểu Học ",
   price:     325000,
   oldPrice:  475000,
   currency:  "VND",
   sheetName: "balo",
+  shipBar:   "Tặng Phụ kiện đeo Balo cho bé khi đặt hàng trong hôm nay",
   category:  "Học sinh",
 
   // ── SEO / OG ──
@@ -155,11 +156,11 @@ const PRODUCT_CONFIG = {
   // ── REVIEWS ──
   reviews: {
     avgScore:   4.5,
-    totalCount: 6,
+    totalCount: 16,
     bars: [
-      { star: 5, count: 4, percent: 67 },
-      { star: 4, count: 1, percent: 17 },
-      { star: 3, count: 1, percent: 16 },
+      { star: 5, count: 11, percent: 69 },
+      { star: 4, count: 3, percent: 19 },
+      { star: 3, count: 2, percent: 12 },
       { star: 2, count: 0, percent: 0 },
       { star: 1, count: 0, percent: 0 }
     ],
@@ -235,7 +236,129 @@ const PRODUCT_CONFIG = {
         content:  "Đặt màu xanh lá mà giao màu nâu, sản phẩm phù hợp với giá thành.",
         media:    [],
         likes:    3
+      },
+      {
+        name:     "Hồng Nhung",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-02 08:40",
+        classify: "Tím Lavender – Size Nhỏ",
+        match:    "Đúng như hình",
+        material: "Dày, chắc",
+        content:  "Bé nhà mình lớp 2, đeo vừa vặn. Quai đeo êm, bé đi học cả ngày về không kêu đau vai như balo cũ. Khóa ngực giữ chắc, bé chạy nhảy không bị tuột.",
+        media:    [],
+        likes:    14
+      },
+      {
+        name:     "Thanh Tùng",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    4,
+        date:     "2026-03-25 19:10",
+        classify: "Navy Phối Xanh Lá – Size Lớn",
+        match:    "Đúng mô tả",
+        material: "Ổn",
+        content:  "Con lớp 5 dùng size lớn vừa đẹp. Nhiều ngăn nên sách vở không bị nhàu. Trừ 1 sao vì khóa kéo hơi cứng lúc mới dùng, dùng vài ngày thì trơn hơn.",
+        media:    [],
+        likes:    8
+      },
+      {
+        name:     "Bích Ngọc",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-10 10:25",
+        classify: "Navy Phối Hồng – Size Nhỏ",
+        match:    "Đúng như hình",
+        material: "Chắc chắn",
+        content:  "Hôm trước đi học gặp mưa to, về mở balo ra sách vở khô hoàn toàn. Chống nước thật chứ không phải quảng cáo. Yên tâm hơn nhiều.",
+        media:    [],
+        likes:    22
+      },
+      {
+        name:     "Minh Đức",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-03-30 15:50",
+        classify: "Navy – Size Nhỏ",
+        match:    "Đúng mô tả",
+        material: "Tốt",
+        content:  "Mua cho con trai lớp 1. Balo nhẹ, bé tự mang được không cần người lớn xách hộ. Đệm lưng mềm, bé bảo đeo thích hơn cái cũ.",
+        media:    [],
+        likes:    17
+      },
+      {
+        name:     "Thu Hà",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    4,
+        date:     "2026-04-05 21:30",
+        classify: "Tím Lavender – Size Lớn",
+        match:    "Đúng",
+        material: "Dày dặn",
+        content:  "Balo đẹp, con gái thích lắm. Ngăn bình nước bên hông tiện, không sợ nước đổ vào sách. Giao hàng 3 ngày, nhanh hơn mình nghĩ.",
+        media:    [],
+        likes:    11
+      },
+      {
+        name:     "Quốc Anh",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-12 07:15",
+        classify: "Navy Phối Xanh Lá – Size Nhỏ",
+        match:    "Đúng như mô tả",
+        material: "Chắc chắn",
+        content:  "Mua lần 2 rồi vì đứa lớn dùng tốt nên mua thêm cho đứa nhỏ. Dùng gần 1 năm chưa hỏng gì, đường may vẫn chắc, khóa kéo vẫn trơn.",
+        media:    [],
+        likes:    35
+      },
+      {
+        name:     "Phương Linh",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-08 13:00",
+        classify: "Navy Phối Hồng – Size Lớn",
+        match:    "Đúng",
+        material: "Bền",
+        content:  "Con bé lớp 4 hay nhét đồ bừa bãi, từ khi dùng balo này tự biết để đồ đúng ngăn vì mỗi ngăn khác nhau. Mẹ đỡ phải nhắc.",
+        media:    [],
+        likes:    19
+      },
+      {
+        name:     "Văn Hưng",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    3,
+        date:     "2026-03-20 16:20",
+        classify: "Navy – Size Lớn",
+        match:    "Đúng mô tả",
+        material: "Được",
+        content:  "Balo dùng ổn, chắc chắn. Nhưng mình đặt navy tưởng xanh đậm hơn, thực tế hơi nhạt. Còn lại chất lượng không có gì chê.",
+        media:    [],
+        likes:    5
+      },
+      {
+        name:     "Kim Oanh",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-15 09:45",
+        classify: "Tím Lavender – Size Nhỏ",
+        match:    "Đúng như hình",
+        material: "Đẹp, chắc",
+        content:  "Bé mới vào lớp 1, mình lo balo nặng quá bé mang không nổi. Nhưng cái này nhẹ lắm, bé tự đeo thoải mái. Phản quang sáng rõ buổi tối, đi đường an tâm hơn.",
+        media:    [],
+        likes:    27
+      },
+      {
+        name:     "Thành Nam",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    4,
+        date:     "2026-04-18 20:00",
+        classify: "Navy Phối Xanh Lá – Size Lớn",
+        match:    "Đúng",
+        material: "Tốt",
+        content:  "Con dùng được 2 tuần, đường may chắc, khóa kéo mượt. Trừ 1 sao vì túi bên hông hơi chật với bình nước 500ml của con. Bình nhỏ hơn thì vừa.",
+        media:    [],
+        likes:    10
       }
+
+
     ]
   },
 
