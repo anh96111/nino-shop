@@ -100,15 +100,16 @@ const PRODUCT_CONFIG = {
 
   // ── REVIEWS ──
   reviews: {
-    avgScore:   4.8,
-    totalCount: 7,
+    avgScore:   4.7,
+    totalCount: 17,
     bars: [
-      { star: 5, count: 6, percent: 85 },
-      { star: 4, count: 1, percent: 15 },
-      { star: 3, count: 0, percent: 0 },
-      { star: 2, count: 0, percent: 0 },
-      { star: 1, count: 0, percent: 0 }
+      { star: 5, count: 12, percent: 71 },
+      { star: 4, count: 3,  percent: 17 },
+      { star: 3, count: 2,  percent: 12 },
+      { star: 2, count: 0,  percent: 0 },
+      { star: 1, count: 0,  percent: 0 }
     ],
+
     items: [
       {
         name: "minhchau_nguyen82",
@@ -179,7 +180,128 @@ const PRODUCT_CONFIG = {
         content: "Cả nhà 2 người già dùng chung được vì máy lưu riêng 2 tài khoản. Tự động tắt sau 1 phút tiết kiệm pin. Bảo hành 12 tháng yên tâm hơn nhiều chỗ khác chỉ 3 tháng. Đặt lần 2 rồi, mua thêm cho nhà ngoại.",
         media: ["https://res.cloudinary.com/dezednxpz/image/upload/w_200,h_200,c_fill,f_webp,q_80/v1776177557/5_xphrfb.jpg"],
         likes: 15
+      },
+      {
+        name:     "Văn Đạt",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-05 07:30",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng mô tả",
+        material: "Chắc chắn",
+        content:  "Mẹ 68 tuổi tự đo được luôn không cần hướng dẫn. Bấm 1 nút xong ngồi chờ, máy đọc kết quả tiếng Việt rõ ràng. Sáng nào bà cũng đo, thành thói quen rồi.",
+        media:    [],
+        likes:    21
+      },
+      {
+        name:     "Ngọc Diệp",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    4,
+        date:     "2026-03-28 14:15",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng",
+        material: "Tốt",
+        content:  "Máy dùng ổn, kết quả khớp với máy ở phòng khám gần nhà. Trừ 1 sao vì vòng bít hơi ngắn, tay bố mình to phải kéo sát mới vừa.",
+        media:    [],
+        likes:    13
+      },
+      {
+        name:     "Hoàng Sơn",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-10 20:45",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng như mô tả",
+        material: "Bền",
+        content:  "Cắm sạc USB dùng luôn không cần mua pin. Để đầu giường cắm sạc điện thoại cũ, sáng dậy đo xong rồi đi làm. Tiện lắm.",
+        media:    [],
+        likes:    16
+      },
+      {
+        name:     "Thúy Hằng",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-02 11:20",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng",
+        material: "Chắc chắn",
+        content:  "Mua tặng ông bà ngoại. Ông 75 tuổi mắt kém nhưng màn hình chữ to nên nhìn được, lại có giọng đọc nên không cần nhìn cũng biết kết quả. Ông khen hoài.",
+        media:    [],
+        likes:    29
+      },
+      {
+        name:     "Tuấn Kiệt",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-03-22 18:00",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng mô tả",
+        material: "Tốt",
+        content:  "Đo thử 3 lần liên tiếp, kết quả chênh nhau 1–2 mmHg thôi, ổn định. Bố mình uống thuốc huyết áp nên cần theo dõi hàng ngày, có máy ở nhà đỡ phải ra tiệm thuốc đo.",
+        media:    [],
+        likes:    22
+      },
+      {
+        name:     "Mai Trang",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    4,
+        date:     "2026-04-08 08:50",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng",
+        material: "Ổn",
+        content:  "Máy nhỏ gọn, mang về quê tặng mẹ chồng dịp giỗ. Bà dùng được ngay. Trừ 1 sao vì hướng dẫn sử dụng in chữ hơi nhỏ, người già đọc khó.",
+        media:    [],
+        likes:    8
+      },
+      {
+        name:     "Đức Thịnh",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-14 16:30",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng như mô tả",
+        material: "Chắc chắn",
+        content:  "Mua lần 2 cho nhà ngoại vì nhà nội dùng gần nửa năm vẫn tốt. Lưu được 99 lần đo, lần nào đi khám mang kết quả cho bác sĩ xem luôn, rất tiện.",
+        media:    [],
+        likes:    31
+      },
+      {
+        name:     "Bảo Ngân",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    3,
+        date:     "2026-03-18 21:10",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng",
+        material: "Được",
+        content:  "Máy dùng bình thường, đo nhanh. Nhưng giọng đọc hơi to, đo lúc khuya sợ ảnh hưởng người ngủ cạnh. Nếu có nút chỉnh âm lượng thì tốt hơn.",
+        media:    [],
+        likes:    6
+      },
+      {
+        name:     "Thanh Nhàn",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-18 10:00",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng mô tả",
+        material: "Tốt",
+        content:  "Shipper giao nhanh, đóng hộp cẩn thận. Kiểm tra hàng trước khi trả tiền, máy nguyên seal. Về dùng thử so với máy thủy ngân ở phòng khám chênh 2 số, chấp nhận được.",
+        media:    [],
+        likes:    19
+      },
+      {
+        name:     "Quỳnh Anh",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777178082/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_l9xnkz.webp",
+        stars:    5,
+        date:     "2026-04-20 15:25",
+        classify: "Máy đo huyết áp bắp tay",
+        match:    "Đúng như hình",
+        material: "Chắc, đẹp",
+        content:  "Mẹ bị tiểu đường kèm huyết áp cao, bác sĩ dặn đo mỗi ngày. Có máy ở nhà mẹ tự đo xong ghi sổ, không cần nhờ ai. Yên tâm hơn nhiều.",
+        media:    [],
+        likes:    24
       }
+
     ]
   },
 
