@@ -81,6 +81,11 @@
           </div>
         </div>
 
+                <!-- GIFT NOTE -->
+        <div style="display:flex; align-items:center; gap:6px; padding:0 16px 12px; font-size:13.5px; font-weight:600; color:#38a169;">
+          <span style="font-size:16px;">🎁</span> Đã bao gồm full bộ quà tặng kèm cho bé
+        </div>
+
         <!-- BIẾN THỂ MÀU -->
         <div class="variant-popup-section">
           <div class="variant-popup-label">${colorVariant.label}</div>
