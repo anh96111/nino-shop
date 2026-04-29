@@ -24,6 +24,7 @@ const REVIEWS              = PRODUCT_CONFIG.reviews.items;
    DETECT: SP có biến thể màu không?
 =================================================== */
 const HAS_COLOR_VARIANT = window.__variantPopup && window.__variantPopup.hasColorVariant;
+const HAS_COMBO_POPUP   = window.__comboPopup ? true : false;
 
 /* ===================================================
    FACEBOOK PIXEL — init + PageView + ViewContent
@@ -325,11 +326,13 @@ function getSelectedCombo() {
   const active = document.querySelector(".combo-option.active");
   if (!active) return null;
   return {
-    index: parseInt(active.dataset.index),
-    name:  active.querySelector(".combo-name")?.textContent || "",
-    price: parseInt(active.dataset.price)
+    index:   parseInt(active.dataset.index),
+    name:    active.querySelector(".combo-name")?.textContent || "",
+    price:   parseInt(active.dataset.price),
+    shipFee: parseInt(active.dataset.shipfee || "0")
   };
 }
+
 
 function getCurrentPrice() {
   const combo = getSelectedCombo();
@@ -453,7 +456,8 @@ function addCurrentSelectionToCart() {
       product_name: PRODUCT.name,
       quantity:     quantity,
       price:        unitPrice,
-      total:        unitPrice * quantity
+      total:        unitPrice * quantity,
+      shipFee:      combo ? (combo.shipFee || 0) : 0
     };
     if (Object.keys(variants).length) item.variants = variants;
     if (combo)                         item.combo    = combo.name;
@@ -470,9 +474,21 @@ function getActiveSubTotal() {
   return getActiveItems().reduce((sum, item) => sum + item.total, 0);
 }
 
-function getActiveGrandTotal() {
-  return getActiveSubTotal();
+function getActiveShipFee() {
+  const items = getActiveItems();
+  if (!items.length) return 0;
+  var maxShip = 0;
+  items.forEach(function(item) {
+    var fee = item.shipFee || 0;
+    if (fee > maxShip) maxShip = fee;
+  });
+  return maxShip;
 }
+
+function getActiveGrandTotal() {
+  return getActiveSubTotal() + getActiveShipFee();
+}
+
 
 /* ===================================================
    RENDER CART SUMMARY
@@ -513,8 +529,20 @@ function renderCartSummary() {
   `;
   }).join("");
 
+  const shipFee = getActiveShipFee();
+  const freeshipRow = document.querySelector(".order-totals-row.freeship");
+  if (freeshipRow) {
+    if (shipFee > 0) {
+      freeshipRow.querySelector("span:first-child").textContent = "🚚 Phí vận chuyển";
+      freeshipRow.querySelector("span:last-child").textContent = formatPrice(shipFee);
+    } else {
+      freeshipRow.querySelector("span:first-child").textContent = "🚚 Miễn phí vận chuyển";
+      freeshipRow.querySelector("span:last-child").textContent = "0đ";
+    }
+  }
   grandTotalEl.textContent = formatPrice(getActiveGrandTotal());
   updateSubmitBtnPrice();
+
 
   cartSummaryList.querySelectorAll("[data-action]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -633,7 +661,8 @@ function doBuyNow() {
     product_name: PRODUCT.name,
     quantity:     quantity,
     price:        unitPrice,
-    total:        unitPrice * quantity
+    total:        unitPrice * quantity,
+    shipFee:      combo ? (combo.shipFee || 0) : 0
   };
   if (Object.keys(variants).length) item.variants = variants;
   if (combo)                         item.combo    = combo.name;
@@ -649,6 +678,8 @@ inlineAddToCartBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
     vpPendingAction = "addtocart";
     window.__variantPopup.open();
+  } else if (HAS_COMBO_POPUP) {
+    window.__comboPopup.open();
   } else {
     doAddToCart();
   }
@@ -668,6 +699,8 @@ buyNowBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
     vpPendingAction = "buynow";
     window.__variantPopup.open();
+  } else if (HAS_COMBO_POPUP) {
+    window.__comboPopup.open();
   } else {
     doBuyNow();
   }
@@ -677,6 +710,8 @@ inlineBuyNowBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
     vpPendingAction = "buynow";
     window.__variantPopup.open();
+  } else if (HAS_COMBO_POPUP) {
+    window.__comboPopup.open();
   } else {
     doBuyNow();
   }
@@ -688,11 +723,14 @@ if (midCtaBtn) {
     if (HAS_COLOR_VARIANT) {
       vpPendingAction = "buynow";
       window.__variantPopup.open();
+    } else if (HAS_COMBO_POPUP) {
+      window.__comboPopup.open();
     } else {
       doBuyNow();
     }
   });
 }
+
 
 
 /* ===================================================
@@ -711,6 +749,22 @@ if (HAS_COLOR_VARIANT) {
     doBuyNow();
   });
 }
+
+/* ===================================================
+   COMBO POPUP — CTA BUTTONS
+=================================================== */
+if (HAS_COMBO_POPUP) {
+  document.getElementById("cpAddToCartBtn").addEventListener("click", () => {
+    doAddToCart();
+    window.__comboPopup.close();
+  });
+
+  document.getElementById("cpBuyNowBtn").addEventListener("click", () => {
+    window.__comboPopup.close();
+    doBuyNow();
+  });
+}
+
 
 /* ===================================================
    Phone auto-format
@@ -1151,19 +1205,25 @@ function renderReviewMedia(media) {
   return `
     <div class="review-media">
       ${media.map(item => {
-        const isVideo = item.toLowerCase().includes(".mp4");
+        if (typeof item === "object" && item.type === "video") {
+          return `<div class="review-media-item lazy-video-wrap" data-type="video" data-src="${item.src}" style="position:relative; cursor:pointer;">
+              <img src="${item.poster}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" />
+              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;background:rgba(0,0,0,0.25);border-radius:8px;">▶</div>
+            </div>`;
+        }
+        const str = typeof item === "string" ? item : "";
+        if (!str) return "";
+        const isVideo = str.toLowerCase().includes(".mp4");
         return isVideo
-          ? `<div class="review-media-item" data-type="video" data-src="${item}" style="position:relative; cursor:pointer;">
-              <video playsinline preload="metadata" muted style="width:100%; height:100%; object-fit:cover; border-radius:8px; pointer-events:none;">
-                <source src="${item}" type="video/mp4">
-              </video>
-              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;background:rgba(0,0,0,0.2);border-radius:8px;">▶</div>
+          ? `<div class="review-media-item lazy-video-wrap" data-type="video" data-src="${str}" style="position:relative; cursor:pointer;">
+              <div style="width:100%;height:100%;background:#eee;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#999;font-size:22px;">▶</div>
             </div>`
-          : `<img class="review-media-item" data-type="image" data-src="${item}" src="${item}" loading="lazy" decoding="async" style="cursor:pointer;" />`;
+          : `<img class="review-media-item" data-type="image" data-src="${str}" src="${str}" loading="lazy" decoding="async" style="cursor:pointer;" />`;
       }).join("")}
     </div>
   `;
 }
+
 
 function renderReviews() {
   const reviewList = document.getElementById("reviewList");
@@ -1252,11 +1312,34 @@ function setupReviewMediaLightbox() {
 /* ===================================================
    KHỞI CHẠY
 =================================================== */
+function initLazyVideos() {
+  document.querySelectorAll(".lazy-video-wrap").forEach(wrap => {
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = "1";
+    wrap.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const src = this.dataset.src;
+      if (!src) return;
+      const video = document.createElement("video");
+      video.src = src;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.style.cssText = "width:100%;height:100%;object-fit:cover;border-radius:8px;";
+      this.innerHTML = "";
+      this.appendChild(video);
+      this.classList.remove("lazy-video-wrap");
+      this.style.cursor = "default";
+    });
+  });
+}
+
 (function init() {
   loadCartItems();
   buildFullGallery();
   renderReviews();
   setupReviewMediaLightbox();
+  initLazyVideos();
   renderCartSummary();
   updateQtyDisplay();
 
@@ -1266,3 +1349,4 @@ function setupReviewMediaLightbox() {
     });
   });
 })();
+
