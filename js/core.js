@@ -1260,6 +1260,10 @@ function setupReviewMediaLightbox() {
   document.addEventListener("click", e => {
     const target = e.target.closest(".review-media-item");
     if (!target) return;
+
+    /* Chặn event không cho bubble lên */
+    e.stopPropagation();
+
     const type = target.dataset.type;
     const src  = target.dataset.src;
     if (!type || !src) return;
@@ -1273,6 +1277,7 @@ function setupReviewMediaLightbox() {
       mediaEl.controls    = true;
       mediaEl.autoplay    = true;
       mediaEl.playsInline = true;
+      mediaEl.style.cssText = "max-width:100%; max-height:80vh; border-radius:8px;";
     } else {
       mediaEl     = document.createElement("img");
       mediaEl.src = src;
@@ -1291,9 +1296,21 @@ function setupReviewMediaLightbox() {
     lightboxContent.querySelectorAll("img, video").forEach(el => el.remove());
   }
 
-  closeBtn.addEventListener("click", closeLightbox);
-  lightbox.addEventListener("click", e => { if (e.target === lightbox) closeLightbox(); });
+  closeBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    closeLightbox();
+  });
+
+  lightbox.addEventListener("click", e => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  /* Click vào video trong lightbox không đóng lightbox */
+  lightboxContent.addEventListener("click", e => {
+    e.stopPropagation();
+  });
 }
+
 
 /* ===================================================
    INIT — ViewContent GAS
@@ -1315,6 +1332,8 @@ function setupReviewMediaLightbox() {
 function initLazyVideos() {
   document.querySelectorAll(".lazy-video-wrap").forEach(wrap => {
     if (wrap.dataset.bound) return;
+    /* Bỏ qua video trong review — review dùng lightbox */
+    if (wrap.closest(".review-media")) return;
     wrap.dataset.bound = "1";
     wrap.addEventListener("click", function (e) {
       e.stopPropagation();
@@ -1333,6 +1352,7 @@ function initLazyVideos() {
     });
   });
 }
+
 
 (function init() {
   loadCartItems();
