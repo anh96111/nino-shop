@@ -708,34 +708,24 @@ function doAddToCart(btnEl) {
    nếu giỏ trống → chỉ SP đang chọn
 =================================================== */
 function doPopupBuyNow() {
-  loadCartItems();
+  checkoutMode = "buynow";
 
-  if (cartItems.length > 0) {
-    /* Thêm SP đang chọn vào giỏ rồi checkout giỏ */
-    addCurrentSelectionToCart();
-    updateCartBadge();
-    checkoutMode = "cart";
-    loadCartItems();
-  } else {
-    /* Giỏ trống — chỉ SP đang chọn */
-    checkoutMode = "buynow";
-    const variants  = getSelectedVariants();
-    const combo     = getSelectedCombo();
-    const unitPrice = getCurrentPrice();
+  const variants  = getSelectedVariants();
+  const combo     = getSelectedCombo();
+  const unitPrice = getCurrentPrice();
 
-    const item = {
-      product_id:   PRODUCT.id,
-      product_name: PRODUCT.name,
-      quantity:     quantity,
-      price:        unitPrice,
-      total:        unitPrice * quantity,
-      shipFee:      combo ? (combo.shipFee || 0) : 0
-    };
-    if (Object.keys(variants).length) item.variants = variants;
-    if (combo)                         item.combo    = combo.name;
-    buyNowItems = [item];
-  }
+  const item = {
+    product_id:   PRODUCT.id,
+    product_name: PRODUCT.name,
+    quantity:     quantity,
+    price:        unitPrice,
+    total:        unitPrice * quantity,
+    shipFee:      combo ? (combo.shipFee || 0) : 0
+  };
+  if (Object.keys(variants).length) item.variants = variants;
+  if (combo)                         item.combo    = combo.name;
 
+  buyNowItems = [item];
   openCheckout();
 }
 

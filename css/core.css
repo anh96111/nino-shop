@@ -813,22 +813,18 @@ button, input, textarea, select { font: inherit; }
    VARIANT POPUP — NÚT THÊM VÀO GIỎ (dưới size)
 =================================================== */
 .vp-add-to-cart-btn {
-  width: 100%;
-  border: 1.5px solid var(--primary);
-  background: #fff;
-  color: var(--primary);
-  border-radius: 10px;
-  padding: 13px;
-  font-size: 15px;
-  font-weight: 700;
+  display: block;
+  width: fit-content;
+  margin: 0 16px 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #e53e3e;
+  background: #fff5f5;
+  border: 1.5px solid #e53e3e;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 4px;
-  margin-bottom: 4px;
-  transition: background 0.15s, color 0.15s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  text-align: center;
 }
 
 .vp-add-to-cart-btn.added {
