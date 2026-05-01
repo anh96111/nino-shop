@@ -245,7 +245,7 @@ const PRODUCT_CONFIG = {
         classify: "Tím Lavender – Size Nhỏ",
         match:    "Đúng như hình",
         material: "Dày, chắc",
-        content:  "Con bé nhà mình mê cái màu tím này lắm, đòi đeo đi ngủ luôn 😂 Quai êm, bé lớp 2 đeo cả ngày không kêu ca gì.",
+        content:  "Con bé nhà mình mê cái màu tím này lắm, đòi đeo đi ngủ luôn 😂 Quai êm",
         media:    [],
         likes:    14
       },
@@ -269,7 +269,7 @@ const PRODUCT_CONFIG = {
         classify: "Navy Phối Hồng – Size Nhỏ",
         match:    "Đúng như hình",
         material: "Chắc chắn",
-        content:  "Hôm qua mưa to, con chạy từ cổng trường ra xe ướt hết áo mà mở balo ra sách vở khô nguyên. Thiệt luôn chứ không phải nói chơi 👍",
+        content:  "đáng mua",
         media:    [],
         likes:    22
       },
