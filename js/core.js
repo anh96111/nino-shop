@@ -166,7 +166,20 @@ function updateCartBadge() {
   } else {
     cartBadge.classList.remove("show");
   }
+
+  /* ── Cập nhật badge trong nút Đến giỏ hàng ── */
+  const vpBadge = document.getElementById("vpCartBadge");
+  const cpBadge = document.getElementById("cpCartBadge");
+  if (vpBadge) {
+    if (total > 0) { vpBadge.textContent = total > 99 ? "99+" : total; vpBadge.classList.add("show"); }
+    else { vpBadge.classList.remove("show"); }
+  }
+  if (cpBadge) {
+    if (total > 0) { cpBadge.textContent = total > 99 ? "99+" : total; cpBadge.classList.add("show"); }
+    else { cpBadge.classList.remove("show"); }
+  }
 }
+
 
 /* ===================================================
    LƯU fbclid RAW

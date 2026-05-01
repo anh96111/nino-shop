@@ -82,6 +82,11 @@ button, input, textarea, select { font: inherit; }
   position: relative;
 }
 
+.btn-ghost {
+  position: relative;
+}
+
+
 .btn-bar-solid {
   flex: 1;
   border: none;

@@ -119,7 +119,7 @@
 
         <!-- NÚT ĐẾN GIỎ HÀNG + MUA NGAY -->
         <div class="variant-popup-cta">
-          <button class="btn-ghost" id="vpGoToCartBtn">🛒 Đến giỏ hàng</button>
+          <button class="btn-ghost" id="vpGoToCartBtn">🛒 Đến giỏ hàng<span class="cart-badge" id="vpCartBadge"></span></button>
           <button class="btn-solid" id="vpBuyNowBtn">Mua ngay</button>
         </div>
       </div>
@@ -266,7 +266,7 @@
 
         <!-- NÚT ĐẾN GIỎ HÀNG + MUA NGAY -->
         <div class="variant-popup-cta">
-          <button class="btn-ghost" id="cpGoToCartBtn">🛒 Đến giỏ hàng</button>
+          <button class="btn-ghost" id="cpGoToCartBtn">🛒 Đến giỏ hàng<span class="cart-badge" id="cpCartBadge"></span></button>
           <button class="btn-solid" id="cpBuyNowBtn">Mua ngay</button>
         </div>
       </div>
