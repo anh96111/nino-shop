@@ -1,0 +1,171 @@
+// ===================================================
+// ads-report.gs
+// ===================================================
+
+const SPREADSHEET_ID = "1zrbQt-DZOZqE3DawlbNwRXD6ZgR9tH8TM44FfDUI5Lg";
+
+function layDanhSachTK() {
+  const ss   = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const cfg  = ss.getSheetByName("Cấu hình");
+  const data = cfg.getDataRange().getValues();
+  const list = [];
+  for (let i = 1; i < data.length; i++) {
+    const actId = String(data[i][1] || "").trim();
+    if (actId.startsWith("act_")) list.push(actId);
+  }
+  return list;
+}
+
+function layAccessToken() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  return String(ss.getSheetByName("Cấu hình").getRange("F2").getValue() || "").trim();
+}
+
+// ===================================================
+// HÀM CHÍNH
+// ===================================================
+function fetchAdsReport() {
+  const ss     = SpreadsheetApp.openById(SPREADSHEET_ID);
+  const sheet  = ss.getSheetByName("Chi phí Ads");
+  const TOKEN  = layAccessToken();
+  const tkList = layDanhSachTK();
+
+  if (!TOKEN) { Logger.log("❌ Chưa có Access Token!"); return; }
+  if (!tkList.length) { Logger.log("❌ Không có Act ID nào!"); return; }
+
+  const yesterday = new Date(Date.now() - 864e5);
+  const dateStr   = Utilities.formatDate(yesterday, "Asia/Ho_Chi_Minh", "yyyy-MM-dd");
+
+  // Đọc dữ liệu hiện có để kiểm tra trùng
+  const existing = sheet.getLastRow() > 1
+    ? sheet.getRange(2, 1, sheet.getLastRow() - 1, 3).getValues()
+    : [];
+
+  tkList.forEach(accountId => {
+    const url = "https://graph.facebook.com/v19.0/"
+      + accountId + "/insights"
+      + "?level=campaign"
+      + "&date_preset=yesterday"
+      + "&fields=account_name,campaign_name,spend,impressions,clicks,ctr,actions"
+      + "&access_token=" + TOKEN;
+
+    try {
+      const res  = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      const json = JSON.parse(res.getContentText());
+
+      if (json.error) {
+        Logger.log("❌ API lỗi " + accountId + ": " + json.error.message);
+        return;
+      }
+      if (!json.data || !json.data.length) {
+        Logger.log("ℹ️ Không có data: " + accountId);
+        return;
+      }
+
+      json.data.forEach(row => {
+        const tenTK    = row.account_name || accountId;
+        const campaign = row.campaign_name || "";
+
+        // Kiểm tra trùng: cùng ngày + cùng TK + cùng campaign
+        const trung = existing.some(r => {
+          const d = r[0] instanceof Date
+            ? Utilities.formatDate(r[0], "Asia/Ho_Chi_Minh", "yyyy-MM-dd")
+            : String(r[0]).substring(0, 10);
+          return d === dateStr && String(r[1]) === tenTK && String(r[2]) === campaign;
+        });
+        if (trung) {
+          Logger.log("⏭ Trùng: " + tenTK + " / " + campaign + " / " + dateStr);
+          return;
+        }
+
+        let viewContent = 0, purchase = 0;
+        if (row.actions) {
+          row.actions.forEach(a => {
+            if (a.action_type === "view_content") viewContent = parseInt(a.value) || 0;
+            if (a.action_type === "purchase")     purchase    = parseInt(a.value) || 0;
+          });
+        }
+
+        // ✅ Không nhân 25000 — Meta đã trả VND cho TK Việt Nam
+        const chiPhi = Math.round(parseFloat(row.spend || 0));
+
+        sheet.appendRow([
+          dateStr,
+          tenTK,
+          campaign,
+          chiPhi,
+          parseInt(row.impressions || 0),
+          parseInt(row.clicks || 0),
+          parseFloat(row.ctr || 0).toFixed(2),
+          viewContent,
+          purchase
+        ]);
+      });
+
+      // Tô màu xen kẽ theo nhóm ngày+TK thay vì merge
+      toMauXenKe(sheet);
+
+      Logger.log("✅ Fetch xong: " + accountId);
+
+    } catch(e) {
+      Logger.log("❌ Lỗi: " + accountId + " — " + e);
+    }
+  });
+
+  // Rebuild sheet Tổng
+  rebuildTong();
+}
+
+// ===================================================
+// TÔ MÀU XEN KẼ THEO NHÓM NGÀY + TÀI KHOẢN
+// ===================================================
+function toMauXenKe(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+
+  const data     = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
+  const mauA     = "#FFFFFF";
+  const mauB     = "#F3F3F3";
+  let   mauHien  = mauA;
+  let   nhomCu   = "";
+
+  for (let i = 0; i < data.length; i++) {
+    const ngay = data[i][0] instanceof Date
+      ? Utilities.formatDate(data[i][0], "Asia/Ho_Chi_Minh", "yyyy-MM-dd")
+      : String(data[i][0]).substring(0, 10);
+    const tk       = String(data[i][1]);
+    const nhomHien = ngay + "|" + tk;
+
+    if (nhomHien !== nhomCu) {
+      mauHien = (mauHien === mauA) ? mauB : mauA;
+      nhomCu  = nhomHien;
+    }
+    sheet.getRange(i + 2, 1, 1, 9).setBackground(mauHien);
+  }
+}
+
+// ===================================================
+// CÀI TRIGGER 00H10 MỖI ĐÊM
+// ===================================================
+function setupAdsTrigger() {
+  ScriptApp.getProjectTriggers().forEach(t => {
+    if (t.getHandlerFunction() === "fetchAdsReport") ScriptApp.deleteTrigger(t);
+  });
+
+  ScriptApp.newTrigger("fetchAdsReport")
+    .timeBased()
+    .everyDays(1)
+    .atHour(0)
+    .nearMinute(10)
+    .inTimezone("Asia/Ho_Chi_Minh")
+    .create();
+
+  SpreadsheetApp.getUi().alert("✅ Trigger 00h10 đã cài!\nMỗi đêm tự động lấy chi phí Ads.");
+}
+
+// ===================================================
+// TEST THỦ CÔNG
+// ===================================================
+function testFetchAdsReport() {
+  fetchAdsReport();
+}

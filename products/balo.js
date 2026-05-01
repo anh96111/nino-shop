@@ -191,7 +191,7 @@ const PRODUCT_CONFIG = {
       },
       {
         name:     "Thu Hương",
-        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1775668484/655123654_4399537900363500_7679473754360228153_n_jb2ppc.jpg",
+        avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777442314/496048196_10227521412714146_7242111311152812573_n_cqob7o.jpg",
         stars:    5,
         date:     "2026-03-05 20:00",
         classify: "Navy Phối Hồng – Size Nhỏ",

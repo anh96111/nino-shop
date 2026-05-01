@@ -209,6 +209,26 @@ function sendToGAS(payload) {
 }
 
 /* ===================================================
+   GỬI BÁO LỖI HỆ THỐNG VỀ EMAIL
+=================================================== */
+function sendErrorReport(errorMessage, customerData, itemsData, total) {
+  const payload = {
+    event_type:    "error_report",
+    error_message: errorMessage,
+    customer:      customerData || {},
+    items:         itemsData   || [],
+    total:         total       || 0,
+    note:          (customerData && customerData.note) ? customerData.note : ""
+  };
+  fetch(GAS_URL, {
+    method:  "POST",
+    mode:    "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify(payload)
+  }).catch(() => {});
+}
+
+/* ===================================================
    GALLERY (trang chính)
 =================================================== */
 function buildFullGallery() {
@@ -332,7 +352,6 @@ function getSelectedCombo() {
     shipFee: parseInt(active.dataset.shipfee || "0")
   };
 }
-
 
 function getCurrentPrice() {
   const combo = getSelectedCombo();
@@ -489,7 +508,6 @@ function getActiveGrandTotal() {
   return getActiveSubTotal() + getActiveShipFee();
 }
 
-
 /* ===================================================
    RENDER CART SUMMARY
 =================================================== */
@@ -543,7 +561,6 @@ function renderCartSummary() {
   grandTotalEl.textContent = formatPrice(getActiveGrandTotal());
   updateSubmitBtnPrice();
 
-
   cartSummaryList.querySelectorAll("[data-action]").forEach(btn => {
     btn.addEventListener("click", () => {
       const action = btn.dataset.action;
@@ -575,9 +592,7 @@ function renderCartSummary() {
 
 function updateSubmitBtnPrice() {
   const total = getActiveGrandTotal();
-  if (!submitBtn.disabled || total > 0) {
-    submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(total)}`;
-  }
+  submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(total)}`;
 }
 
 /* ===================================================
@@ -585,7 +600,6 @@ function updateSubmitBtnPrice() {
 =================================================== */
 function openCheckout() {
   renderCartSummary();
-  checkFormValidity();
 
   const eid = genEventId();
 
@@ -731,8 +745,6 @@ if (midCtaBtn) {
   });
 }
 
-
-
 /* ===================================================
    VARIANT POPUP — CTA BUTTONS
 =================================================== */
@@ -765,7 +777,6 @@ if (HAS_COMBO_POPUP) {
   });
 }
 
-
 /* ===================================================
    Phone auto-format
 =================================================== */
@@ -794,8 +805,6 @@ phoneInput.addEventListener("input", function () {
   } else {
     clearFieldError("phone", "phoneError");
   }
-
-  checkFormValidity();
 });
 
 /* ===================================================
@@ -829,40 +838,14 @@ function clearAllFieldErrors() {
 }
 
 /* ===================================================
-   Check form validity
+   SCROLL ĐẾN TRƯỜNG LỖI ĐẦU TIÊN
 =================================================== */
-function getPhoneRaw() {
-  return phoneInput.value.replace(/\D/g, "");
+function scrollToFirstError() {
+  const firstError = document.querySelector(".field-error.show");
+  if (firstError) {
+    firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 }
-
-function isFormValid() {
-  const fullName     = document.getElementById("fullName").value.trim();
-  const phoneRaw     = getPhoneRaw();
-  const address      = document.getElementById("address").value.trim();
-  const provinceName = selectedProvinceName;
-  const districtVal  = districtSelect.value;
-  const wardVal      = wardSelect.value;
-
-  const phoneRegex = /^(0[35789])[0-9]{8}$/;
-
-  if (!fullName) return false;
-  if (!phoneRegex.test(phoneRaw)) return false;
-  if (!provinceName) return false;
-  if (!districtVal) return false;
-  if (!wardVal) return false;
-  if (!address) return false;
-
-  return true;
-}
-
-function checkFormValidity() {
-  submitBtn.disabled = !isFormValid();
-}
-
-document.getElementById("fullName").addEventListener("input", checkFormValidity);
-document.getElementById("address").addEventListener("input", checkFormValidity);
-districtSelect.addEventListener("change", checkFormValidity);
-wardSelect.addEventListener("change", checkFormValidity);
 
 /* ===================================================
    SEARCHABLE PROVINCE DROPDOWN
@@ -955,7 +938,6 @@ function selectProvince(code, name) {
   wardSelect.disabled      = true;
 
   loadDistricts(code);
-  checkFormValidity();
 }
 
 document.addEventListener("click", function(e) {
@@ -1078,7 +1060,10 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       hasError = true;
     }
 
-    if (hasError) return;
+    if (hasError) {
+      scrollToFirstError();
+      return;
+    }
 
     const activeItems = getActiveItems();
     if (!activeItems.length) {
@@ -1094,6 +1079,15 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     const purchaseEventId = genEventId();
     const hashedPhone     = await sha256(phoneRaw);
     const finalGrandTotal = getActiveGrandTotal();
+
+    const customerData = {
+      full_name: fullName,
+      phone:     phoneRaw,
+      address,
+      ward:      wardName,
+      district:  districtName,
+      province:  provinceName
+    };
 
     const payloadItems = activeItems.map(item => {
       const clean = { ...item };
@@ -1118,16 +1112,10 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       external_id:        EXTERNAL_ID,
       external_id_hashed: false,
       note:               orderNote,
-      customer: {
-        full_name: fullName,
-        phone:     phoneRaw,
-        address,
-        ward:      wardName,
-        district:  districtName,
-        province:  provinceName
-      }
+      customer:           customerData
     };
 
+    /* ── Reset form TRƯỚC khi gửi để UX mượt ── */
     document.getElementById("orderForm").reset();
 
     selectedProvinceCode = "";
@@ -1158,16 +1146,24 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     hideModal();
     openThankModal();
 
-    submitBtn.disabled    = false;
-    submitBtn.innerHTML   = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(PRODUCT.price)}`;
+    submitBtn.disabled  = false;
+    submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(PRODUCT.price)}`;
 
+    /* ── Gửi GAS + Pixel sau khi hiện thank modal ── */
     setTimeout(() => {
       fetch(GAS_URL, {
         method:  "POST",
         mode:    "no-cors",
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify(payload)
-      }).catch(() => {});
+      }).catch(fetchErr => {
+        sendErrorReport(
+          "Fetch GAS thất bại: " + fetchErr.toString(),
+          customerData,
+          payloadItems,
+          finalGrandTotal
+        );
+      });
 
       if (typeof fbq !== "undefined") {
         fbq('track', 'Purchase', {
@@ -1181,7 +1177,6 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
           external_id: EXTERNAL_ID
         });
       }
-
     }, 0);
 
   } catch (err) {
@@ -1190,6 +1185,21 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(PRODUCT.price)}`;
     statusMessage.style.color = "red";
     statusMessage.textContent = "Có lỗi xảy ra, vui lòng thử lại.";
+
+    /* ── Lỗi hệ thống không rõ — gửi email báo ── */
+    const customerSnap = {
+      full_name: document.getElementById("fullName")?.value?.trim() || "",
+      phone:     getPhoneRaw(),
+      address:   document.getElementById("address")?.value?.trim()  || "",
+      province:  selectedProvinceName || ""
+    };
+    const activeSnap = getActiveItems();
+    sendErrorReport(
+      "Exception trong submit handler: " + err.toString(),
+      customerSnap,
+      activeSnap,
+      getActiveGrandTotal()
+    );
   }
 });
 
@@ -1223,7 +1233,6 @@ function renderReviewMedia(media) {
     </div>
   `;
 }
-
 
 function renderReviews() {
   const reviewList = document.getElementById("reviewList");
@@ -1261,7 +1270,6 @@ function setupReviewMediaLightbox() {
     const target = e.target.closest(".review-media-item");
     if (!target) return;
 
-    /* Chặn event không cho bubble lên */
     e.stopPropagation();
 
     const type = target.dataset.type;
@@ -1305,12 +1313,10 @@ function setupReviewMediaLightbox() {
     if (e.target === lightbox) closeLightbox();
   });
 
-  /* Click vào video trong lightbox không đóng lightbox */
   lightboxContent.addEventListener("click", e => {
     e.stopPropagation();
   });
 }
-
 
 /* ===================================================
    INIT — ViewContent GAS
@@ -1332,7 +1338,6 @@ function setupReviewMediaLightbox() {
 function initLazyVideos() {
   document.querySelectorAll(".lazy-video-wrap").forEach(wrap => {
     if (wrap.dataset.bound) return;
-    /* Bỏ qua video trong review — review dùng lightbox */
     if (wrap.closest(".review-media")) return;
     wrap.dataset.bound = "1";
     wrap.addEventListener("click", function (e) {
@@ -1353,6 +1358,9 @@ function initLazyVideos() {
   });
 }
 
+function getPhoneRaw() {
+  return phoneInput.value.replace(/\D/g, "");
+}
 
 (function init() {
   loadCartItems();
@@ -1369,4 +1377,3 @@ function initLazyVideos() {
     });
   });
 })();
-

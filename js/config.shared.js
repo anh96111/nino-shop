@@ -27,7 +27,7 @@ const SHARED_CONFIG = {
   // ── LIÊN HỆ ──
   contact: [
     { icon: "📞", label: "Hotline",   value: "0798.658.600" },
-    { icon: "💬", label: "Zalo",      value: "zalo.me/ninoshop" },
+    { icon: "💬", label: "Zalo",      value: "zalo.me/tamanhshop" },
     { icon: "📲", label: "Messenger", value: "m.me/920062987858914" }
   ],
 

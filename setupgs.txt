@@ -1,0 +1,1194 @@
+// ============================================================
+//  setup.gs — Toàn bộ code quản lý báo cáo doanh thu
+//  Trigger: onEdit (real-time) + rebuildTong(5h)
+//           + autoBackupCuoiThang (00h05 ngày 1)
+//           + baoCaoNgay (00h10 hàng ngày)
+// ============================================================
+
+const SS_ID = "1zrbQt-DZOZqE3DawlbNwRXD6ZgR9tH8TM44FfDUI5Lg";
+
+// ===== MENU =====
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("⚙️ Quản lý")
+    .addItem("🔄 Rebuild sheet Tổng ngay", "rebuildTong")
+    .addItem("🔁 Sync tên TK Ads từ Meta", "syncTenTK")
+    .addItem("🏁 Chốt sổ cuối tháng", "chotSoCuoiThang")
+    .addItem("📅 Test báo cáo ngày", "baoCaoNgay")
+    .addItem("🛠️ Setup toàn bộ (lần đầu)", "setupSheets")
+    .addToUi();
+}
+
+// ===== ON EDIT TRIGGER =====
+function onEdit(e) { handleEditTrigger(e); }
+function onEditInstallable(e) { handleEditTrigger(e); }
+
+function handleEditTrigger(e) {
+  if (!e) return;
+  const ss        = e.source;
+  const sheetName = ss.getActiveSheet().getName();
+  const realTimeSheets = ["Chi phí Ads", "Chi phí khác", "Cấu hình"];
+
+  let orderSheets = [];
+  const cfg = ss.getSheetByName("Cấu hình");
+  if (cfg) {
+    const cfgData = cfg.getRange("D2:D").getValues();
+    orderSheets   = cfgData.map(row => String(row[0]).trim()).filter(name => name !== "");
+  }
+  if (realTimeSheets.includes(sheetName) || orderSheets.includes(sheetName)) {
+    rebuildTong();
+  }
+}
+
+// ============================================================
+//  HELPER FUNCTIONS
+// ============================================================
+
+function parseTien(val) {
+  if (typeof val === "number") return val;
+  const str = String(val).replace(/[^\d]/g, "");
+  return str ? parseInt(str) : 0;
+}
+
+function parseNgay(val) {
+  if (val instanceof Date && !isNaN(val)) return val;
+  if (typeof val === "string" && val.trim() !== "") {
+    const s = val.trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) {
+      const p = s.split(/[-T ]/);
+      return new Date(parseInt(p[0]), parseInt(p[1]) - 1, parseInt(p[2]));
+    }
+    if (/^\d{2}\/\d{2}\/\d{4}/.test(s)) {
+      const p = s.split(" ")[0].split("/");
+      return new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+    }
+  }
+  return null;
+}
+
+function layToken(ss) {
+  return String(ss.getSheetByName("Cấu hình").getRange("F2").getValue() || "").trim();
+}
+
+function formatSoTien(num) {
+  return num.toLocaleString("vi-VN") + "đ";
+}
+
+function formatPhanTram(val) {
+  return (val * 100).toFixed(1) + "%";
+}
+
+// ── So sánh 2 ngày cùng ngày/tháng/năm ──
+function cungNgay(d1, d2) {
+  if (!d1 || !d2) return false;
+  return d1.getFullYear() === d2.getFullYear()
+    && d1.getMonth()    === d2.getMonth()
+    && d1.getDate()     === d2.getDate();
+}
+
+// ── Lấy ngày hôm qua theo Asia/Ho_Chi_Minh ──
+function layNgayHomQua() {
+  const now       = new Date();
+  const tzOffset  = 7 * 60 * 60 * 1000;
+  const vnNow     = new Date(now.getTime() + tzOffset);
+  const vnYesterday = new Date(vnNow.getTime() - 864e5);
+  return new Date(
+    vnYesterday.getUTCFullYear(),
+    vnYesterday.getUTCMonth(),
+    vnYesterday.getUTCDate()
+  );
+}
+
+// ============================================================
+//  ĐỌC DANH SÁCH TRẠNG THÁI TỪ DROPDOWN CỘT C
+// ============================================================
+
+function layDanhSachTrangThai(sheet) {
+  try {
+    const rule = sheet.getRange("C2").getDataValidation();
+    if (!rule) return [];
+    const criteriaType = rule.getCriteriaType();
+    if (
+      criteriaType === SpreadsheetApp.DataValidationCriteria.VALUE_IN_LIST ||
+      criteriaType === SpreadsheetApp.DataValidationCriteria.VALUE_IN_RANGE
+    ) {
+      const values = rule.getCriteriaValues();
+      if (criteriaType === SpreadsheetApp.DataValidationCriteria.VALUE_IN_LIST) {
+        if (Array.isArray(values[0])) return values[0].map(v => String(v).trim()).filter(v => v !== "");
+        if (Array.isArray(values))    return values.map(v => String(v).trim()).filter(v => v !== "");
+      }
+      if (criteriaType === SpreadsheetApp.DataValidationCriteria.VALUE_IN_RANGE) {
+        return values[0].getValues().flat().map(v => String(v).trim()).filter(v => v !== "");
+      }
+    }
+    return [];
+  } catch (err) {
+    Logger.log("layDanhSachTrangThai lỗi (" + sheet.getName() + "): " + err);
+    return [];
+  }
+}
+
+// ============================================================
+//  ĐỌC DỮ LIỆU UTM — toàn bộ (dùng cho báo cáo tháng)
+// ============================================================
+
+function layDuLieuUTM(ss, sheetNames) {
+  const utmMap = {};
+  sheetNames.forEach(name => {
+    const sh = ss.getSheetByName(name);
+    if (!sh || sh.getLastRow() < 2) { utmMap[name] = []; return; }
+    const data    = sh.getDataRange().getValues();
+    const nhomMap = {};
+    for (let i = 1; i < data.length; i++) {
+      const row       = data[i];
+      const trangThai = String(row[2]  || "").trim();
+      const tien      = parseTien(row[14]) || parseTien(row[11]);
+      const source    = String(row[16] || "").trim() || "(trực tiếp)";
+      const medium    = String(row[17] || "").trim() || "—";
+      const campaign  = String(row[18] || "").trim() || "—";
+      const content   = String(row[19] || "").trim() || "—";
+      const key = source + "||" + medium + "||" + campaign + "||" + content;
+      if (!nhomMap[key]) {
+        nhomMap[key] = { source, medium, campaign, content, tongDon: 0, doanhSo: 0, doanhThu: 0, daNhan: 0, boom: 0, huy: 0 };
+      }
+      nhomMap[key].tongDon++;
+      nhomMap[key].doanhSo += tien;
+      if (trangThai === "Đã Nhận")   { nhomMap[key].daNhan++; nhomMap[key].doanhThu += tien; }
+      if (trangThai === "Boom hàng")   nhomMap[key].boom++;
+      if (trangThai === "Hủy")         nhomMap[key].huy++;
+    }
+    utmMap[name] = Object.values(nhomMap).sort((a, b) => b.tongDon - a.tongDon);
+  });
+  return utmMap;
+}
+
+// ============================================================
+//  ĐỌC DỮ LIỆU UTM — lọc theo ngày (dùng cho báo cáo ngày)
+// ============================================================
+
+function layDuLieuUTMNgay(ss, sheetNames, ngayTarget) {
+  const utmMap = {};
+  sheetNames.forEach(name => {
+    const sh = ss.getSheetByName(name);
+    if (!sh || sh.getLastRow() < 2) { utmMap[name] = []; return; }
+    const data    = sh.getDataRange().getValues();
+    const nhomMap = {};
+    for (let i = 1; i < data.length; i++) {
+      const row       = data[i];
+      const ngayDon   = parseNgay(row[1]);
+      if (!cungNgay(ngayDon, ngayTarget)) continue;
+      const trangThai = String(row[2]  || "").trim();
+      const tien      = parseTien(row[14]) || parseTien(row[11]);
+      const source    = String(row[16] || "").trim() || "(trực tiếp)";
+      const medium    = String(row[17] || "").trim() || "—";
+      const campaign  = String(row[18] || "").trim() || "—";
+      const content   = String(row[19] || "").trim() || "—";
+      const key = source + "||" + medium + "||" + campaign + "||" + content;
+      if (!nhomMap[key]) {
+        nhomMap[key] = { source, medium, campaign, content, tongDon: 0, doanhSo: 0, daNhan: 0, boom: 0, huy: 0 };
+      }
+      nhomMap[key].tongDon++;
+      nhomMap[key].doanhSo += tien;
+      if (trangThai === "Đã Nhận")   nhomMap[key].daNhan++;
+      if (trangThai === "Boom hàng") nhomMap[key].boom++;
+      if (trangThai === "Hủy")       nhomMap[key].huy++;
+    }
+    utmMap[name] = Object.values(nhomMap).sort((a, b) => b.tongDon - a.tongDon);
+  });
+  return utmMap;
+}
+
+// ============================================================
+//  ĐỌC DỮ LIỆU THÁNG — dùng chung cho email tháng + rebuildTong
+// ============================================================
+
+function layDuLieuThang(ss, thangNay, namNay) {
+  const cfg     = ss.getSheetByName("Cấu hình");
+  const cfgData = cfg.getDataRange().getValues();
+  const sheetNames = [];
+  const tkList     = [];
+
+  for (let i = 1; i < cfgData.length; i++) {
+    const tenSheet = String(cfgData[i][3] || "").trim();
+    const tenTK    = String(cfgData[i][0] || "").trim();
+    const actId    = String(cfgData[i][1] || "").trim();
+    if (tenSheet) sheetNames.push(tenSheet);
+    if (actId.startsWith("act_")) tkList.push({ ten: tenTK || actId, actId });
+  }
+
+  // ── DOANH THU ──
+  const dtMap = {};
+  sheetNames.forEach(name => {
+    const sh = ss.getSheetByName(name);
+    if (!sh) { dtMap[name] = { tong: 0, sodon: 0, loi: "⚠️ Không tìm thấy sheet" }; return; }
+    const data = sh.getDataRange().getValues();
+    let tong = 0, sodon = 0;
+    for (let i = 1; i < data.length; i++) {
+      const trangThai = String(data[i][2] || "").trim();
+      const ngay      = parseNgay(data[i][1]);
+      let   tien      = parseTien(data[i][14]);
+      if (!tien || tien === 0) tien = parseTien(data[i][11]);
+      if (ngay && trangThai === "Đã Nhận"
+        && ngay.getMonth() === thangNay && ngay.getFullYear() === namNay) {
+        tong += tien; sodon++;
+      }
+    }
+    dtMap[name] = { tong, sodon, loi: null };
+  });
+
+  // ── CHI PHÍ ADS ──
+  const adsSheet = ss.getSheetByName("Chi phí Ads");
+  const adsMap   = {};
+  tkList.forEach(tk => { adsMap[tk.ten] = 0; });
+  if (adsSheet && adsSheet.getLastRow() > 1) {
+    const adsData = adsSheet.getDataRange().getValues();
+    for (let i = 1; i < adsData.length; i++) {
+      const ngay   = parseNgay(adsData[i][0]);
+      const tk     = String(adsData[i][1] || "").trim();
+      const chiPhi = parseTien(adsData[i][3]);
+      if (ngay && ngay.getMonth() === thangNay && ngay.getFullYear() === namNay && adsMap.hasOwnProperty(tk)) {
+        adsMap[tk] += chiPhi;
+      }
+    }
+  }
+
+  // ── CHI PHÍ KHÁC ──
+  const cpKhacSheet = ss.getSheetByName("Chi phí khác");
+  const cpKhacMap   = {};
+  if (cpKhacSheet && cpKhacSheet.getLastRow() > 1) {
+    const cpData = cpKhacSheet.getDataRange().getValues();
+    for (let i = 1; i < cpData.length; i++) {
+      const ngay   = parseNgay(cpData[i][0]);
+      const khoan  = String(cpData[i][1] || "").trim();
+      const sotien = parseTien(cpData[i][2]);
+      if (ngay && khoan && sotien > 0 && ngay.getMonth() === thangNay && ngay.getFullYear() === namNay) {
+        cpKhacMap[khoan] = (cpKhacMap[khoan] || 0) + sotien;
+      }
+    }
+  }
+
+  // ── TRẠNG THÁI ──
+  const statusMap = {};
+  sheetNames.forEach(name => {
+    const sh = ss.getSheetByName(name);
+    if (!sh) { statusMap[name] = { danhSach: [], counts: {}, loi: "⚠️ Không tìm thấy sheet" }; return; }
+    const danhSach = layDanhSachTrangThai(sh);
+    const counts   = {};
+    danhSach.forEach(tt => { counts[tt] = 0; });
+    if (sh.getLastRow() > 1) {
+      sh.getRange(2, 3, sh.getLastRow() - 1, 1).getValues().forEach(row => {
+        const tt = String(row[0] || "").trim();
+        if (counts.hasOwnProperty(tt)) counts[tt]++;
+      });
+    }
+    statusMap[name] = { danhSach, counts, loi: null };
+  });
+
+  // ── UTM ──
+  const utmMap = layDuLieuUTM(ss, sheetNames);
+
+  const tongDT     = Object.values(dtMap).reduce((sum, v) => sum + (v.tong || 0), 0);
+  const tongAds    = Object.values(adsMap).reduce((sum, v) => sum + v, 0);
+  const tongCpKhac = Object.values(cpKhacMap).reduce((sum, v) => sum + v, 0);
+  const tongCP     = tongAds + tongCpKhac;
+  const loiNhuan   = tongDT - tongCP;
+
+  return { sheetNames, tkList, dtMap, adsMap, cpKhacMap, statusMap, utmMap, tongDT, tongAds, tongCpKhac, tongCP, loiNhuan };
+}
+
+// ============================================================
+//  ĐỌC DỮ LIỆU NGÀY — lọc theo ngày hôm qua
+// ============================================================
+
+function layDuLieuNgay(ss, ngayTarget) {
+  const cfg     = ss.getSheetByName("Cấu hình");
+  const cfgData = cfg.getDataRange().getValues();
+  const sheetNames = [];
+  const tkList     = [];
+
+  for (let i = 1; i < cfgData.length; i++) {
+    const tenSheet = String(cfgData[i][3] || "").trim();
+    const tenTK    = String(cfgData[i][0] || "").trim();
+    const actId    = String(cfgData[i][1] || "").trim();
+    if (tenSheet) sheetNames.push(tenSheet);
+    if (actId.startsWith("act_")) tkList.push({ ten: tenTK || actId, actId });
+  }
+
+  // ── CHI PHÍ ADS NGÀY — nhóm theo TK + Campaign ──
+  const adsSheet = ss.getSheetByName("Chi phí Ads");
+  const adsRows  = [];   // [ { tk, campaign, chiPhi, impressions, clicks, ctr } ]
+  let   tongCPNgay = 0;
+
+  if (adsSheet && adsSheet.getLastRow() > 1) {
+    const adsData = adsSheet.getDataRange().getValues();
+    for (let i = 1; i < adsData.length; i++) {
+      const ngay = parseNgay(adsData[i][0]);
+      if (!cungNgay(ngay, ngayTarget)) continue;
+      const tk          = String(adsData[i][1] || "").trim();
+      const campaign    = String(adsData[i][2] || "").trim();
+      const chiPhi      = parseTien(adsData[i][3]);
+      const impressions = parseInt(adsData[i][4] || 0);
+      const clicks      = parseInt(adsData[i][5] || 0);
+      const ctr         = parseFloat(adsData[i][6] || 0);
+      adsRows.push({ tk, campaign, chiPhi, impressions, clicks, ctr });
+      tongCPNgay += chiPhi;
+    }
+  }
+
+  // ── ĐƠN HÀNG NGÀY — lọc cột B = ngayTarget ──
+  const donMap = {};   // name → { sodon, doanhSo }
+  let   tongDonNgay   = 0;
+  let   tongDoanhSoNgay = 0;
+
+  sheetNames.forEach(name => {
+    const sh = ss.getSheetByName(name);
+    if (!sh || sh.getLastRow() < 2) { donMap[name] = { sodon: 0, doanhSo: 0 }; return; }
+    const data = sh.getDataRange().getValues();
+    let sodon = 0, doanhSo = 0;
+    for (let i = 1; i < data.length; i++) {
+      const ngayDon = parseNgay(data[i][1]);
+      if (!cungNgay(ngayDon, ngayTarget)) continue;
+      let tien = parseTien(data[i][14]);
+      if (!tien || tien === 0) tien = parseTien(data[i][11]);
+      sodon++;
+      doanhSo += tien;
+    }
+    donMap[name]      = { sodon, doanhSo };
+    tongDonNgay      += sodon;
+    tongDoanhSoNgay  += doanhSo;
+  });
+
+  // ── UTM NGÀY ──
+  const utmMap = layDuLieuUTMNgay(ss, sheetNames, ngayTarget);
+
+  return { sheetNames, tkList, adsRows, donMap, utmMap, tongCPNgay, tongDonNgay, tongDoanhSoNgay };
+}
+
+// ============================================================
+//  BUILD EMAIL HTML — BÁO CÁO THÁNG
+// ============================================================
+
+function buildEmailHTML(duLieu, thangLabel, backupUrl, thoiGianChot) {
+  const { sheetNames, tkList, dtMap, adsMap, cpKhacMap, statusMap, utmMap, tongDT, tongAds, tongCpKhac, tongCP, loiNhuan } = duLieu;
+
+  const tiSuat      = tongDT  > 0 ? loiNhuan / tongDT : 0;
+  const roas        = tongAds > 0 ? tongDT   / tongAds : 0;
+  const roi         = tongCP  > 0 ? loiNhuan / tongCP  : 0;
+  const mauLoiNhuan = loiNhuan >= 0 ? "#1a7f37" : "#cf222e";
+  const mauROI      = roi      >= 0 ? "#1a7f37" : "#cf222e";
+
+  // ROWS DOANH THU
+  let rowsDT = ""; let tongSoDon = 0;
+  sheetNames.forEach(name => {
+    const info = dtMap[name];
+    if (info.loi) {
+      rowsDT += `<tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">${name}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;color:#cf222e;">${info.loi}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">—</td></tr>`;
+    } else {
+      tongSoDon += info.sodon;
+      rowsDT += `<tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">${name}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;">${info.sodon}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatSoTien(info.tong)}</td></tr>`;
+    }
+  });
+  rowsDT += `<tr style="background:#d9ead3;font-weight:bold;"><td style="padding:8px 12px;">TỔNG</td><td style="padding:8px 12px;text-align:center;">${tongSoDon}</td><td style="padding:8px 12px;text-align:right;">${formatSoTien(tongDT)}</td></tr>`;
+
+  // ROWS CHI PHÍ
+  let rowsCP = "";
+  tkList.forEach(tk => {
+    const val = adsMap[tk.ten] || 0;
+    rowsCP += `<tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">CP Ads — ${tk.ten}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatSoTien(val)}</td></tr>`;
+  });
+  if (tongCpKhac > 0) {
+    rowsCP += `<tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">Chi phí khác</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatSoTien(tongCpKhac)}</td></tr>`;
+  }
+  rowsCP += `<tr style="background:#f4cccc;font-weight:bold;"><td style="padding:8px 12px;">TỔNG CHI PHÍ</td><td style="padding:8px 12px;text-align:right;">${formatSoTien(tongCP)}</td></tr>`;
+
+  // ROWS LÃI LỖ
+  const rowsLL = `
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">Tổng doanh thu</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatSoTien(tongDT)}</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">Tổng chi phí</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatSoTien(tongCP)}</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;font-weight:bold;">Lợi nhuận</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;color:${mauLoiNhuan};">${formatSoTien(loiNhuan)}</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">Tỉ suất lợi nhuận</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatPhanTram(tiSuat)}</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">ROAS</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${roas.toFixed(2)}x</td></tr>
+    <tr><td style="padding:8px 12px;font-weight:bold;">ROI</td><td style="padding:8px 12px;text-align:right;font-weight:bold;color:${mauROI};">${(roi * 100).toFixed(1)}%</td></tr>`;
+
+  // BLOCKS TRẠNG THÁI
+  let blocksStatus = "";
+  sheetNames.forEach(name => {
+    const info = statusMap[name];
+    if (info.loi) {
+      blocksStatus += `<div style="margin-bottom:24px;"><div style="font-size:15px;font-weight:bold;color:#24292f;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #7986CB;">📦 ${name}</div><p style="color:#cf222e;margin:0;">${info.loi}</p></div>`;
+      return;
+    }
+    if (info.danhSach.length === 0) {
+      blocksStatus += `<div style="margin-bottom:24px;"><div style="font-size:15px;font-weight:bold;color:#24292f;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #7986CB;">📦 ${name}</div><p style="color:#888;font-style:italic;margin:0;">(Chưa có dropdown trạng thái)</p></div>`;
+      return;
+    }
+    const tongDon  = info.danhSach.reduce((sum, tt) => sum + (info.counts[tt] || 0), 0);
+    const soDaNhan = info.counts["Đã Nhận"]   || 0;
+    const soBoom   = info.counts["Boom hàng"] || 0;
+    const soHuy    = info.counts["Hủy"]       || 0;
+    const tlDaNhan = tongDon > 0 ? soDaNhan / tongDon : 0;
+    const tlBoom   = tongDon > 0 ? soBoom   / tongDon : 0;
+    const tlHuy    = tongDon > 0 ? soHuy    / tongDon : 0;
+    let rowsOther  = "";
+    info.danhSach.forEach(tt => {
+      if (tt === "Đã Nhận" || tt === "Boom hàng" || tt === "Hủy") return;
+      const so = info.counts[tt] || 0;
+      rowsOther += `<tr><td style="padding:6px 12px;border-bottom:1px solid #e8e8e8;color:#555;">${tt}</td><td style="padding:6px 12px;border-bottom:1px solid #e8e8e8;text-align:center;color:#555;">${so}</td><td style="padding:6px 12px;border-bottom:1px solid #e8e8e8;text-align:right;color:#555;">—</td></tr>`;
+    });
+    blocksStatus += `<div style="margin-bottom:28px;">
+      <div style="font-size:15px;font-weight:bold;color:#24292f;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #7986CB;">📦 ${name}</div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13.5px;">
+        <thead><tr style="background:#7986CB;color:#fff;">
+          <th style="padding:8px 12px;text-align:left;font-weight:600;">Trạng thái</th>
+          <th style="padding:8px 12px;text-align:center;font-weight:600;">Số đơn</th>
+          <th style="padding:8px 12px;text-align:right;font-weight:600;">Tỷ lệ</th>
+        </tr></thead>
+        <tbody>
+          <tr style="background:#f0fff4;"><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;font-weight:bold;color:#1a7f37;">✅ Đã Nhận</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;font-weight:bold;color:#1a7f37;">${soDaNhan}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;color:#1a7f37;">${formatPhanTram(tlDaNhan)}</td></tr>
+          <tr style="background:#fff8f0;"><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;font-weight:bold;color:#e36209;">💥 Boom hàng</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;font-weight:bold;color:#e36209;">${soBoom}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;color:#e36209;">${formatPhanTram(tlBoom)}</td></tr>
+          <tr style="background:#fff5f5;"><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;font-weight:bold;color:#cf222e;">❌ Hủy</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;font-weight:bold;color:#cf222e;">${soHuy}</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;color:#cf222e;">${formatPhanTram(tlHuy)}</td></tr>
+          ${rowsOther}
+          <tr style="background:#e8eaf6;font-weight:bold;"><td style="padding:8px 12px;">Tổng đơn</td><td style="padding:8px 12px;text-align:center;">${tongDon}</td><td style="padding:8px 12px;text-align:right;">100%</td></tr>
+        </tbody>
+      </table>
+    </div>`;
+  });
+
+  // BLOCKS UTM THÁNG
+  const blocksUTM = _buildUTMBlocks(utmMap, sheetNames);
+
+  return `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f6f8fa;font-family:'Segoe UI',Arial,sans-serif;font-size:14px;color:#24292f;">
+<div style="max-width:720px;margin:32px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+  <div style="background:linear-gradient(135deg,#4472C4,#7986CB);padding:28px 32px;text-align:center;">
+    <div style="font-size:26px;font-weight:800;color:#fff;">📊 BÁO CÁO THÁNG ${thangLabel}</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:6px;">Chốt lúc ${thoiGianChot}</div>
+  </div>
+  <div style="padding:28px 32px;">
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;margin-bottom:12px;">📦 DOANH THU</div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13.5px;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;">
+        <thead><tr style="background:#4472C4;color:#fff;"><th style="padding:10px 12px;text-align:left;font-weight:600;">Sản phẩm</th><th style="padding:10px 12px;text-align:center;font-weight:600;">Số đơn</th><th style="padding:10px 12px;text-align:right;font-weight:600;">Doanh thu</th></tr></thead>
+        <tbody>${rowsDT}</tbody>
+      </table>
+    </div>
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;margin-bottom:12px;">💸 CHI PHÍ</div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13.5px;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;">
+        <thead><tr style="background:#E06666;color:#fff;"><th style="padding:10px 12px;text-align:left;font-weight:600;">Khoản chi</th><th style="padding:10px 12px;text-align:right;font-weight:600;">Số tiền</th></tr></thead>
+        <tbody>${rowsCP}</tbody>
+      </table>
+    </div>
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;margin-bottom:12px;">📊 LÃI / LỖ & HIỆU SUẤT</div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13.5px;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;">
+        <thead><tr style="background:#6AA84F;color:#fff;"><th style="padding:10px 12px;text-align:left;font-weight:600;">Chỉ số</th><th style="padding:10px 12px;text-align:right;font-weight:600;">Giá trị</th></tr></thead>
+        <tbody>${rowsLL}</tbody>
+      </table>
+    </div>
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;margin-bottom:16px;">📋 TRẠNG THÁI ĐƠN HÀNG</div>
+      ${blocksStatus}
+    </div>
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;">📊 HIỆU SUẤT UTM</div>
+      <div style="font-size:12px;color:#888;margin-bottom:12px;font-style:italic;">Doanh số = tất cả đơn &nbsp;|&nbsp; Doanh thu = chỉ đơn Đã Nhận &nbsp;|&nbsp; Sắp xếp theo số đơn giảm dần</div>
+      ${blocksUTM}
+    </div>
+    <hr style="border:none;border-top:1px solid #e8e8e8;margin:24px 0;" />
+    <div style="background:#f6f8fa;border-radius:8px;padding:16px 20px;margin-bottom:12px;">
+      <div style="font-size:13px;color:#57606a;margin-bottom:8px;">📎 File lưu trữ dữ liệu tháng ${thangLabel}:</div>
+      <a href="${backupUrl}" style="display:inline-block;background:#4472C4;color:#fff;text-decoration:none;padding:10px 20px;border-radius:6px;font-size:13.5px;font-weight:600;">Mở file backup →</a>
+    </div>
+    <div style="text-align:center;font-size:12px;color:#999;margin-top:20px;">Hệ thống tự động gửi lúc ${thoiGianChot} — Vui lòng không reply email này.</div>
+  </div>
+</div></body></html>`;
+}
+
+// ============================================================
+//  BUILD EMAIL HTML — BÁO CÁO NGÀY
+// ============================================================
+
+function buildEmailNgayHTML(duLieu, ngayLabel, thoiGianGui) {
+  const { sheetNames, adsRows, donMap, utmMap, tongCPNgay, tongDonNgay, tongDoanhSoNgay } = duLieu;
+
+  const roas = tongCPNgay > 0 ? tongDoanhSoNgay / tongCPNgay : 0;
+  const roi  = tongCPNgay > 0 ? (tongDoanhSoNgay - tongCPNgay) / tongCPNgay : 0;
+  const mauROI = roi >= 0 ? "#1a7f37" : "#cf222e";
+
+  // ── ROWS CHI PHÍ ADS ──
+  let rowsAds = "";
+  if (adsRows.length === 0) {
+    rowsAds = `<tr><td colspan="6" style="padding:12px;text-align:center;color:#888;font-style:italic;">Chưa có dữ liệu chi phí Ads ngày ${ngayLabel}</td></tr>`;
+  } else {
+    adsRows.forEach((a, idx) => {
+      const bg = idx % 2 === 0 ? "#ffffff" : "#f9f9f9";
+      rowsAds += `<tr style="background:${bg};">
+        <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;font-size:13px;">${a.tk}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;font-size:13px;word-break:break-all;">${a.campaign}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;color:#cf222e;">${formatSoTien(a.chiPhi)}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;color:#555;">${a.impressions.toLocaleString("vi-VN")}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;color:#555;">${a.clicks.toLocaleString("vi-VN")}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;color:#555;">${parseFloat(a.ctr).toFixed(2)}%</td>
+      </tr>`;
+    });
+    rowsAds += `<tr style="background:#f4cccc;font-weight:bold;">
+      <td style="padding:8px 12px;" colspan="2">TỔNG CHI PHÍ ADS</td>
+      <td style="padding:8px 12px;text-align:right;">${formatSoTien(tongCPNgay)}</td>
+      <td colspan="3"></td>
+    </tr>`;
+  }
+
+  // ── ROWS ĐƠN HÀNG TỪNG SP ──
+  let rowsDon = "";
+  sheetNames.forEach(name => {
+    const info = donMap[name] || { sodon: 0, doanhSo: 0 };
+    rowsDon += `<tr>
+      <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">${name}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:center;font-weight:bold;color:#0b5394;">${info.sodon}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatSoTien(info.doanhSo)}</td>
+    </tr>`;
+  });
+  rowsDon += `<tr style="background:#d9ead3;font-weight:bold;">
+    <td style="padding:8px 12px;">TỔNG</td>
+    <td style="padding:8px 12px;text-align:center;">${tongDonNgay}</td>
+    <td style="padding:8px 12px;text-align:right;">${formatSoTien(tongDoanhSoNgay)}</td>
+  </tr>`;
+
+  // ── BLOCKS UTM NGÀY ──
+  const blocksUTM = _buildUTMBlocksNgay(utmMap, sheetNames);
+
+  // ── ROWS TỔNG KẾT ──
+  const rowsTongKet = `
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">Tổng CP Ads</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;color:#cf222e;font-weight:bold;">${formatSoTien(tongCPNgay)}</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">Tổng đơn</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;color:#0b5394;">${tongDonNgay} đơn</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">Doanh số</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;">${formatSoTien(tongDoanhSoNgay)}</td></tr>
+    <tr><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;">ROAS</td><td style="padding:8px 12px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;">${roas.toFixed(2)}x</td></tr>
+    <tr><td style="padding:8px 12px;font-weight:bold;">ROI</td><td style="padding:8px 12px;text-align:right;font-weight:bold;color:${mauROI};">${(roi * 100).toFixed(1)}%</td></tr>`;
+
+  return `<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f6f8fa;font-family:'Segoe UI',Arial,sans-serif;font-size:14px;color:#24292f;">
+<div style="max-width:720px;margin:32px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+
+  <!-- HEADER -->
+  <div style="background:linear-gradient(135deg,#1a73e8,#34a853);padding:24px 32px;text-align:center;">
+    <div style="font-size:24px;font-weight:800;color:#fff;">📅 BÁO CÁO NGÀY ${ngayLabel}</div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.85);margin-top:6px;">Gửi lúc ${thoiGianGui}</div>
+  </div>
+
+  <div style="padding:28px 32px;">
+
+    <!-- CHI PHÍ ADS -->
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;color:#24292f;margin-bottom:12px;">💸 CHI PHÍ ADS</div>
+      <div style="overflow-x:auto;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13px;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;min-width:520px;">
+          <thead><tr style="background:#E06666;color:#fff;">
+            <th style="padding:10px 12px;text-align:left;font-weight:600;white-space:nowrap;">Tài khoản</th>
+            <th style="padding:10px 12px;text-align:left;font-weight:600;white-space:nowrap;">Campaign</th>
+            <th style="padding:10px 12px;text-align:right;font-weight:600;white-space:nowrap;">Chi phí</th>
+            <th style="padding:10px 12px;text-align:center;font-weight:600;white-space:nowrap;">Hiển thị</th>
+            <th style="padding:10px 12px;text-align:center;font-weight:600;white-space:nowrap;">Clicks</th>
+            <th style="padding:10px 12px;text-align:center;font-weight:600;white-space:nowrap;">CTR</th>
+          </tr></thead>
+          <tbody>${rowsAds}</tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ĐƠN HÀNG THEO SP -->
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;color:#24292f;margin-bottom:12px;">📦 ĐƠN HÀNG THEO SẢN PHẨM</div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13.5px;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;">
+        <thead><tr style="background:#4472C4;color:#fff;">
+          <th style="padding:10px 12px;text-align:left;font-weight:600;">Sản phẩm</th>
+          <th style="padding:10px 12px;text-align:center;font-weight:600;">Số đơn</th>
+          <th style="padding:10px 12px;text-align:right;font-weight:600;">Doanh số</th>
+        </tr></thead>
+        <tbody>${rowsDon}</tbody>
+      </table>
+    </div>
+
+    <!-- HIỆU SUẤT UTM -->
+    <div style="margin-bottom:28px;">
+      <div style="font-size:16px;font-weight:700;color:#24292f;margin-bottom:8px;">📊 HIỆU SUẤT UTM</div>
+      <div style="font-size:12px;color:#888;margin-bottom:12px;font-style:italic;">Doanh số = tất cả đơn trong ngày &nbsp;|&nbsp; Sắp xếp theo số đơn giảm dần</div>
+      ${blocksUTM}
+    </div>
+
+    <!-- TỔNG KẾT NGÀY -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:16px;font-weight:700;color:#24292f;margin-bottom:12px;">📈 TỔNG KẾT NGÀY</div>
+      <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13.5px;border:1px solid #e8e8e8;border-radius:8px;overflow:hidden;">
+        <thead><tr style="background:#34a853;color:#fff;">
+          <th style="padding:10px 12px;text-align:left;font-weight:600;">Chỉ số</th>
+          <th style="padding:10px 12px;text-align:right;font-weight:600;">Giá trị</th>
+        </tr></thead>
+        <tbody>${rowsTongKet}</tbody>
+      </table>
+    </div>
+
+    <div style="text-align:center;font-size:12px;color:#999;margin-top:24px;">Hệ thống tự động gửi lúc ${thoiGianGui} — Vui lòng không reply email này.</div>
+  </div>
+</div></body></html>`;
+}
+
+// ============================================================
+//  HELPER — BUILD BLOCKS UTM (dùng chung cho tháng & ngày)
+// ============================================================
+
+function _buildUTMBlocks(utmMap, sheetNames) {
+  let blocks = "";
+  sheetNames.forEach(name => {
+    const rows = utmMap[name] || [];
+    if (rows.length === 0) {
+      blocks += `<div style="margin-bottom:24px;"><div style="font-size:15px;font-weight:bold;color:#24292f;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #F6A623;">📦 ${name}</div><p style="color:#888;font-style:italic;margin:0;">(Không có dữ liệu UTM)</p></div>`;
+      return;
+    }
+    let rowsUTM = "";
+    rows.forEach((u, idx) => {
+      const bg     = idx % 2 === 0 ? "#ffffff" : "#f9f9f9";
+      const tlNhan = u.tongDon > 0 ? ((u.daNhan / u.tongDon) * 100).toFixed(1) + "%" : "0%";
+      const tlBoom = u.tongDon > 0 ? ((u.boom   / u.tongDon) * 100).toFixed(1) + "%" : "0%";
+      const tlHuy  = u.tongDon > 0 ? ((u.huy    / u.tongDon) * 100).toFixed(1) + "%" : "0%";
+      rowsUTM += `<tr style="background:${bg};">
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;word-break:break-all;">${u.source}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;text-align:center;">${u.medium}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;word-break:break-all;">${u.campaign}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;word-break:break-all;">${u.content}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;font-weight:bold;">${u.tongDon}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:right;">${formatSoTien(u.doanhSo)}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:right;color:#1a7f37;font-weight:bold;">${formatSoTien(u.doanhThu)}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;color:#1a7f37;">${u.daNhan} (${tlNhan})</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;color:#e36209;">${u.boom} (${tlBoom})</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;color:#cf222e;">${u.huy} (${tlHuy})</td>
+      </tr>`;
+    });
+    blocks += `<div style="margin-bottom:32px;">
+      <div style="font-size:15px;font-weight:bold;color:#24292f;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #F6A623;">📦 ${name}</div>
+      <div style="overflow-x:auto;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;min-width:700px;">
+          <thead><tr style="background:#F6A623;color:#fff;">
+            <th style="padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap;">utm_source</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">utm_medium</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap;">utm_campaign</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap;">utm_content</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Số đơn</th>
+            <th style="padding:8px 10px;text-align:right;font-weight:600;white-space:nowrap;">Doanh số</th>
+            <th style="padding:8px 10px;text-align:right;font-weight:600;white-space:nowrap;">Doanh thu</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Đã Nhận</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Boom</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Hủy</th>
+          </tr></thead>
+          <tbody>${rowsUTM}</tbody>
+        </table>
+      </div>
+    </div>`;
+  });
+  return blocks;
+}
+
+function _buildUTMBlocksNgay(utmMap, sheetNames) {
+  let blocks = "";
+  sheetNames.forEach(name => {
+    const rows = utmMap[name] || [];
+    if (rows.length === 0) {
+      blocks += `<div style="margin-bottom:24px;"><div style="font-size:15px;font-weight:bold;color:#24292f;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid #F6A623;">📦 ${name}</div><p style="color:#888;font-style:italic;margin:0;">(Không có dữ liệu UTM trong ngày)</p></div>`;
+      return;
+    }
+    let rowsUTM = "";
+    rows.forEach((u, idx) => {
+      const bg     = idx % 2 === 0 ? "#ffffff" : "#f9f9f9";
+      const tlNhan = u.tongDon > 0 ? ((u.daNhan / u.tongDon) * 100).toFixed(1) + "%" : "0%";
+      const tlBoom = u.tongDon > 0 ? ((u.boom   / u.tongDon) * 100).toFixed(1) + "%" : "0%";
+      const tlHuy  = u.tongDon > 0 ? ((u.huy    / u.tongDon) * 100).toFixed(1) + "%" : "0%";
+      rowsUTM += `<tr style="background:${bg};">
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;word-break:break-all;">${u.source}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;text-align:center;">${u.medium}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;word-break:break-all;">${u.campaign}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;font-size:12px;word-break:break-all;">${u.content}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;font-weight:bold;">${u.tongDon}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:right;font-weight:bold;">${formatSoTien(u.doanhSo)}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;color:#1a7f37;">${u.daNhan} (${tlNhan})</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;color:#e36209;">${u.boom} (${tlBoom})</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #e8e8e8;text-align:center;color:#cf222e;">${u.huy} (${tlHuy})</td>
+      </tr>`;
+    });
+    blocks += `<div style="margin-bottom:32px;">
+      <div style="font-size:15px;font-weight:bold;color:#24292f;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #F6A623;">📦 ${name}</div>
+      <div style="overflow-x:auto;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:12px;min-width:620px;">
+          <thead><tr style="background:#F6A623;color:#fff;">
+            <th style="padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap;">utm_source</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">utm_medium</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap;">utm_campaign</th>
+            <th style="padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap;">utm_content</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Số đơn</th>
+            <th style="padding:8px 10px;text-align:right;font-weight:600;white-space:nowrap;">Doanh số</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Đã Nhận</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Boom</th>
+            <th style="padding:8px 10px;text-align:center;font-weight:600;white-space:nowrap;">Hủy</th>
+          </tr></thead>
+          <tbody>${rowsUTM}</tbody>
+        </table>
+      </div>
+    </div>`;
+  });
+  return blocks;
+}
+
+// ============================================================
+//  BÁO CÁO NGÀY — trigger 00h10 hàng ngày
+// ============================================================
+
+function baoCaoNgay() {
+  const ss  = SpreadsheetApp.openById(SS_ID);
+  const cfg = ss.getSheetByName("Cấu hình");
+  if (!cfg) { Logger.log("❌ baoCaoNgay: Không tìm thấy sheet Cấu hình."); return; }
+
+  const emailData = cfg.getRange("H2:H").getValues();
+  const emails    = emailData.map(r => String(r[0]).trim()).filter(e => e !== "" && e.includes("@"));
+  if (emails.length === 0) { Logger.log("❌ baoCaoNgay: Không có email hợp lệ ở cột H."); return; }
+
+  const ngayHomQua = layNgayHomQua();
+  const ngayLabel  = Utilities.formatDate(ngayHomQua, "Asia/Ho_Chi_Minh", "dd/MM/yyyy");
+  const thoiGian   = Utilities.formatDate(new Date(), "Asia/Ho_Chi_Minh", "HH:mm - dd/MM/yyyy");
+
+  try {
+    const duLieu   = layDuLieuNgay(ss, ngayHomQua);
+    const htmlBody = buildEmailNgayHTML(duLieu, ngayLabel, thoiGian);
+    const subject  = "📅 Báo cáo ngày " + ngayLabel + " — Tâm Anh Shop";
+
+    emails.forEach(email => {
+      MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody });
+    });
+    Logger.log("✅ baoCaoNgay: Đã gửi báo cáo ngày " + ngayLabel + " đến: " + emails.join(", "));
+  } catch (e) {
+    Logger.log("❌ baoCaoNgay lỗi: " + e.toString());
+  }
+}
+
+// ============================================================
+//  HELPER — LẤY THÁNG TRƯỚC
+// ============================================================
+
+function layThangTruoc() {
+  const now        = new Date();
+  const thangBC    = now.getMonth() === 0 ? 12 : now.getMonth();
+  const namBC      = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear();
+  const thangLabel = String(thangBC).padStart(2, "0") + "/" + namBC;
+  const thangIdx   = thangBC - 1;
+  const namIdx     = namBC;
+  return { thangLabel, thangIdx, namIdx };
+}
+
+// ============================================================
+//  LOGIC CHỐT SỔ CORE
+// ============================================================
+
+function _chotSoCore(ss, emails, thangLabel, thangIdx, namIdx, thoiGianChot) {
+  // 1. Tạo backup
+  let backupUrl = "";
+  try {
+    const file       = DriveApp.getFileById(SS_ID);
+    const backupFile = file.makeCopy("Báo cáo tháng " + thangLabel);
+    backupUrl        = backupFile.getUrl();
+  } catch (e) {
+    Logger.log("❌ Lỗi tạo backup: " + e.toString());
+    throw e;
+  }
+
+  // 2. Đọc dữ liệu tháng báo cáo
+  const duLieu = layDuLieuThang(ss, thangIdx, namIdx);
+
+  // 3. Build & gửi email
+  const htmlBody = buildEmailHTML(duLieu, thangLabel, backupUrl, thoiGianChot);
+  const subject  = "📊 Báo cáo tháng " + thangLabel + " — Tâm Anh Shop";
+  try {
+    emails.forEach(email => {
+      MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody });
+    });
+    Logger.log("✅ Đã gửi email tháng " + thangLabel + " đến: " + emails.join(", "));
+  } catch (e) {
+    Logger.log("❌ Lỗi gửi email: " + e.toString());
+    throw e;
+  }
+
+  // 4. Rebuild Tổng tháng mới — TRƯỚC khi xóa data
+  rebuildTong();
+
+  // 5. Xóa Chi phí Ads (giữ header)
+  const adsSheet = ss.getSheetByName("Chi phí Ads");
+  if (adsSheet && adsSheet.getLastRow() > 1) {
+    const adsLastRow = adsSheet.getLastRow() - 1;
+    const adsLastCol = adsSheet.getLastColumn();
+    if (adsLastRow > 0 && adsLastCol > 0) {
+      adsSheet.getRange(2, 1, adsLastRow, adsLastCol).clearContent();
+      adsSheet.getRange(2, 1, adsLastRow, adsLastCol).setBackground(null);
+    }
+    Logger.log("✅ Đã xóa dữ liệu sheet Chi phí Ads");
+  } else {
+    Logger.log("ℹ️ Chi phí Ads không có data, bỏ qua.");
+  }
+
+  // 6. Xóa Chi phí khác (giữ header)
+  const cpKhacSheet = ss.getSheetByName("Chi phí khác");
+  if (cpKhacSheet && cpKhacSheet.getLastRow() > 1) {
+    const cpLastRow = cpKhacSheet.getLastRow() - 1;
+    const cpLastCol = cpKhacSheet.getLastColumn();
+    if (cpLastRow > 0 && cpLastCol > 0) {
+      cpKhacSheet.getRange(2, 1, cpLastRow, cpLastCol).clearContent();
+      cpKhacSheet.getRange(2, 1, cpLastRow, cpLastCol).setBackground(null);
+    }
+    Logger.log("✅ Đã xóa dữ liệu sheet Chi phí khác");
+  } else {
+    Logger.log("ℹ️ Chi phí khác không có data, bỏ qua.");
+  }
+
+  // 7. KHÔNG xóa sheet đơn hàng
+  return backupUrl;
+}
+
+// ============================================================
+//  AUTO BACKUP CUỐI THÁNG
+// ============================================================
+
+function autoBackupCuoiThang() {
+  const now     = new Date();
+  const ngayHom = parseInt(Utilities.formatDate(now, "Asia/Ho_Chi_Minh", "d"));
+  if (ngayHom !== 1) { Logger.log("ℹ️ autoBackupCuoiThang: Không phải ngày 1, bỏ qua."); return; }
+
+  const ss  = SpreadsheetApp.openById(SS_ID);
+  const cfg = ss.getSheetByName("Cấu hình");
+  if (!cfg) { Logger.log("❌ Không tìm thấy sheet Cấu hình."); return; }
+
+  const emailData = cfg.getRange("H2:H").getValues();
+  const emails    = emailData.map(r => String(r[0]).trim()).filter(e => e !== "" && e.includes("@"));
+  if (emails.length === 0) { Logger.log("❌ Không có email hợp lệ ở cột H."); return; }
+
+  const { thangLabel, thangIdx, namIdx } = layThangTruoc();
+  const thoiGian = Utilities.formatDate(now, "Asia/Ho_Chi_Minh", "HH:mm - dd/MM/yyyy");
+
+  try {
+    const backupUrl = _chotSoCore(ss, emails, thangLabel, thangIdx, namIdx, thoiGian);
+    Logger.log("✅ autoBackupCuoiThang hoàn tất. Backup: " + backupUrl);
+  } catch (e) {
+    Logger.log("❌ autoBackupCuoiThang lỗi: " + e.toString());
+  }
+}
+
+// ============================================================
+//  CHỐT SỔ THỦ CÔNG
+// ============================================================
+
+function chotSoCuoiThang() {
+  const { thangLabel, thangIdx, namIdx } = layThangTruoc();
+  const ui       = SpreadsheetApp.getUi();
+  const response = ui.alert(
+    "⚠️ XÁC NHẬN CHỐT SỔ",
+    "Chốt sổ tháng " + thangLabel + "?\n\n" +
+    "Hành động này sẽ:\n" +
+    "1. Tạo file backup báo cáo tháng " + thangLabel + ".\n" +
+    "2. Gửi email báo cáo chi tiết đến các địa chỉ đã cấu hình.\n" +
+    "3. Xóa dữ liệu Chi phí Ads và Chi phí khác để làm mới.\n" +
+    "   (Dữ liệu đơn hàng KHÔNG bị xóa)",
+    ui.ButtonSet.YES_NO
+  );
+  if (response !== ui.Button.YES) return;
+
+  const ss  = SpreadsheetApp.openById(SS_ID);
+  const cfg = ss.getSheetByName("Cấu hình");
+  if (!cfg) { ui.alert("❌ Lỗi: Không tìm thấy sheet Cấu hình."); return; }
+
+  const emailData = cfg.getRange("H2:H").getValues();
+  const emails    = emailData.map(r => String(r[0]).trim()).filter(e => e !== "" && e.includes("@"));
+  if (emails.length === 0) { ui.alert("❌ Lỗi: Chưa cấu hình email hợp lệ ở cột H."); return; }
+
+  const thoiGian = Utilities.formatDate(new Date(), "Asia/Ho_Chi_Minh", "HH:mm - dd/MM/yyyy");
+  try {
+    const backupUrl = _chotSoCore(ss, emails, thangLabel, thangIdx, namIdx, thoiGian);
+    ui.alert("✅ Chốt sổ tháng " + thangLabel + " thành công!\n\nFile lưu trữ: " + backupUrl + "\nĐã gửi email đến: " + emails.join(", "));
+  } catch (e) {
+    ui.alert("❌ Lỗi trong quá trình chốt sổ: " + e.toString());
+  }
+}
+
+// ============================================================
+//  TRIGGER MANAGEMENT
+// ============================================================
+
+function deleteTriggers() {
+  ScriptApp.getProjectTriggers().forEach(t => {
+    if (t.getHandlerFunction() === "rebuildTong") ScriptApp.deleteTrigger(t);
+  });
+}
+
+function setupTrigger() {
+  ScriptApp.getProjectTriggers().forEach(t => ScriptApp.deleteTrigger(t));
+  const ss = SpreadsheetApp.openById(SS_ID);
+
+  ScriptApp.newTrigger("onEditInstallable")
+    .forSpreadsheet(ss).onEdit().create();
+
+  ScriptApp.newTrigger("rebuildTong")
+    .timeBased().everyHours(5).create();
+
+  ScriptApp.newTrigger("autoBackupCuoiThang")
+    .timeBased().everyDays(1).atHour(0).nearMinute(5)
+    .inTimezone("Asia/Ho_Chi_Minh").create();
+
+  ScriptApp.newTrigger("baoCaoNgay")
+    .timeBased().everyDays(1).atHour(0).nearMinute(10)
+    .inTimezone("Asia/Ho_Chi_Minh").create();
+
+  Logger.log("✅ Triggers: onEdit + rebuildTong(5h) + autoBackupCuoiThang(00h05) + baoCaoNgay(00h10)");
+}
+
+// ============================================================
+//  SYNC TÊN TK TỪ META API
+// ============================================================
+
+function syncTenTK() {
+  const ss    = SpreadsheetApp.openById(SS_ID);
+  const cfg   = ss.getSheetByName("Cấu hình");
+  const TOKEN = layToken(ss);
+  if (!TOKEN) { SpreadsheetApp.getUi().alert("❌ Chưa có Access Token!\nNhập token vào sheet Cấu hình ô F2."); return; }
+
+  const data    = cfg.getDataRange().getValues();
+  let   updated = 0;
+  for (let i = 1; i < data.length; i++) {
+    const actId = String(data[i][1] || "").trim();
+    if (!actId || !actId.startsWith("act_")) continue;
+    try {
+      const url  = `https://graph.facebook.com/v19.0/${actId}?fields=name&access_token=${TOKEN}`;
+      const res  = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+      const json = JSON.parse(res.getContentText());
+      if (json.name) { cfg.getRange(i + 1, 1).setValue(json.name); updated++; }
+    } catch(e) { Logger.log("Lỗi sync TK " + actId + ": " + e); }
+  }
+  SpreadsheetApp.getUi().alert("✅ Đã sync " + updated + " tài khoản!");
+}
+
+// ============================================================
+//  SETUP LẦN ĐẦU
+// ============================================================
+
+function setupSheets() {
+  const ss = SpreadsheetApp.openById(SS_ID);
+
+  let cfg = ss.getSheetByName("Cấu hình");
+  if (!cfg) cfg = ss.insertSheet("Cấu hình");
+  cfg.clearContents(); cfg.clearFormats();
+
+  cfg.getRange("A1:B1").setValues([["Tên TK (tự sync)", "Act ID"]]);
+  cfg.getRange("A1:B1").setFontWeight("bold").setBackground("#4472C4").setFontColor("#FFFFFF");
+  cfg.getRange("A1:B1").setNote("Chỉ cần nhập Act ID → menu ⚙️ → 🔁 Sync tên TK");
+  cfg.getRange("A2").setValue("Việt Nam 2");
+  cfg.getRange("B2").setValue("act_1661193068213105");
+  cfg.getRange("D1").setValue("Tên sheet đơn hàng");
+  cfg.getRange("D1").setFontWeight("bold").setBackground("#4472C4").setFontColor("#FFFFFF");
+  cfg.getRange("D1").setNote("Thêm tên sheet đơn hàng mới vào đây → Rebuild tự cập nhật");
+  cfg.getRange("D2:D4").setValues([["Áo chống nắng"], ["Bọc Yên"], ["Áo nắng cotton"]]);
+  cfg.getRange("F1").setValue("🔑 Access Token Meta");
+  cfg.getRange("F1").setFontWeight("bold").setBackground("#FFE599");
+  cfg.getRange("F2").setBackground("#FFF2CC").setNote("Dán Access Token Meta Ads vào đây");
+  cfg.getRange("H1").setValue("📧 Mail xác nhận (Chốt sổ & Báo cáo ngày)");
+  cfg.getRange("H1").setFontWeight("bold").setBackground("#8E7CC3").setFontColor("#FFFFFF");
+  cfg.getRange("H2").setNote("Nhập danh sách email nhận báo cáo vào các ô bên dưới");
+  cfg.setColumnWidth(1, 180); cfg.setColumnWidth(2, 220);
+  cfg.setColumnWidth(4, 200); cfg.setColumnWidth(6, 300); cfg.setColumnWidth(8, 280);
+
+  let ads = ss.getSheetByName("Chi phí Ads");
+  if (!ads) ads = ss.insertSheet("Chi phí Ads");
+  if (ads.getRange("A1").getValue() === "") {
+    ads.getRange("A1:I1").setValues([["Ngày","Tài khoản","Campaign","Chi phí (VND)","Lượt hiển thị","Clicks","CTR (%)","Lượt xem trang","Lượt mua"]]);
+    ads.getRange("A1:I1").setFontWeight("bold").setBackground("#4472C4").setFontColor("#FFFFFF");
+    ads.setFrozenRows(1);
+    const adsDateRule = SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).build();
+    ads.getRange("A2:A1000").setDataValidation(adsDateRule);
+    ads.getRange("A2:A1000").setNumberFormat("dd/MM/yyyy");
+    ads.setColumnWidth(1, 120); ads.setColumnWidth(2, 160); ads.setColumnWidth(3, 200); ads.setColumnWidth(4, 130);
+  }
+
+  let cpKhac = ss.getSheetByName("Chi phí khác");
+  if (!cpKhac) cpKhac = ss.insertSheet("Chi phí khác");
+  cpKhac.clearContents(); cpKhac.clearFormats();
+  cpKhac.getRange("A1:C1").setValues([["Ngày", "Khoản chi", "Số tiền (VND)"]]);
+  cpKhac.getRange("A1:C1").setFontWeight("bold").setBackground("#E06666").setFontColor("#FFFFFF");
+  cpKhac.setFrozenRows(1);
+  const dateRule = SpreadsheetApp.newDataValidation().requireDate().setAllowInvalid(false).setHelpText("Chọn ngày phát sinh chi phí").build();
+  cpKhac.getRange("A2:A1000").setDataValidation(dateRule);
+  cpKhac.getRange("A2:A1000").setNumberFormat("dd/MM/yyyy");
+  cpKhac.getRange("C2:C1000").setNumberFormat("#,##0");
+  const now = new Date();
+  cpKhac.getRange("A2").setValue(now);
+  cpKhac.getRange("B2").setValue("CP nhập hàng");
+  cpKhac.getRange("C2").setValue(0);
+  cpKhac.setColumnWidth(1, 130); cpKhac.setColumnWidth(2, 250); cpKhac.setColumnWidth(3, 150);
+  cpKhac.getRange("E1").setValue("💡 Hướng dẫn").setFontWeight("bold").setFontColor("#cc0000");
+  cpKhac.getRange("E2").setValue("1. Click ô cột A → chọn ngày từ lịch");
+  cpKhac.getRange("E3").setValue("2. Cột B: nhập tên khoản chi");
+  cpKhac.getRange("E4").setValue("3. Cột C: nhập số tiền");
+  cpKhac.getRange("E5").setValue("4. Sheet Tổng tự cập nhật ngay sau khi nhập ✅");
+  cpKhac.setColumnWidth(5, 380);
+
+  setupTrigger();
+  rebuildTong();
+
+  SpreadsheetApp.getUi().alert(
+    "✅ Setup hoàn tất!\n\n" +
+    "🤖 Tự động hóa:\n" +
+    "  • 00h05 ngày 1: backup + email tháng + xóa CP\n" +
+    "  • 00h10 hàng ngày: email báo cáo ngày hôm qua\n" +
+    "  • Mỗi 5 tiếng: rebuild sheet Tổng\n" +
+    "  • onEdit: rebuild real-time\n\n" +
+    "📋 Thêm sheet đơn hàng: nhập tên vào Cấu hình cột D\n" +
+    "📋 Thêm TK Ads: nhập Act ID vào cột B → Sync tên TK"
+  );
+}
+
+// ============================================================
+//  REBUILD SHEET TỔNG
+// ============================================================
+
+function rebuildTong() {
+  const ss  = SpreadsheetApp.openById(SS_ID);
+  const cfg = ss.getSheetByName("Cấu hình");
+  if (!cfg) return;
+
+  const now        = new Date();
+  const thangNay   = now.getMonth();
+  const namNay     = now.getFullYear();
+  const thangLabel = Utilities.formatDate(now, "Asia/Ho_Chi_Minh", "MM/yyyy");
+
+  const duLieu = layDuLieuThang(ss, thangNay, namNay);
+  const { sheetNames, tkList, dtMap, adsMap, cpKhacMap, statusMap, tongDT, tongAds, tongCpKhac, tongCP, loiNhuan } = duLieu;
+  const tiSuat = tongDT > 0 ? loiNhuan / tongDT : 0;
+
+  let tongSheet = ss.getSheetByName("Tổng");
+  if (!tongSheet) tongSheet = ss.insertSheet("Tổng");
+  tongSheet.clearContents(); tongSheet.clearFormats();
+
+  const COL_STATUS = 5;
+  let r = 1;
+
+  tongSheet.getRange(r, 1).setValue("📊 BÁO CÁO THÁNG " + thangLabel).setFontWeight("bold").setFontSize(13);
+  r += 2;
+
+  tongSheet.getRange(r, 1).setValue("📦 DOANH THU").setFontWeight("bold").setFontSize(11); r++;
+  tongSheet.getRange(r, 1, 1, 3).setValues([["Sản phẩm", "Số đơn", "Doanh thu (VND)"]]);
+  tongSheet.getRange(r, 1, 1, 3).setFontWeight("bold").setBackground("#4472C4").setFontColor("#FFFFFF"); r++;
+  const dtStart = r; let tongDTTotal = 0;
+  sheetNames.forEach(name => {
+    const info = dtMap[name];
+    tongSheet.getRange(r, 1).setValue(name);
+    if (info.loi) { tongSheet.getRange(r, 2).setValue(info.loi).setFontColor("#cc0000"); }
+    else { tongSheet.getRange(r, 2).setValue(info.sodon); tongSheet.getRange(r, 3).setValue(info.tong).setNumberFormat("#,##0"); tongDTTotal += info.tong; }
+    r++;
+  });
+  tongSheet.getRange(r, 1).setValue("TỔNG DOANH THU").setFontWeight("bold");
+  tongSheet.getRange(r, 3).setValue(tongDTTotal).setNumberFormat("#,##0").setFontWeight("bold");
+  tongSheet.getRange(r, 1, 1, 3).setBackground("#D9EAD3").setFontWeight("bold");
+  tongSheet.getRange(dtStart - 1, 1, r - dtStart + 2, 3).setBorder(true, true, true, true, true, true);
+  r += 2;
+
+  tongSheet.getRange(r, 1).setValue("💸 CHI PHÍ").setFontWeight("bold").setFontSize(11); r++;
+  tongSheet.getRange(r, 1, 1, 2).setValues([["Khoản chi", "Số tiền (VND)"]]);
+  tongSheet.getRange(r, 1, 1, 2).setFontWeight("bold").setBackground("#E06666").setFontColor("#FFFFFF"); r++;
+  const cpStart = r; let tongCPTotal = 0;
+  tkList.forEach(tk => {
+    const val = adsMap[tk.ten] || 0;
+    tongSheet.getRange(r, 1).setValue("CP Ads - " + tk.ten);
+    tongSheet.getRange(r, 2).setValue(val).setNumberFormat("#,##0");
+    tongCPTotal += val; r++;
+  });
+  const totalCpKhac = tongCpKhac;
+  if (totalCpKhac > 0) { tongSheet.getRange(r, 1).setValue("Chi phí khác"); tongSheet.getRange(r, 2).setValue(totalCpKhac).setNumberFormat("#,##0"); tongCPTotal += totalCpKhac; r++; }
+  else { tongSheet.getRange(r, 1).setValue("(Chưa có CP khác tháng này)").setFontColor("#999999").setFontStyle("italic"); tongSheet.getRange(r, 2).setValue(0).setNumberFormat("#,##0"); r++; }
+  tongSheet.getRange(r, 1).setValue("TỔNG CHI PHÍ").setFontWeight("bold");
+  tongSheet.getRange(r, 2).setValue(tongCPTotal).setNumberFormat("#,##0").setFontWeight("bold");
+  tongSheet.getRange(r, 1, 1, 2).setBackground("#F4CCCC").setFontWeight("bold");
+  tongSheet.getRange(cpStart - 1, 1, r - cpStart + 2, 2).setBorder(true, true, true, true, true, true);
+  r += 2;
+
+  const loiNhuanFinal = tongDTTotal - tongCPTotal;
+  const tongAdsTotal  = Object.values(adsMap).reduce((sum, v) => sum + v, 0);
+  const roas          = tongAdsTotal > 0 ? tongDTTotal / tongAdsTotal : 0;
+  const roi           = tongCPTotal  > 0 ? loiNhuanFinal / tongCPTotal : 0;
+
+  tongSheet.getRange(r, 1).setValue("📊 LÃI / LỖ & HIỆU SUẤT").setFontWeight("bold").setFontSize(11); r++;
+  tongSheet.getRange(r, 1, 1, 2).setValues([["Chỉ số", "Giá trị"]]);
+  tongSheet.getRange(r, 1, 1, 2).setFontWeight("bold").setBackground("#6AA84F").setFontColor("#FFFFFF"); r++;
+  const llStart = r;
+  tongSheet.getRange(r, 1).setValue("Tổng doanh thu"); tongSheet.getRange(r, 2).setValue(tongDTTotal).setNumberFormat("#,##0"); r++;
+  tongSheet.getRange(r, 1).setValue("Tổng chi phí");   tongSheet.getRange(r, 2).setValue(tongCPTotal).setNumberFormat("#,##0"); r++;
+  tongSheet.getRange(r, 1).setValue("LỢI NHUẬN").setFontWeight("bold");
+  tongSheet.getRange(r, 2).setValue(loiNhuanFinal).setNumberFormat("#,##0").setFontWeight("bold");
+  tongSheet.getRange(r, 2).setFontColor(loiNhuanFinal >= 0 ? "#0b5394" : "#cc0000"); r++;
+  tongSheet.getRange(r, 1).setValue("Tỉ suất lợi nhuận"); tongSheet.getRange(r, 2).setValue(tiSuat).setNumberFormat("0.0%"); r++;
+  tongSheet.getRange(r, 1).setValue("ROAS"); tongSheet.getRange(r, 2).setValue(roas).setNumberFormat("0.00\"x\""); r++;
+  tongSheet.getRange(r, 1).setValue("ROI").setFontWeight("bold");
+  tongSheet.getRange(r, 2).setValue(roi).setNumberFormat("0.0%").setFontWeight("bold");
+  tongSheet.getRange(r, 2).setFontColor(roi >= 0 ? "#0b5394" : "#cc0000");
+  tongSheet.getRange(llStart - 1, 1, r - llStart + 2, 2).setBorder(true, true, true, true, true, true);
+  r += 2;
+
+  tongSheet.getRange(r, 1).setValue("🕐 Cập nhật: " + Utilities.formatDate(now, "Asia/Ho_Chi_Minh", "HH:mm - dd/MM/yyyy")).setFontColor("#999999").setFontStyle("italic");
+
+  // BẢNG TRẠNG THÁI (Cột E)
+  let rs = 1;
+  tongSheet.getRange(rs, COL_STATUS).setValue("📋 TRẠNG THÁI ĐƠN HÀNG").setFontWeight("bold").setFontSize(13); rs += 2;
+  tongSheet.getRange(rs, COL_STATUS, 1, 3).setValues([["Sản phẩm", "Trạng thái", "Số đơn"]]);
+  tongSheet.getRange(rs, COL_STATUS, 1, 3).setFontWeight("bold").setBackground("#7986CB").setFontColor("#FFFFFF"); rs++;
+  const statusTableStart = rs;
+
+  sheetNames.forEach(name => {
+    const info = statusMap[name];
+    if (info.loi) { tongSheet.getRange(rs, COL_STATUS).setValue(name).setFontWeight("bold"); tongSheet.getRange(rs, COL_STATUS + 1).setValue(info.loi).setFontColor("#cc0000"); rs++; return; }
+    if (info.danhSach.length === 0) { tongSheet.getRange(rs, COL_STATUS).setValue(name).setFontWeight("bold"); tongSheet.getRange(rs, COL_STATUS + 1).setValue("(Chưa có dropdown trạng thái)").setFontColor("#999999").setFontStyle("italic"); rs++; return; }
+    const groupStart = rs;
+    const tongDon    = info.danhSach.reduce((sum, tt) => sum + (info.counts[tt] || 0), 0);
+    info.danhSach.forEach((trangThai, idx) => {
+      const sodon = info.counts[trangThai] || 0;
+      const tlPct = tongDon > 0 ? ((sodon / tongDon) * 100).toFixed(1) + "%" : "0%";
+      if (idx === 0) tongSheet.getRange(rs, COL_STATUS).setValue(name).setFontWeight("bold");
+      tongSheet.getRange(rs, COL_STATUS + 1).setValue(trangThai);
+      tongSheet.getRange(rs, COL_STATUS + 2).setValue(sodon + " (" + tlPct + ")");
+      if (trangThai === "Đã Nhận")        { tongSheet.getRange(rs, COL_STATUS + 1, 1, 2).setBackground("#f0fff4"); tongSheet.getRange(rs, COL_STATUS + 2).setFontWeight("bold").setFontColor("#1a7f37"); }
+      else if (trangThai === "Boom hàng") { tongSheet.getRange(rs, COL_STATUS + 1, 1, 2).setBackground("#fff8f0"); tongSheet.getRange(rs, COL_STATUS + 2).setFontWeight("bold").setFontColor("#e36209"); }
+      else if (trangThai === "Hủy")       { tongSheet.getRange(rs, COL_STATUS + 1, 1, 2).setBackground("#fff5f5"); tongSheet.getRange(rs, COL_STATUS + 2).setFontWeight("bold").setFontColor("#cf222e"); }
+      else if (sodon > 0)                 { tongSheet.getRange(rs, COL_STATUS + 1, 1, 2).setBackground("#FFFFFF"); tongSheet.getRange(rs, COL_STATUS + 2).setFontWeight("bold").setFontColor("#0b5394"); }
+      else                                { tongSheet.getRange(rs, COL_STATUS + 1, 1, 2).setBackground("#F5F5F5"); tongSheet.getRange(rs, COL_STATUS + 2).setFontColor("#999999"); }
+      rs++;
+    });
+    tongSheet.getRange(rs, COL_STATUS).setValue("Tổng");
+    tongSheet.getRange(rs, COL_STATUS + 1).setValue(name);
+    tongSheet.getRange(rs, COL_STATUS + 2).setValue(tongDon).setFontWeight("bold");
+    tongSheet.getRange(rs, COL_STATUS, 1, 3).setBackground("#E8EAF6").setFontWeight("bold"); rs++;
+    tongSheet.getRange(groupStart, COL_STATUS, rs - groupStart, 3).setBorder(true, true, true, true, true, false);
+    rs++;
+  });
+
+  if (rs > statusTableStart) {
+    tongSheet.getRange(statusTableStart - 1, COL_STATUS, rs - statusTableStart + 1, 3).setBorder(true, true, true, true, false, false);
+  }
+
+  tongSheet.setColumnWidth(1, 250); tongSheet.setColumnWidth(2, 120); tongSheet.setColumnWidth(3, 180);
+  tongSheet.setColumnWidth(4, 40);  tongSheet.setColumnWidth(5, 180); tongSheet.setColumnWidth(6, 180); tongSheet.setColumnWidth(7, 130);
+}
+
+// ============================================================
+//  CẤP QUYỀN DRIVE + MAIL
+// ============================================================
+
+function capQuyenDrive() {
+  const file = DriveApp.getFileById(SS_ID);
+  const copy = file.makeCopy("__test_quyen_drive__");
+  DriveApp.getFileById(copy.getId()).setTrashed(true);
+  MailApp.sendEmail({
+    to:      Session.getActiveUser().getEmail(),
+    subject: "__test_quyen_mail__",
+    body:    "Test cấp quyền mail — có thể xóa email này."
+  });
+  SpreadsheetApp.getUi().alert("✅ Đã cấp đủ quyền Drive + Mail!\nFile: " + file.getName());
+}
