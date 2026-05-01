@@ -102,6 +102,7 @@ const thankCloseBtn      = document.getElementById("thankCloseBtn");
 const districtSelect     = document.getElementById("district");
 const wardSelect         = document.getElementById("ward");
 const districtWardWrap   = document.getElementById("districtWardWrap");
+const cartBadge          = document.getElementById("cartBadge");
 
 /* ===================================================
    SHA256
@@ -150,6 +151,21 @@ function getCookie(name) {
 function setCookie(name, value, days) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   document.cookie = name + "=" + value + "; expires=" + expires + "; path=/";
+}
+
+/* ===================================================
+   CART BADGE
+=================================================== */
+function updateCartBadge() {
+  loadCartItems();
+  const total = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  if (!cartBadge) return;
+  if (total > 0) {
+    cartBadge.textContent = total > 99 ? "99+" : total;
+    cartBadge.classList.add("show");
+  } else {
+    cartBadge.classList.remove("show");
+  }
 }
 
 /* ===================================================
@@ -586,6 +602,7 @@ function renderCartSummary() {
       }
 
       renderCartSummary();
+      updateCartBadge();
     });
   });
 }
@@ -628,10 +645,11 @@ function openCheckout() {
 }
 
 /* ===================================================
-   HELPER: Thực hiện hành động "Thêm giỏ hàng"
+   HELPER: Thêm vào giỏ — KHÔNG đóng popup
 =================================================== */
-function doAddToCart() {
+function doAddToCart(btnEl) {
   addCurrentSelectionToCart();
+  updateCartBadge();
 
   const eid       = genEventId();
   const unitPrice = getCurrentPrice();
@@ -658,10 +676,58 @@ function doAddToCart() {
   });
 
   showToast("✓ Đã thêm vào giỏ hàng");
+
+  /* ── Đổi text nút tạm thời ── */
+  if (btnEl) {
+    const original = btnEl.textContent;
+    btnEl.textContent = "✓ Đã thêm";
+    btnEl.classList.add("added");
+    setTimeout(() => {
+      btnEl.textContent = original;
+      btnEl.classList.remove("added");
+    }, 1500);
+  }
 }
 
 /* ===================================================
-   HELPER: Thực hiện hành động "Mua ngay"
+   HELPER: Mua ngay trong popup —
+   nếu giỏ có SP → gộp vào giỏ + checkout
+   nếu giỏ trống → chỉ SP đang chọn
+=================================================== */
+function doPopupBuyNow() {
+  loadCartItems();
+
+  if (cartItems.length > 0) {
+    /* Thêm SP đang chọn vào giỏ rồi checkout giỏ */
+    addCurrentSelectionToCart();
+    updateCartBadge();
+    checkoutMode = "cart";
+    loadCartItems();
+  } else {
+    /* Giỏ trống — chỉ SP đang chọn */
+    checkoutMode = "buynow";
+    const variants  = getSelectedVariants();
+    const combo     = getSelectedCombo();
+    const unitPrice = getCurrentPrice();
+
+    const item = {
+      product_id:   PRODUCT.id,
+      product_name: PRODUCT.name,
+      quantity:     quantity,
+      price:        unitPrice,
+      total:        unitPrice * quantity,
+      shipFee:      combo ? (combo.shipFee || 0) : 0
+    };
+    if (Object.keys(variants).length) item.variants = variants;
+    if (combo)                         item.combo    = combo.name;
+    buyNowItems = [item];
+  }
+
+  openCheckout();
+}
+
+/* ===================================================
+   HELPER: Mua ngay ngoài trang (giữ nguyên behavior cũ)
 =================================================== */
 function doBuyNow() {
   checkoutMode = "buynow";
@@ -686,16 +752,15 @@ function doBuyNow() {
 }
 
 /* ===================================================
-   CTA EVENTS
+   CTA EVENTS — ngoài trang
 =================================================== */
 inlineAddToCartBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
-    vpPendingAction = "addtocart";
     window.__variantPopup.open();
   } else if (HAS_COMBO_POPUP) {
     window.__comboPopup.open();
   } else {
-    doAddToCart();
+    doAddToCart(inlineAddToCartBtn);
   }
 });
 
@@ -711,7 +776,6 @@ goToCartBtn.addEventListener("click", () => {
 
 buyNowBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
-    vpPendingAction = "buynow";
     window.__variantPopup.open();
   } else if (HAS_COMBO_POPUP) {
     window.__comboPopup.open();
@@ -722,7 +786,6 @@ buyNowBtn.addEventListener("click", () => {
 
 inlineBuyNowBtn.addEventListener("click", () => {
   if (HAS_COLOR_VARIANT) {
-    vpPendingAction = "buynow";
     window.__variantPopup.open();
   } else if (HAS_COMBO_POPUP) {
     window.__comboPopup.open();
@@ -735,7 +798,6 @@ const midCtaBtn = document.getElementById("midCtaBtn");
 if (midCtaBtn) {
   midCtaBtn.addEventListener("click", () => {
     if (HAS_COLOR_VARIANT) {
-      vpPendingAction = "buynow";
       window.__variantPopup.open();
     } else if (HAS_COMBO_POPUP) {
       window.__comboPopup.open();
@@ -749,32 +811,74 @@ if (midCtaBtn) {
    VARIANT POPUP — CTA BUTTONS
 =================================================== */
 if (HAS_COLOR_VARIANT) {
-  document.getElementById("vpAddToCartBtn").addEventListener("click", () => {
-    doAddToCart();
-    window.__variantPopup.close();
-    vpPendingAction = null;
-  });
+  /* Nút Thêm vào giỏ — KHÔNG đóng popup */
+  const vpAddBtn = document.getElementById("vpAddToCartBtn");
+  if (vpAddBtn) {
+    vpAddBtn.addEventListener("click", () => {
+      doAddToCart(vpAddBtn);
+    });
+  }
 
-  document.getElementById("vpBuyNowBtn").addEventListener("click", () => {
-    window.__variantPopup.close();
-    vpPendingAction = null;
-    doBuyNow();
-  });
+  /* Nút Đến giỏ hàng — đóng popup rồi mở checkout giỏ */
+  const vpGoToCartBtn = document.getElementById("vpGoToCartBtn");
+  if (vpGoToCartBtn) {
+    vpGoToCartBtn.addEventListener("click", () => {
+      window.__variantPopup.close();
+      loadCartItems();
+      if (!cartItems.length) {
+        showToast("Giỏ hàng trống");
+        return;
+      }
+      checkoutMode = "cart";
+      openCheckout();
+    });
+  }
+
+  /* Nút Mua ngay trong popup */
+  const vpBuyNowBtn = document.getElementById("vpBuyNowBtn");
+  if (vpBuyNowBtn) {
+    vpBuyNowBtn.addEventListener("click", () => {
+      window.__variantPopup.close();
+      doPopupBuyNow();
+    });
+  }
 }
 
 /* ===================================================
    COMBO POPUP — CTA BUTTONS
 =================================================== */
 if (HAS_COMBO_POPUP) {
-  document.getElementById("cpAddToCartBtn").addEventListener("click", () => {
-    doAddToCart();
-    window.__comboPopup.close();
-  });
+  /* Nút Thêm vào giỏ — KHÔNG đóng popup */
+  const cpAddBtn = document.getElementById("cpAddToCartBtn");
+  if (cpAddBtn) {
+    cpAddBtn.addEventListener("click", () => {
+      doAddToCart(cpAddBtn);
+    });
+  }
 
-  document.getElementById("cpBuyNowBtn").addEventListener("click", () => {
-    window.__comboPopup.close();
-    doBuyNow();
-  });
+  /* Nút Đến giỏ hàng — đóng popup rồi mở checkout giỏ */
+  const cpGoToCartBtn = document.getElementById("cpGoToCartBtn");
+  if (cpGoToCartBtn) {
+    cpGoToCartBtn.addEventListener("click", () => {
+      window.__comboPopup.close();
+      loadCartItems();
+      if (!cartItems.length) {
+        showToast("Giỏ hàng trống");
+        return;
+      }
+      checkoutMode = "cart";
+      openCheckout();
+    });
+  }
+
+  /* Nút Mua ngay trong popup */
+  const cpBuyNowBtn = document.getElementById("cpBuyNowBtn");
+  if (cpBuyNowBtn) {
+    cpBuyNowBtn.addEventListener("click", () => {
+      window.__comboPopup.close();
+      doPopupBuyNow();
+    });
+  }
 }
 
 /* ===================================================
@@ -1143,6 +1247,7 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     }
 
     renderCartSummary();
+    updateCartBadge();
     hideModal();
     openThankModal();
 
@@ -1186,7 +1291,6 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     statusMessage.style.color = "red";
     statusMessage.textContent = "Có lỗi xảy ra, vui lòng thử lại.";
 
-    /* ── Lỗi hệ thống không rõ — gửi email báo ── */
     const customerSnap = {
       full_name: document.getElementById("fullName")?.value?.trim() || "",
       phone:     getPhoneRaw(),
@@ -1370,6 +1474,7 @@ function getPhoneRaw() {
   initLazyVideos();
   renderCartSummary();
   updateQtyDisplay();
+  updateCartBadge();
 
   document.querySelectorAll(".combo-option").forEach(btn => {
     btn.addEventListener("click", () => {
