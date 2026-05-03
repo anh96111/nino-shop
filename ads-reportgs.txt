@@ -153,12 +153,13 @@ function setupAdsTrigger() {
   });
 
   ScriptApp.newTrigger("fetchAdsReport")
-    .timeBased()
-    .everyDays(1)
-    .atHour(0)
-    .nearMinute(10)
-    .inTimezone("Asia/Ho_Chi_Minh")
-    .create();
+  .timeBased()
+  .everyDays(1)
+  .atHour(0)
+  .nearMinute(2)
+  .inTimezone("Asia/Ho_Chi_Minh")
+  .create();
+
 
   SpreadsheetApp.getUi().alert("✅ Trigger 00h10 đã cài!\nMỗi đêm tự động lấy chi phí Ads.");
 }

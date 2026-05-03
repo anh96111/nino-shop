@@ -174,7 +174,7 @@ const PRODUCT_CONFIG = {
         match:    "Đúng như mô tả",
         material: "Dày dặn, chắc chắn",
         content:  "Sản phẩm dày dặn, tốt. Có nhiều ngăn nhỏ để đựng dụng cụ học tập, hợp lý. Con gái mình thích lắm, đeo vào trông rất xinh.",
-        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777061298/vn-11134103-7r98o-lq75zjno355e38_mcyxnt.webp"],
+        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777823162/d_zfn5mj.jpg"],
         likes:    18
       },
       {
@@ -186,7 +186,7 @@ const PRODUCT_CONFIG = {
         match:    "Đúng mô tả",
         material: "Tốt",
         content:  "Balo to, màu sắc đẹp, quai đeo dày và êm. Mình tưởng có con gấu tặng kèm nhưng không có, bù lại được tặng cây viết chì cũng ok.",
-        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777061294/vn-11134103-7r98o-lpq37v23ihfdf8_clzp8y.webp"],
+        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777825918/20_mhn1d9.jpg"],
         likes:    12
       },
       {
@@ -198,7 +198,7 @@ const PRODUCT_CONFIG = {
         match:    "Đúng mô tả",
         material: "Chắc chắn",
         content:  "Shop chu đáo. Sản phẩm rất hài lòng. Còn tặng kèm quà dễ thương cho bé. Sẽ ủng hộ lần sau 😘😘",
-        media:    [],
+        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777823140/%C3%A2_gonip3.jpg"],
         likes:    25
       },
       {
@@ -210,7 +210,7 @@ const PRODUCT_CONFIG = {
         match:    "Đúng như hình",
         material: "Chắc chắn",
         content:  "Sản phẩm đúng với hình ảnh mô tả. Bé nhà mình rất thích. Cặp to chắc chắn còn kèm quà tặng.",
-        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777061301/vn-11134103-7r98o-lmsynsf8rwm7fa_eyz2qp.webp"],
+        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777826692/0012_bfvngs.jpg"],
         likes:    20
       },
       {
