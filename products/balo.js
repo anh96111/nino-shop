@@ -97,6 +97,10 @@ const PRODUCT_CONFIG = {
         {
           name:  "Tím Lavender",
           image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777058700/15_kgeqxz.jpg"
+        },
+        {
+          name:  "Hồng",
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777836709/50cc654b-1e0d-4496-b87c-ecf0a2e3d507_qoc85w.jpg"
         }
       ]
     },

@@ -161,7 +161,7 @@ function setupAdsTrigger() {
   .create();
 
 
-  SpreadsheetApp.getUi().alert("✅ Trigger 00h10 đã cài!\nMỗi đêm tự động lấy chi phí Ads.");
+  SpreadsheetApp.getUi().alert("✅ Trigger 00h02 đã cài!\nMỗi đêm tự động lấy chi phí Ads.");
 }
 
 // ===================================================
