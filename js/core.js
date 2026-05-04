@@ -1317,11 +1317,11 @@ function renderStars(stars) {
   return "★".repeat(stars) + "☆".repeat(5 - stars);
 }
 
-function renderReviewMedia(media) {
+function renderReviewMedia(media, mediaFull) {
   if (!media || !media.length) return "";
   return `
     <div class="review-media">
-      ${media.map(item => {
+      ${media.map((item, idx) => {
         if (typeof item === "object" && item.type === "video") {
           return `<div class="review-media-item lazy-video-wrap" data-type="video" data-src="${item.src}" style="position:relative; cursor:pointer;">
               <img src="${item.poster}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" />
@@ -1335,7 +1335,7 @@ function renderReviewMedia(media) {
           ? `<div class="review-media-item lazy-video-wrap" data-type="video" data-src="${str}" style="position:relative; cursor:pointer;">
               <div style="width:100%;height:100%;background:#eee;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#999;font-size:22px;">▶</div>
             </div>`
-          : `<img class="review-media-item" data-type="image" data-src="${str}" src="${str}" loading="lazy" decoding="async" style="cursor:pointer;" />`;
+          : `<img class="review-media-item" data-type="image" data-src="${str}" data-full="${(mediaFull && mediaFull[idx]) ? mediaFull[idx] : str}" src="${str}" loading="lazy" decoding="async" style="cursor:pointer;" />`;
       }).join("")}
     </div>
   `;
@@ -1357,7 +1357,7 @@ function renderReviews() {
             Chính xác: ${review.match} &nbsp;·&nbsp; Chất lượng: ${review.material}
           </div>
           <div class="review-content">${review.content}</div>
-          ${renderReviewMedia(review.media)}
+          ${renderReviewMedia(review.media, review.mediaFull)}
           <div class="review-like">👍 ${review.likes}</div>
         </div>
       </div>
@@ -1380,7 +1380,7 @@ function setupReviewMediaLightbox() {
     e.stopPropagation();
 
     const type = target.dataset.type;
-    const src  = target.dataset.src;
+    const src  = target.dataset.full || target.dataset.src;
     if (!type || !src) return;
 
     lightboxContent.querySelectorAll("img, video").forEach(el => el.remove());

@@ -84,23 +84,23 @@ const PRODUCT_CONFIG = {
       options: [
         {
           name:  "Navy Phối Xanh Lá",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777058700/13_cqnoto.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/13_cqnoto.jpg"
         },
         {
           name:  "Navy",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777058700/14_p5n76h.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/14_p5n76h.jpg"
         },
         {
           name:  "Navy Phối Hồng",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777058700/16_urqk3f.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/16_urqk3f.jpg"
         },
         {
           name:  "Tím Lavender",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777058700/15_kgeqxz.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/15_kgeqxz.jpg"
         },
         {
           name:  "Hồng",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/v1777836709/50cc654b-1e0d-4496-b87c-ecf0a2e3d507_qoc85w.jpg"
+          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777836709/50cc654b-1e0d-4496-b87c-ecf0a2e3d507_qoc85w.jpg"
         }
       ]
     },
@@ -178,7 +178,8 @@ const PRODUCT_CONFIG = {
         match:    "Đúng như mô tả",
         material: "Dày dặn, chắc chắn",
         content:  "Sản phẩm dày dặn, tốt. Có nhiều ngăn nhỏ để đựng dụng cụ học tập, hợp lý. Con gái mình thích lắm, đeo vào trông rất xinh.",
-        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777823162/d_zfn5mj.jpg"],
+        media:     ["https://res.cloudinary.com/dezednxpz/image/upload/w_140,f_webp,q_auto/v1777823162/d_zfn5mj.jpg"],
+        mediaFull: ["https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777823162/d_zfn5mj.jpg"],
         likes:    18
       },
       {
@@ -190,7 +191,8 @@ const PRODUCT_CONFIG = {
         match:    "Đúng mô tả",
         material: "Tốt",
         content:  "Balo to, màu sắc đẹp, quai đeo dày và êm. Mình tưởng có con gấu tặng kèm nhưng không có, bù lại được tặng cây viết chì cũng ok.",
-        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777825918/20_mhn1d9.jpg"],
+        media:     ["https://res.cloudinary.com/dezednxpz/image/upload/w_140,f_webp,q_auto/v1777825918/20_mhn1d9.jpg"],
+        mediaFull: ["https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777825918/20_mhn1d9.jpg"],
         likes:    12
       },
       {
@@ -202,7 +204,8 @@ const PRODUCT_CONFIG = {
         match:    "Đúng mô tả",
         material: "Chắc chắn",
         content:  "Shop chu đáo. Sản phẩm rất hài lòng. Còn tặng kèm quà dễ thương cho bé. Sẽ ủng hộ lần sau 😘😘",
-        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777823140/%C3%A2_gonip3.jpg"],
+        media:     ["https://res.cloudinary.com/dezednxpz/image/upload/w_140,f_webp,q_auto/v1777823140/%C3%A2_gonip3.jpg"],
+        mediaFull: ["https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777823140/%C3%A2_gonip3.jpg"],
         likes:    25
       },
       {
@@ -214,7 +217,8 @@ const PRODUCT_CONFIG = {
         match:    "Đúng như hình",
         material: "Chắc chắn",
         content:  "Sản phẩm đúng với hình ảnh mô tả. Bé nhà mình rất thích. Cặp to chắc chắn còn kèm quà tặng.",
-        media:    ["https://res.cloudinary.com/dezednxpz/image/upload/v1777826692/0012_bfvngs.jpg"],
+        media:     ["https://res.cloudinary.com/dezednxpz/image/upload/w_140,f_webp,q_auto/v1777826692/0012_bfvngs.jpg"],
+        mediaFull: ["https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777826692/0012_bfvngs.jpg"],
         likes:    20
       },
       {
@@ -361,10 +365,6 @@ const PRODUCT_CONFIG = {
         media:    [],
         likes:    10
       }
-
-
-
-
     ]
   },
 
