@@ -322,7 +322,7 @@
                   <img src="${b.poster}" alt="${b.title}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;" />
                   <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;background:rgba(0,0,0,0.25);border-radius:10px;">▶</div>
                 </div>`
-              : `<img src="${b.image}" alt="${b.title}" loading="lazy" decoding="async" width="600" height="338" />`
+              : `<img src="${b.image}" alt="${b.title}" loading="${i === 0 ? 'eager' : 'lazy'}" fetchpriority="${i === 0 ? 'high' : 'low'}" decoding="async" width="600" height="338" />`
             }
           </div>
           <div class="benefit-content">

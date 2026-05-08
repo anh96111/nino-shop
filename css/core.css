@@ -855,3 +855,11 @@ button, input, textarea, select { font: inherit; }
 .btn-bar-solid {
   animation: wiggle-pulse 4s ease-in-out 2s infinite;
 }
+
+.slide img {
+  aspect-ratio: 16/9;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
