@@ -25,7 +25,7 @@ const PRODUCT_CONFIG = {
 
   // ── GALLERY ──
   images: [
-    "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1778251760/ag_mxc127.jpg"
+    "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1778251760/ag_mxc127.jpg"
   ],
   videos: [],
 
@@ -45,32 +45,32 @@ const PRODUCT_CONFIG = {
   // ── BENEFITS / CHỨNG MINH CÔNG DỤNG (P3) ──
   benefits: [
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777046282/7_gzneof.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/7_gzneof.jpg",
       title: "Bảo vệ cột sống đúng cách — bảo vệ tương lai con",
       description: "Cột sống của trẻ yếu hơn bạn nghĩ rất nhiều. Dây đeo kém chất lượng gây lệch vai, balo quá nặng khiến lưng cong gù, đeo lâu quá sức gây đau lưng thoái hoá sớm."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777046281/4_g1h7ej.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046281/4_g1h7ej.jpg",
       title: "Dây đeo chữ S – Khóa ngực chống trượt – Đệm lưng 3D lập thể",
       description: "Ôm sát vai không hằn, không đau, không lệch vai. Khóa ngực giữ cân bằng balo khi bé chạy nhảy. Đệm nổi khoa học giảm áp lực lên cột sống, thông thoáng không đổ mồ hôi."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777046282/6_xjux0t.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/6_xjux0t.jpg",
       title: "6 ngăn riêng biệt — cất gọn mọi thứ, bé tự tìm được ngay",
       description: "Ngăn chính dung tích lớn, ngăn phụ khoá kéo, ngăn trước khoá kéo, túi nhỏ dán magic, túi bên trái khoá kéo, túi bên phải đàn hồi đựng bình nước. Mỗi ngăn một công dụng — bé nhìn vào là biết ngay cái gì để ở đâu."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777046285/1_i409ck.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046285/1_i409ck.jpg",
       title: "Chống nước kiểu lá sen — mưa lớn cũng không lo",
       description: "Vải mật độ cao chống thấm nước công nghệ lá sen. Nước bắn vào lăn tròn, không ngấm vào trong. Sách vở bên trong khô ráo hoàn toàn dù trời đổ mưa giữa đường."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777046282/8_vmqhx4.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/8_vmqhx4.jpg",
       title: "Phản quang 360° — nhìn thấy từ khoảng cách 200m",
       description: "Dải phản quang phía trước, hai bên và phía sau balo. Buổi sáng sớm, trời tối hay trời mưa — xe cộ vẫn nhìn thấy con rõ ràng từ xa."
     },
     {
-      image: "https://res.cloudinary.com/dezednxpz/image/upload/f_webp,q_auto/v1777046282/9_qezl4k.jpg",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/9_qezl4k.jpg",
       title: "Siêu nhẹ — đeo mãi không mỏi",
       description: "Balo chỉ nặng 550g — nhẹ như một chai nước. Chuyên gia xương khớp khuyến nghị balo không nên vượt quá 10% cân nặng của trẻ."
     }
