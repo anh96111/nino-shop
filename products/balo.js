@@ -83,16 +83,18 @@ const PRODUCT_CONFIG = {
       label: "Màu sắc",
       options: [
         {
-          name:  "Navy Phối Xanh Lá",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/13_cqnoto.jpg"
+          name:       "Navy Phối Xanh Lá",
+          image:      "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/13_cqnoto.jpg",
+          soldBadge:  "🔥 Đã bán 1.5k"
         },
         {
           name:  "Navy",
           image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/14_p5n76h.jpg"
         },
         {
-          name:  "Navy Phối Hồng",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/16_urqk3f.jpg"
+          name:      "Navy Phối Hồng",
+          image:     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/16_urqk3f.jpg",
+          soldBadge: "🔥 Đã bán 1.5k"
         },
         {
           name:  "Tím Lavender",
@@ -108,8 +110,28 @@ const PRODUCT_CONFIG = {
       type:  "size",
       label: "Size",
       options: [
-        "Nhỏ — Lớp 1–3 (39×28×18cm)",
-        "Lớn — Lớp 4–6 (42×32×20cm)"
+        {
+          name: "Nhỏ — Lớp 1–3 (39×28×18cm)",
+          soldOutFor: [],
+          images: {
+            "Navy Phối Xanh Lá": "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/xanh_nho_ftbtzd.jpg",
+            "Navy":              "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/navy_nho_sjolsz.jpg",
+            "Navy Phối Hồng":   "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/navyhongnhooo_x4qo1j.jpg",
+            "Tím Lavender":     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/hong_nho_tvkfgx.jpg",
+            "Hồng":             "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/nhohong_x6tc3v.jpg"
+          }
+        },
+        {
+          name: "Lớn — Lớp 4–6 (42×32×20cm)",
+          soldOutFor: ["Hồng"],
+          images: {
+            "Navy Phối Xanh Lá": "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/xanhto_arrcx5.jpg",
+            "Navy":              "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/navyto_optqqr.jpg",
+            "Navy Phối Hồng":   "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/nvay_hongto_lcegan.jpg",
+            "Tím Lavender":     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/hong_to_a0v1tv.jpg",
+            "Hồng":             "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/h%C3%B4ng_to_mwjlva.jpg"
+          }
+        }
       ]
     }
   ],
@@ -163,10 +185,10 @@ const PRODUCT_CONFIG = {
     totalCount: 16,
     bars: [
       { star: 5, count: 11, percent: 69 },
-      { star: 4, count: 3, percent: 19 },
-      { star: 3, count: 2, percent: 12 },
-      { star: 2, count: 0, percent: 0 },
-      { star: 1, count: 0, percent: 0 }
+      { star: 4, count: 3,  percent: 19 },
+      { star: 3, count: 2,  percent: 12 },
+      { star: 2, count: 0,  percent: 0  },
+      { star: 1, count: 0,  percent: 0  }
     ],
     items: [
       {

@@ -11,27 +11,61 @@
   const C = SHARED_CONFIG;
   const root = document.getElementById("layoutRoot");
 
-  /* ── Kiểm tra SP có biến thể màu không ── */
   const hasColorVariant = P.variants.some(v => v.type === "color");
-
-  /* ── Kiểm tra SP có combo + không có color variant → dùng combo popup ── */
-  const hasComboPopup = P.combos.length > 0 && !hasColorVariant;
-
-  /* ── showMidCta — mặc định true nếu không khai báo ── */
-  const showMidCta = P.showMidCta !== false;
-
-  /* ── Discount number (lấy số từ "-50%" → "50") ── */
-  const discountNum = P.discount
+  const hasComboPopup   = P.combos.length > 0 && !hasColorVariant;
+  const showMidCta      = P.showMidCta !== false;
+  const discountNum     = P.discount
     ? P.discount.replace(/[^0-9]/g, "")
     : Math.round((1 - P.price / P.oldPrice) * 100);
 
-  /* ── Build variant popup HTML nếu có biến thể màu ── */
+  /* ── Build variant popup HTML ── */
   let variantPopupHTML = "";
   if (hasColorVariant) {
-    const colorVariant = P.variants.find(v => v.type === "color");
-    const otherVariants = P.variants.filter(v => v.type !== "color");
+    const colorVariant   = P.variants.find(v => v.type === "color");
+    const otherVariants  = P.variants.filter(v => v.type !== "color");
+    const firstColorName = colorVariant.options[0].name;
 
     variantPopupHTML = `
+    <style>
+      /* ── Size image lightbox ── */
+      #vpSizeImgLightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.88);
+        z-index: 99999;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      #vpSizeImgLightbox.show { display: flex; }
+      #vpSizeImgLightbox img {
+        max-width: 92vw;
+        max-height: 80vh;
+        border-radius: 10px;
+        object-fit: contain;
+      }
+      #vpSizeImgLightboxClose {
+        position: absolute;
+        top: 18px; right: 18px;
+        background: rgba(255,255,255,0.15);
+        border: none;
+        color: #fff;
+        font-size: 26px;
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        line-height: 1;
+      }
+    </style>
+
+    <!-- SIZE IMAGE LIGHTBOX (ngoài popup, fixed toàn màn hình) -->
+    <div id="vpSizeImgLightbox">
+      <button id="vpSizeImgLightboxClose">&times;</button>
+      <img id="vpSizeImgLightboxImg" src="" alt="Xem ảnh size" />
+    </div>
+
     <div class="variant-popup-overlay" id="variantPopupOverlay">
       <div class="variant-popup" id="variantPopup">
         <div class="variant-popup-top">
@@ -62,7 +96,7 @@
           </div>
         </div>
 
-        <!-- SLIDER ẢNH TRONG POPUP -->
+        <!-- SLIDER ẢNH MÀU -->
         <div class="variant-popup-gallery">
           <div class="variant-popup-slider" id="vpSlider">
             <div class="variant-popup-slides" id="vpSlides">
@@ -87,9 +121,14 @@
           </div>
         </div>
 
-        <!-- GIFT NOTE -->
-        <div style="display:flex; align-items:center; gap:6px; padding:0 16px 12px; font-size:13.5px; font-weight:600; color:#38a169;">
-          <span style="font-size:16px;">🎁</span> Đã bao gồm full bộ quà tặng kèm cho bé
+        <!-- GIFT NOTE + LIVE COUNT -->
+        <div style="padding:0 16px 4px; text-align:center;">
+          <div style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:13.5px; font-weight:600; color:#38a169;">
+            <span style="font-size:16px;">🎁</span> Đã bao gồm full bộ quà tặng kèm cho bé
+          </div>
+          <div style="margin-top:5px; font-size:11.5px; color:#b7913a; font-weight:500; letter-spacing:0.01em;">
+            65% khách hàng mua lại &middot; <span id="vpLiveCount">148</span> người đang mua
+          </div>
         </div>
 
         <!-- BIẾN THỂ MÀU -->
@@ -97,24 +136,53 @@
           <div class="variant-popup-label">${colorVariant.label}</div>
           <div class="variant-popup-options">
             ${colorVariant.options.map((opt, idx) => `
-              <button class="variant-popup-option vp-color-option ${idx === 0 ? "active" : ""}" data-type="color" data-value="${opt.name}" data-index="${idx}">${opt.name}</button>
+              <button
+                class="variant-popup-option vp-color-option ${idx === 0 ? "active" : ""}"
+                data-type="color"
+                data-value="${opt.name}"
+                data-index="${idx}"
+                style="position:relative;"
+              >
+                ${opt.name}
+                ${opt.soldBadge ? `<span style="display:block; font-size:9px; font-weight:700; color:#e53e3e; margin-top:2px; line-height:1;">${opt.soldBadge}</span>` : ""}
+              </button>
             `).join("")}
           </div>
         </div>
 
-        <!-- BIẾN THỂ KHÁC (size, v.v.) -->
-        ${otherVariants.map(v => `
+        <!-- BIẾN THỂ KHÁC (size) -->
+        ${otherVariants.map(v => {
+          const isSizeVariant = v.type === "size";
+          return `
           <div class="variant-popup-section">
             <div class="variant-popup-label">${v.label}</div>
+            ${isSizeVariant ? `
+              <div id="vpSizeImageWrap" style="margin-bottom:10px; border-radius:10px; overflow:hidden; max-height:180px; display:flex; align-items:center; justify-content:center; background:#f7f7f7; cursor:zoom-in; position:relative;">
+                <img id="vpSizeImage" src="${v.options[0].images[firstColorName] || ""}" alt="" loading="lazy" decoding="async" style="width:100%; object-fit:contain; max-height:180px;" />
+                <div style="position:absolute; bottom:6px; right:8px; background:rgba(0,0,0,0.38); color:#fff; font-size:10px; padding:2px 7px; border-radius:4px; pointer-events:none;">🔍 Nhấn để xem to</div>
+              </div>
+            ` : ""}
             <div class="variant-popup-options">
-              ${v.options.map((opt, idx) => `
-                <button class="variant-popup-option vp-other-option ${idx === 0 ? "active" : ""}" data-type="${v.type}" data-value="${opt}">${opt}</button>
-              `).join("")}
+              ${v.options.map((opt, idx) => {
+                const isSoldOut = isSizeVariant && opt.soldOutFor && opt.soldOutFor.includes(firstColorName);
+                return `
+                <button
+                  class="variant-popup-option vp-other-option ${idx === 0 && !isSoldOut ? "active" : ""} ${isSoldOut ? "vp-soldout" : ""}"
+                  data-type="${v.type}"
+                  data-value="${isSizeVariant ? opt.name : opt}"
+                  data-index="${idx}"
+                  ${isSoldOut ? "disabled" : ""}
+                  style="${isSoldOut ? "opacity:0.45; cursor:not-allowed; text-decoration:line-through;" : ""}"
+                >
+                  ${isSizeVariant ? opt.name : opt}
+                  ${isSoldOut ? `<span style="display:block; font-size:9px; color:#e53e3e; font-weight:600; margin-top:2px;">Hết hàng</span>` : ""}
+                </button>`;
+              }).join("")}
             </div>
-          </div>
-        `).join("")}
+          </div>`;
+        }).join("")}
 
-        <!-- NÚT THÊM VÀO GIỎ (ngay dưới size) -->
+        <!-- NÚT THÊM VÀO GIỎ -->
         <button class="vp-add-to-cart-btn" id="vpAddToCartBtn">🛒 Thêm vào giỏ</button>
 
         <!-- NÚT ĐẾN GIỎ HÀNG + MUA NGAY -->
@@ -127,7 +195,7 @@
     `;
   }
 
-  /* ── Build combo popup HTML nếu có combo + không có color variant ── */
+  /* ── Build combo popup HTML ── */
   let comboPopupHTML = "";
   if (hasComboPopup) {
     const comboHasImages = P.combos.some(c => c.image);
@@ -139,8 +207,6 @@
           <div class="variant-popup-title">Chọn sản phẩm</div>
           <button class="variant-popup-close" id="comboPopupClose">&times;</button>
         </div>
-
-        <!-- GIÁ + TRUST -->
         <div style="padding:0 16px 12px; border-bottom:1px solid #f0f0f0; margin-bottom:8px;">
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
             <span class="cp-price-display" style="font-size:20px; font-weight:800; color:#e53e3e;">${Number(P.combos[0].price).toLocaleString("vi-VN")}đ</span>
@@ -151,43 +217,25 @@
             ${P.combos[0].shipFee ? '🚚 Phí ship: ' + Number(P.combos[0].shipFee).toLocaleString("vi-VN") + 'đ' : '🚚 Miễn phí vận chuyển'}
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
-              <span style="font-size:14px;">🔍</span> Xem hàng trước khi trả tiền
-            </div>
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
-              <span style="font-size:14px;">↩️</span> Hoàn tiền nếu sai mô tả
-            </div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;"><span style="font-size:14px;">🔍</span> Xem hàng trước khi trả tiền</div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;"><span style="font-size:14px;">↩️</span> Hoàn tiền nếu sai mô tả</div>
           </div>
         </div>
-
-        <!-- SLIDER ẢNH COMBO (chỉ render nếu combo có image) -->
         ${comboHasImages ? `
         <div class="variant-popup-gallery">
           <div class="variant-popup-slider" id="cpSlider">
             <div class="variant-popup-slides" id="cpSlides">
-              ${P.combos.map(c => `
-                <div class="variant-popup-slide">
-                  <img src="${c.image}" alt="${c.name}" loading="lazy" decoding="async" />
-                </div>
-              `).join("")}
+              ${P.combos.map(c => `<div class="variant-popup-slide"><img src="${c.image}" alt="${c.name}" loading="lazy" decoding="async" /></div>`).join("")}
             </div>
           </div>
           <div class="variant-popup-dots" id="cpDots">
-            ${P.combos.map((c, idx) => `
-              <div class="variant-popup-dot ${idx === 0 ? "active" : ""}" data-index="${idx}"></div>
-            `).join("")}
+            ${P.combos.map((c, idx) => `<div class="variant-popup-dot ${idx === 0 ? "active" : ""}" data-index="${idx}"></div>`).join("")}
           </div>
           <div class="variant-popup-thumbs" id="cpThumbs">
-            ${P.combos.map((c, idx) => `
-              <div class="variant-popup-thumb ${idx === 0 ? "active" : ""}" data-index="${idx}">
-                <img src="${c.image}" alt="${c.name}" loading="lazy" decoding="async" />
-              </div>
-            `).join("")}
+            ${P.combos.map((c, idx) => `<div class="variant-popup-thumb ${idx === 0 ? "active" : ""}" data-index="${idx}"><img src="${c.image}" alt="${c.name}" loading="lazy" decoding="async" /></div>`).join("")}
           </div>
         </div>
         ` : ""}
-
-        <!-- COMBO OPTIONS -->
         <div style="padding:0 16px 12px;">
           <div style="font-size:14px; font-weight:600; margin-bottom:8px;">Chọn combo</div>
           <div class="combos-list">
@@ -211,60 +259,23 @@
             }).join("")}
           </div>
         </div>
-
         <style>
-        #comboPopup .combo-option {
-          display:flex; flex-direction:column; align-items:flex-start;
-          width:100%; padding:12px 14px; border:2px solid #e2e8f0;
-          border-radius:10px; background:#fff; cursor:pointer;
-          text-align:left; gap:0; margin-bottom:8px;
-          transition: border-color .15s;
-        }
-        #comboPopup .combo-option.active {
-          border-color:#e53e3e; background:#fff5f5;
-        }
-        #comboPopup .combo-option .combo-name,
-        #comboPopup .combo-option .combo-price,
-        #comboPopup .combo-option .combo-ship {
-          display:none;
-        }
-        .cp-opt-top {
-          display:flex; align-items:flex-start; justify-content:space-between; width:100%; gap:10px;
-        }
-        .cp-opt-name {
-          font-size:13.5px; font-weight:600; color:#1a202c; line-height:1.4; flex:1;
-        }
-        .cp-opt-badge-free {
-          flex-shrink:0; font-size:10px; font-weight:700; color:#fff; background:#38a169;
-          padding:3px 8px; border-radius:4px; white-space:nowrap; margin-top:1px;
-        }
-        .cp-opt-bottom {
-          display:flex; align-items:center; gap:8px; margin-top:6px; flex-wrap:wrap;
-        }
-        .cp-opt-price {
-          font-size:17px; font-weight:800; color:#e53e3e;
-        }
-        .cp-opt-oldprice {
-          font-size:13px; color:#aaa; text-decoration:line-through;
-        }
-        .cp-opt-discount {
-          font-size:10px; font-weight:700; color:#fff; background:#e53e3e;
-          padding:2px 6px; border-radius:3px;
-        }
-        .cp-opt-ship {
-          font-size:11.5px; color:#c2410c; margin-top:2px;
-        }
+        #comboPopup .combo-option { display:flex; flex-direction:column; align-items:flex-start; width:100%; padding:12px 14px; border:2px solid #e2e8f0; border-radius:10px; background:#fff; cursor:pointer; text-align:left; gap:0; margin-bottom:8px; transition:border-color .15s; }
+        #comboPopup .combo-option.active { border-color:#e53e3e; background:#fff5f5; }
+        #comboPopup .combo-option .combo-name, #comboPopup .combo-option .combo-price, #comboPopup .combo-option .combo-ship { display:none; }
+        .cp-opt-top { display:flex; align-items:flex-start; justify-content:space-between; width:100%; gap:10px; }
+        .cp-opt-name { font-size:13.5px; font-weight:600; color:#1a202c; line-height:1.4; flex:1; }
+        .cp-opt-badge-free { flex-shrink:0; font-size:10px; font-weight:700; color:#fff; background:#38a169; padding:3px 8px; border-radius:4px; white-space:nowrap; margin-top:1px; }
+        .cp-opt-bottom { display:flex; align-items:center; gap:8px; margin-top:6px; flex-wrap:wrap; }
+        .cp-opt-price { font-size:17px; font-weight:800; color:#e53e3e; }
+        .cp-opt-oldprice { font-size:13px; color:#aaa; text-decoration:line-through; }
+        .cp-opt-discount { font-size:10px; font-weight:700; color:#fff; background:#e53e3e; padding:2px 6px; border-radius:3px; }
+        .cp-opt-ship { font-size:11.5px; color:#c2410c; margin-top:2px; }
         </style>
-
-        <!-- SHIP BAR -->
         <div style="margin:0 16px 12px; color:#16a34a; background:linear-gradient(135deg,#f0fff4,#dcfce7); border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; font-weight:600; font-size:13px;">
           🎁 ${P.shipBar || 'Miễn phí vận chuyển khi mua combo'}
         </div>
-
-        <!-- NÚT THÊM VÀO GIỎ (ngay dưới combo options) -->
         <button class="vp-add-to-cart-btn" id="cpAddToCartBtn">🛒 Thêm vào giỏ</button>
-
-        <!-- NÚT ĐẾN GIỎ HÀNG + MUA NGAY -->
         <div class="variant-popup-cta">
           <button class="btn-ghost" id="cpGoToCartBtn">🛒 Đến giỏ hàng<span class="cart-badge" id="cpCartBadge"></span></button>
           <button class="btn-solid" id="cpBuyNowBtn">Mua ngay</button>
@@ -275,8 +286,6 @@
   }
 
   root.innerHTML = `
-
-    <!-- ============ P1 — HERO: Gallery + Tên SP ============ -->
     <section class="gallery-wrap">
       <div class="slider" id="slider">
         <div class="slides" id="slides"></div>
@@ -289,7 +298,6 @@
       <div class="product-sub">${P.subHeading}</div>
     </section>
 
-    <!-- ============ P2 — HOOK ============ -->
     <section class="section hook-section">
       <div class="hook-title">${P.hookTitle || (P.hooks.length + " lý do bạn nên chọn sản phẩm này")}</div>
       <div class="hook-list">
@@ -302,7 +310,6 @@
       </div>
     </section>
 
-    <!-- ============ MID CTA — Nhận ưu đãi (ẩn nếu showMidCta === false) ============ -->
     ${showMidCta ? `
     <section style="padding:0 16px; margin-bottom:0;">
       <div id="midCtaBanner" style="display:flex; align-items:center; justify-content:space-between; gap:12px; background:linear-gradient(135deg,#fff7ed,#ffedd5); border:1px solid #fed7aa; border-radius:12px; padding:14px 16px;">
@@ -312,7 +319,6 @@
     </section>
     ` : ""}
 
-    <!-- ============ P3 — BENEFITS (chứng minh công dụng) ============ -->
     <section class="section benefits-section">
       ${P.benefits.map((b, i) => `
         <div class="benefit-block ${i % 2 === 0 ? "img-left" : "img-right"}">
@@ -333,15 +339,9 @@
       `).join("")}
     </section>
 
-    <!-- ============ P4 — GIÁ + BIẾN THỂ + COMBO + QTY + CTA ============ -->
     <section class="section pricing-section">
-
-      <!-- TÊN SP -->
       <div class="pricing-product-name">${P.shortName}</div>
-
-      <!-- SALE BAR (tĩnh, trước giá) -->
       <div class="sale-bar">🔥 Giảm ${discountNum}% và miễn phí vận chuyển khi đặt hàng trong hôm nay</div>
-
       <div class="price-row">
         <span class="price-label">Giá chỉ:</span>
         <span class="price">${Number(P.price).toLocaleString("vi-VN")}đ</span>
@@ -349,7 +349,6 @@
         <span class="badge-discount">-${discountNum}%</span>
       </div>
 
-      <!-- VARIANTS (chỉ render ngoài trang nếu KHÔNG có biến thể màu) -->
       ${(P.variants.length && !hasColorVariant) ? `
         <div class="variants-wrap">
           ${P.variants.map(v => `
@@ -365,7 +364,6 @@
         </div>
       ` : ""}
 
-      <!-- COMBOS (chỉ render ngoài trang nếu KHÔNG dùng combo popup) -->
       ${(P.combos.length && !hasComboPopup) ? `
         <div class="combos-wrap">
           <div class="combos-label">Chọn combo</div>
@@ -381,36 +379,20 @@
         </div>
       ` : ""}
 
-      <!-- FREE SHIP -->
       <div class="ship-bar" style="color:#16a34a; background:linear-gradient(135deg,#f0fff4,#dcfce7); border:1px solid #bbf7d0; border-radius:8px; padding:10px 14px; font-weight:600; font-size:14px; position:relative; overflow:hidden;">
         <span class="ship-bar-shimmer"></span>
         <span style="position:relative; z-index:1;">🎁 ${P.shipBar || 'Miễn phí vận chuyển &amp; hoàn trả toàn quốc khi mua trong hôm nay'}</span>
       </div>
       <style>
-      .ship-bar-shimmer {
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
-        animation: shipBarShimmer 2s ease-in-out infinite;
-        pointer-events: none;
-        z-index: 0;
-      }
-      @keyframes shipBarShimmer {
-        0%   { left: -100%; }
-        100% { left: 100%; }
-      }
+      .ship-bar-shimmer { position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.6) 50%,transparent 100%); animation:shipBarShimmer 2s ease-in-out infinite; pointer-events:none; z-index:0; }
+      @keyframes shipBarShimmer { 0%{left:-100%} 100%{left:100%} }
       </style>
 
-      <!-- RETURN POLICY -->
       <div class="return-policy-bar">
         <span class="return-policy-icon">🛡️</span>
         <span class="return-policy-text">${P.returnPolicy.content}</span>
       </div>
 
-      <!-- QTY + CTA -->
       <div class="section-label">Số lượng</div>
       <div class="qty-wrap">
         <button class="qty-btn" id="minusQty">−</button>
@@ -428,20 +410,15 @@
       </div>
     </section>
 
-    <!-- ============ VARIANT POPUP (chỉ render nếu có biến thể màu) ============ -->
     ${variantPopupHTML}
-
-    <!-- ============ COMBO POPUP (chỉ render nếu có combo + không có color variant) ============ -->
     ${comboPopupHTML}
 
-    <!-- ============ P5 — REVIEWS ============ -->
     <section class="section review-section">
       <div class="section-heading">Đánh giá từ khách hàng</div>
       <div id="reviewSummary"></div>
       <div id="reviewList"></div>
     </section>
 
-    <!-- ============ P6 — SHOP INFO ============ -->
     <section class="section shop-section">
       <div class="shop-row">
         <img class="shop-avatar" src="${S.avatar}" alt="${S.name}" loading="lazy" decoding="async" />
@@ -458,7 +435,6 @@
           </div>
         `).join("")}
       </div>
-
       <div class="info-block">
         <div class="info-block-title">Liên hệ</div>
         ${C.contact.map(c => `
@@ -468,7 +444,6 @@
           </div>
         `).join("")}
       </div>
-
       <div class="info-block">
         <div class="info-block-title">Hệ thống cửa hàng</div>
         ${C.stores.map(s => `
@@ -478,11 +453,9 @@
           </div>
         `).join("")}
       </div>
-
       <div style="margin-bottom:16px;">
         <img src="${C.storeMapImage}" loading="lazy" decoding="async" width="600" height="300" style="width:100%; border-radius:10px;" alt="Bản đồ cửa hàng" />
       </div>
-
       <div class="info-block">
         <div class="info-block-title">Chính sách</div>
         ${P.policies.map(p => `
@@ -494,7 +467,6 @@
       </div>
     </section>
 
-    <!-- ============ P7 — FAQ ============ -->
     <section class="section faq-section">
       <div class="section-heading">Câu hỏi thường gặp</div>
       <div class="faq-list">
@@ -513,7 +485,7 @@
     </section>
   `;
 
-  /* ── ORDER NOTIFICATION (fixed top, ngoài layoutRoot) ── */
+  /* ── ORDER NOTIFICATION ── */
   const orderNotifTop = document.createElement("div");
   orderNotifTop.className = "order-notif-top";
   orderNotifTop.innerHTML = `<div class="order-notif-top-inner"><span class="order-notif-top-icon">🔔</span><span class="order-notif-top-text" id="orderNotifTopText"></span></div>`;
@@ -521,44 +493,46 @@
 
   (function loopOrderNotification() {
     const names = [
-      "Nguyễn Văn Hùng", "Trần Thị Mai", "Lê Minh Tuấn", "Phạm Thị Hoa",
-      "Hoàng Văn Đức", "Ngô Thị Lan", "Vũ Đình Khoa", "Đặng Thị Ngọc",
-      "Bùi Quang Hải", "Đỗ Thị Thanh", "Phan Văn Long", "Lý Thị Hương",
-      "Trịnh Minh Phát", "Hồ Thị Yến", "Dương Văn Tâm", "Mai Thị Linh",
-      "Nguyễn Thị Bích", "Lê Văn Sơn", "Trần Quốc Bảo", "Phạm Minh Châu",
-      "Võ Thị Diệu", "Huỳnh Văn Thắng", "Đinh Thị Thu", "Lương Văn Hòa",
-      "Tạ Thị Kim", "Châu Minh Trí", "Nguyễn Hữu Phước", "Trần Thị Ánh",
-      "Lê Thị Tuyết", "Phạm Văn Nghĩa"
+      "Nguyễn Văn Hùng","Trần Thị Mai","Lê Minh Tuấn","Phạm Thị Hoa",
+      "Hoàng Văn Đức","Ngô Thị Lan","Vũ Đình Khoa","Đặng Thị Ngọc",
+      "Bùi Quang Hải","Đỗ Thị Thanh","Phan Văn Long","Lý Thị Hương",
+      "Trịnh Minh Phát","Hồ Thị Yến","Dương Văn Tâm","Mai Thị Linh",
+      "Nguyễn Thị Bích","Lê Văn Sơn","Trần Quốc Bảo","Phạm Minh Châu",
+      "Võ Thị Diệu","Huỳnh Văn Thắng","Đinh Thị Thu","Lương Văn Hòa",
+      "Tạ Thị Kim","Châu Minh Trí","Nguyễn Hữu Phước","Trần Thị Ánh",
+      "Lê Thị Tuyết","Phạm Văn Nghĩa"
     ];
-
     const textEl = document.getElementById("orderNotifTopText");
     let lastIndex = -1;
-
-    function randomBetween(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function pickRandomName() {
+    function rnd(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+    function pickName() {
       let idx;
       do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIndex);
-      lastIndex = idx;
-      return names[idx];
+      lastIndex = idx; return names[idx];
     }
-
     function showThenHide() {
-      textEl.textContent = pickRandomName() + " vừa đặt hàng";
+      textEl.textContent = pickName() + " vừa đặt hàng";
       orderNotifTop.classList.add("show");
-
-      const showDuration = randomBetween(4000, 8000);
       setTimeout(() => {
         orderNotifTop.classList.remove("show");
-        const hideDuration = randomBetween(5000, 15000);
-        setTimeout(showThenHide, hideDuration);
-      }, showDuration);
+        setTimeout(showThenHide, rnd(5000, 15000));
+      }, rnd(4000, 8000));
     }
+    setTimeout(showThenHide, rnd(2000, 5000));
+  })();
 
-    const initialDelay = randomBetween(2000, 5000);
-    setTimeout(showThenHide, initialDelay);
+  /* ── LIVE COUNT ── */
+  (function liveCount() {
+    const el = document.getElementById("vpLiveCount");
+    if (!el) return;
+    let current = 148;
+    function tick() {
+      const delta = Math.floor(Math.random() * 4) + 1;
+      current = Math.max(130, Math.min(180, current + (Math.random() < 0.5 ? 1 : -1) * delta));
+      el.textContent = current;
+      setTimeout(tick, Math.floor(Math.random() * 2001) + 2000);
+    }
+    setTimeout(tick, 2000);
   })();
 
   /* ── REVIEW SUMMARY ── */
@@ -585,21 +559,16 @@
   /* ── FAQ ACCORDION ── */
   document.querySelectorAll(".faq-head").forEach(head => {
     head.addEventListener("click", () => {
-      const idx = head.dataset.faq;
+      const idx  = head.dataset.faq;
       const body = document.getElementById("faqBody" + idx);
       const isOpen = head.classList.contains("active");
-
       document.querySelectorAll(".faq-head").forEach(h => h.classList.remove("active"));
       document.querySelectorAll(".faq-body").forEach(b => b.classList.remove("show"));
-
-      if (!isOpen) {
-        head.classList.add("active");
-        body.classList.add("show");
-      }
+      if (!isOpen) { head.classList.add("active"); body.classList.add("show"); }
     });
   });
 
-  /* ── VARIANT SELECTOR (cho SP không có biến thể màu) ── */
+  /* ── VARIANT SELECTOR (không có biến thể màu) ── */
   document.querySelectorAll(".variant-option").forEach(btn => {
     btn.addEventListener("click", () => {
       const type = btn.dataset.type;
@@ -608,7 +577,7 @@
     });
   });
 
-  /* ── COMBO SELECTOR (ngoài trang — chỉ khi không dùng combo popup) ── */
+  /* ── COMBO SELECTOR (ngoài trang) ── */
   if (!hasComboPopup) {
     document.querySelectorAll(".combo-option").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -618,13 +587,12 @@
     });
   }
 
-  /* ── COMBO POPUP — EVENT LISTENERS ── */
+  /* ── COMBO POPUP ── */
   if (hasComboPopup) {
-    const cpOverlay  = document.getElementById("comboPopupOverlay");
-    const cpCloseBtn = document.getElementById("comboPopupClose");
+    const cpOverlay   = document.getElementById("comboPopupOverlay");
+    const cpCloseBtn  = document.getElementById("comboPopupClose");
     const cpHasImages = P.combos.some(c => c.image);
-
-    let cpCurrentSlide = 0;
+    let cpCurrentSlide  = 0;
     const cpTotalSlides = P.combos.length;
 
     function cpGoToSlide(idx) {
@@ -632,142 +600,78 @@
       cpCurrentSlide = idx;
       const cpSlides = document.getElementById("cpSlides");
       if (cpSlides) cpSlides.style.transform = "translateX(-" + (idx * 100) + "%)";
-      document.querySelectorAll("#cpDots .variant-popup-dot").forEach(function(dot, i) {
-        dot.classList.toggle("active", i === idx);
-      });
-      document.querySelectorAll("#cpThumbs .variant-popup-thumb").forEach(function(thumb, i) {
-        thumb.classList.toggle("active", i === idx);
-      });
-      var activeThumb = document.querySelectorAll("#cpThumbs .variant-popup-thumb")[idx];
-      if (activeThumb) activeThumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      document.querySelectorAll("#cpDots .variant-popup-dot").forEach((d, i) => d.classList.toggle("active", i === idx));
+      document.querySelectorAll("#cpThumbs .variant-popup-thumb").forEach((t, i) => t.classList.toggle("active", i === idx));
+      const at = document.querySelectorAll("#cpThumbs .variant-popup-thumb")[idx];
+      if (at) at.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
 
     if (cpHasImages) {
-      document.querySelectorAll("#cpDots .variant-popup-dot").forEach(function(dot) {
-        dot.addEventListener("click", function() {
-          cpGoToSlide(parseInt(dot.dataset.index));
-          var comboBtns = document.querySelectorAll("#comboPopup .combo-option");
-          comboBtns.forEach(function(b) { b.classList.remove("active"); });
-          if (comboBtns[parseInt(dot.dataset.index)]) {
-            comboBtns[parseInt(dot.dataset.index)].classList.add("active");
-            comboBtns[parseInt(dot.dataset.index)].click();
-          }
+      document.querySelectorAll("#cpDots .variant-popup-dot").forEach(dot => {
+        dot.addEventListener("click", () => {
+          const i = parseInt(dot.dataset.index);
+          cpGoToSlide(i);
+          const btns = document.querySelectorAll("#comboPopup .combo-option");
+          btns.forEach(b => b.classList.remove("active"));
+          if (btns[i]) { btns[i].classList.add("active"); btns[i].click(); }
         });
       });
-
-      document.querySelectorAll("#cpThumbs .variant-popup-thumb").forEach(function(thumb) {
-        thumb.addEventListener("click", function() {
-          cpGoToSlide(parseInt(thumb.dataset.index));
-          var comboBtns = document.querySelectorAll("#comboPopup .combo-option");
-          comboBtns.forEach(function(b) { b.classList.remove("active"); });
-          if (comboBtns[parseInt(thumb.dataset.index)]) {
-            comboBtns[parseInt(thumb.dataset.index)].classList.add("active");
-            comboBtns[parseInt(thumb.dataset.index)].click();
-          }
+      document.querySelectorAll("#cpThumbs .variant-popup-thumb").forEach(thumb => {
+        thumb.addEventListener("click", () => {
+          const i = parseInt(thumb.dataset.index);
+          cpGoToSlide(i);
+          const btns = document.querySelectorAll("#comboPopup .combo-option");
+          btns.forEach(b => b.classList.remove("active"));
+          if (btns[i]) { btns[i].classList.add("active"); btns[i].click(); }
         });
       });
-
-      var cpStartX = 0, cpMoveX = 0, cpIsDragging = false, cpIsHorizontal = null;
-      var cpSlider = document.getElementById("cpSlider");
-
-      if (cpSlider) {
-        cpSlider.addEventListener("touchstart", function(e) {
-          cpStartX = cpMoveX = e.touches[0].clientX;
-          cpIsDragging = true;
-          cpIsHorizontal = null;
-        }, { passive: true });
-
-        cpSlider.addEventListener("touchmove", function(e) {
-          if (!cpIsDragging) return;
-          cpMoveX = e.touches[0].clientX;
-          var diffX = Math.abs(cpMoveX - cpStartX);
-          var diffY = Math.abs(e.touches[0].clientY - cpStartX);
-          if (cpIsHorizontal === null && (diffX > 5 || diffY > 5)) {
-            cpIsHorizontal = diffX >= diffY;
-          }
-          if (cpIsHorizontal === true) e.preventDefault();
+      let cpSX = 0, cpMX = 0, cpDrag = false, cpHz = null;
+      const cpSliderEl = document.getElementById("cpSlider");
+      if (cpSliderEl) {
+        cpSliderEl.addEventListener("touchstart", e => { cpSX = cpMX = e.touches[0].clientX; cpDrag = true; cpHz = null; }, { passive: true });
+        cpSliderEl.addEventListener("touchmove", e => {
+          if (!cpDrag) return; cpMX = e.touches[0].clientX;
+          const dX = Math.abs(cpMX - cpSX), dY = Math.abs(e.touches[0].clientY - cpSX);
+          if (cpHz === null && (dX > 5 || dY > 5)) cpHz = dX >= dY;
+          if (cpHz) e.preventDefault();
         }, { passive: false });
-
-        cpSlider.addEventListener("touchend", function() {
-          if (!cpIsDragging) return;
-          if (cpIsHorizontal === true) {
-            var diff = cpStartX - cpMoveX;
-            if (diff > 50 && cpCurrentSlide < cpTotalSlides - 1) {
-              cpGoToSlide(cpCurrentSlide + 1);
-              var comboBtns = document.querySelectorAll("#comboPopup .combo-option");
-              comboBtns.forEach(function(b) { b.classList.remove("active"); });
-              if (comboBtns[cpCurrentSlide]) {
-                comboBtns[cpCurrentSlide].classList.add("active");
-                comboBtns[cpCurrentSlide].click();
-              }
-            } else if (diff < -50 && cpCurrentSlide > 0) {
-              cpGoToSlide(cpCurrentSlide - 1);
-              var comboBtns2 = document.querySelectorAll("#comboPopup .combo-option");
-              comboBtns2.forEach(function(b) { b.classList.remove("active"); });
-              if (comboBtns2[cpCurrentSlide]) {
-                comboBtns2[cpCurrentSlide].classList.add("active");
-                comboBtns2[cpCurrentSlide].click();
-              }
-            }
+        cpSliderEl.addEventListener("touchend", () => {
+          if (!cpDrag) return;
+          if (cpHz) {
+            const diff = cpSX - cpMX;
+            const btns = document.querySelectorAll("#comboPopup .combo-option");
+            if (diff > 50 && cpCurrentSlide < cpTotalSlides - 1) { cpGoToSlide(cpCurrentSlide + 1); btns.forEach(b => b.classList.remove("active")); if (btns[cpCurrentSlide]) { btns[cpCurrentSlide].classList.add("active"); btns[cpCurrentSlide].click(); } }
+            else if (diff < -50 && cpCurrentSlide > 0) { cpGoToSlide(cpCurrentSlide - 1); btns.forEach(b => b.classList.remove("active")); if (btns[cpCurrentSlide]) { btns[cpCurrentSlide].classList.add("active"); btns[cpCurrentSlide].click(); } }
           }
-          cpIsDragging = false;
-          cpIsHorizontal = null;
+          cpDrag = false; cpHz = null;
         });
       }
     }
 
-    function openComboPopup() {
-      cpOverlay.classList.add("show");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeComboPopup() {
-      cpOverlay.classList.remove("show");
-      document.body.style.overflow = "auto";
-    }
-
+    function openComboPopup()  { cpOverlay.classList.add("show");    document.body.style.overflow = "hidden"; }
+    function closeComboPopup() { cpOverlay.classList.remove("show"); document.body.style.overflow = "auto"; }
     cpCloseBtn.addEventListener("click", closeComboPopup);
-    cpOverlay.addEventListener("click", function(e) {
-      if (e.target === cpOverlay) closeComboPopup();
-    });
+    cpOverlay.addEventListener("click", e => { if (e.target === cpOverlay) closeComboPopup(); });
 
-    document.querySelectorAll("#comboPopup .combo-option").forEach(function(btn) {
-      btn.addEventListener("click", function() {
-        document.querySelectorAll("#comboPopup .combo-option").forEach(function(b) { b.classList.remove("active"); });
+    document.querySelectorAll("#comboPopup .combo-option").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#comboPopup .combo-option").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-
-        var price    = parseInt(btn.dataset.price);
-        var shipFee  = parseInt(btn.dataset.shipfee || "0");
-        var oldPrice = parseInt(btn.dataset.oldprice || P.oldPrice);
-        var disc     = Math.round((1 - price / oldPrice) * 100);
-
-        document.querySelector(".cp-price-display").textContent = Number(price).toLocaleString("vi-VN") + "đ";
+        const price = parseInt(btn.dataset.price), shipFee = parseInt(btn.dataset.shipfee || "0"), oldPrice = parseInt(btn.dataset.oldprice || P.oldPrice);
+        document.querySelector(".cp-price-display").textContent    = Number(price).toLocaleString("vi-VN") + "đ";
         document.querySelector(".cp-oldprice-display").textContent = Number(oldPrice).toLocaleString("vi-VN") + "đ";
-        document.querySelector(".cp-discount-display").textContent = "-" + disc + "%";
-
-        var shipEl = document.querySelector(".cp-ship-display");
-        if (shipFee > 0) {
-          shipEl.textContent = "🚚 Phí ship: " + Number(shipFee).toLocaleString("vi-VN") + "đ";
-          shipEl.style.color = "#c2410c";
-          shipEl.style.background = "#fff7ed";
-        } else {
-          shipEl.textContent = "🚚 Miễn phí vận chuyển";
-          shipEl.style.color = "#38a169";
-          shipEl.style.background = "#f0fff4";
-        }
-
-        var comboIdx = parseInt(btn.dataset.index);
-        cpGoToSlide(comboIdx);
+        document.querySelector(".cp-discount-display").textContent = "-" + Math.round((1 - price / oldPrice) * 100) + "%";
+        const shipEl = document.querySelector(".cp-ship-display");
+        if (shipFee > 0) { shipEl.textContent = "🚚 Phí ship: " + Number(shipFee).toLocaleString("vi-VN") + "đ"; shipEl.style.color = "#c2410c"; shipEl.style.background = "#fff7ed"; }
+        else             { shipEl.textContent = "🚚 Miễn phí vận chuyển"; shipEl.style.color = "#38a169"; shipEl.style.background = "#f0fff4"; }
+        cpGoToSlide(parseInt(btn.dataset.index));
       });
     });
 
-    window.__comboPopup = {
-      open: openComboPopup,
-      close: closeComboPopup
-    };
+    window.__comboPopup = { open: openComboPopup, close: closeComboPopup };
   }
 
-  /* ── VARIANT POPUP — EVENT LISTENERS (chỉ khi có biến thể màu) ── */
+  /* ── VARIANT POPUP ── */
   if (hasColorVariant) {
     const vpOverlay   = document.getElementById("variantPopupOverlay");
     const vpCloseBtn  = document.getElementById("variantPopupClose");
@@ -775,38 +679,151 @@
     const vpDots      = document.querySelectorAll(".variant-popup-dot");
     const vpThumbs    = document.querySelectorAll(".variant-popup-thumb");
     const vpColorBtns = document.querySelectorAll(".vp-color-option");
-    let vpCurrentSlide = 0;
-    const vpTotalSlides = P.variants.find(v => v.type === "color").options.length;
+    const colorVariant = P.variants.find(v => v.type === "color");
+    const sizeVariant  = P.variants.find(v => v.type === "size");
+    let vpCurrentSlide  = 0;
+    const vpTotalSlides = colorVariant.options.length;
+
+    /* ── SIZE IMAGE LIGHTBOX ── */
+    const lightbox      = document.getElementById("vpSizeImgLightbox");
+    const lightboxImg   = document.getElementById("vpSizeImgLightboxImg");
+    const lightboxClose = document.getElementById("vpSizeImgLightboxClose");
+
+    function openLightbox(src) {
+      lightboxImg.src = src;
+      lightbox.classList.add("show");
+    }
+    function closeLightbox() {
+      lightbox.classList.remove("show");
+      lightboxImg.src = "";
+    }
+
+    lightboxClose.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", e => { if (e.target === lightbox) closeLightbox(); });
+
+    const vpSizeImageWrap = document.getElementById("vpSizeImageWrap");
+    const vpSizeImage     = document.getElementById("vpSizeImage");
+    if (vpSizeImageWrap && vpSizeImage) {
+      vpSizeImageWrap.addEventListener("click", () => {
+        if (vpSizeImage.src) openLightbox(vpSizeImage.src);
+      });
+    }
+
+    /* ── NÚT QUAY LẠI trong orderModal ── */
+    if (!document.getElementById("vpBackToVariantBtn")) {
+      const modalTop = document.querySelector("#orderModal .modal-top");
+      if (modalTop) {
+        modalTop.style.cssText = "display:flex; align-items:center; gap:8px; flex-wrap:nowrap;";
+        const backBtn = document.createElement("button");
+        backBtn.id = "vpBackToVariantBtn";
+        backBtn.textContent = "← Chọn size";
+        backBtn.style.cssText = [
+          "background:none",
+          "border:none",
+          "color:#2b6cb0",
+          "font-size:12px",
+          "font-weight:600",
+          "padding:0",
+          "cursor:pointer",
+          "white-space:nowrap",
+          "flex-shrink:0"
+        ].join(";");
+        backBtn.addEventListener("click", () => {
+          document.getElementById("orderModal").classList.remove("show");
+          document.body.style.overflow = "hidden";
+          vpOverlay.classList.add("show");
+        });
+        modalTop.insertBefore(backBtn, modalTop.firstChild);
+      }
+    }
+
+    /* ── CẬP NHẬT SIZE UI ── */
+    function vpUpdateSizeUI(colorName) {
+      if (!sizeVariant) return;
+      const sizeImgEl = document.getElementById("vpSizeImage");
+      const sizeBtns  = document.querySelectorAll(".vp-other-option[data-type='size']");
+      let activeSizeName = null;
+      sizeBtns.forEach(b => { if (b.classList.contains("active")) activeSizeName = b.dataset.value; });
+
+      sizeBtns.forEach((btn, idx) => {
+        const sizeOpt = sizeVariant.options[idx];
+        const soldOut = sizeOpt.soldOutFor && sizeOpt.soldOutFor.includes(colorName);
+        btn.disabled = soldOut;
+        btn.style.opacity        = soldOut ? "0.45" : "";
+        btn.style.cursor         = soldOut ? "not-allowed" : "";
+        btn.style.textDecoration = soldOut ? "line-through" : "";
+        const tag = btn.querySelector(".vp-soldout-tag");
+        if (soldOut) {
+          if (!tag) {
+            const t = document.createElement("span");
+            t.className = "vp-soldout-tag";
+            t.style.cssText = "display:block; font-size:9px; color:#e53e3e; font-weight:600; margin-top:2px;";
+            t.textContent = "Hết hàng";
+            btn.appendChild(t);
+          }
+          btn.classList.remove("active");
+        } else {
+          if (tag) tag.remove();
+        }
+      });
+
+      /* Giữ size cũ nếu còn hàng, không thì lấy size đầu còn hàng */
+      let newActiveBtn = null;
+      sizeBtns.forEach((btn, idx) => {
+        const soldOut = sizeVariant.options[idx].soldOutFor && sizeVariant.options[idx].soldOutFor.includes(colorName);
+        if (!soldOut && btn.dataset.value === activeSizeName && !newActiveBtn) newActiveBtn = btn;
+      });
+      if (!newActiveBtn) {
+        sizeBtns.forEach((btn, idx) => {
+          const soldOut = sizeVariant.options[idx].soldOutFor && sizeVariant.options[idx].soldOutFor.includes(colorName);
+          if (!soldOut && !newActiveBtn) newActiveBtn = btn;
+        });
+      }
+      sizeBtns.forEach(b => b.classList.remove("active"));
+      if (newActiveBtn) {
+        newActiveBtn.classList.add("active");
+        const ai = parseInt(newActiveBtn.dataset.index);
+        if (sizeImgEl && sizeVariant.options[ai] && sizeVariant.options[ai].images) {
+          sizeImgEl.src = sizeVariant.options[ai].images[colorName] || "";
+        }
+      }
+    }
 
     function vpGoToSlide(idx) {
       vpCurrentSlide = idx;
       vpSlides.style.transform = `translateX(-${idx * 100}%)`;
-      vpDots.forEach((dot, i) => dot.classList.toggle("active", i === idx));
-      vpThumbs.forEach((thumb, i) => thumb.classList.toggle("active", i === idx));
-      vpColorBtns.forEach((btn, i) => btn.classList.toggle("active", i === idx));
-      const activeThumb = document.querySelectorAll(".variant-popup-thumb")[idx];
-      if (activeThumb) activeThumb.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      vpDots.forEach((d, i)   => d.classList.toggle("active", i === idx));
+      vpThumbs.forEach((t, i) => t.classList.toggle("active", i === idx));
+      vpColorBtns.forEach((b, i) => b.classList.toggle("active", i === idx));
+      const at = document.querySelectorAll(".variant-popup-thumb")[idx];
+      if (at) at.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      const colorName = colorVariant.options[idx] ? colorVariant.options[idx].name : "";
+      vpUpdateSizeUI(colorName);
     }
 
-    vpDots.forEach(dot => {
-      dot.addEventListener("click", () => {
-        vpGoToSlide(parseInt(dot.dataset.index));
-      });
-    });
+    vpDots.forEach(dot     => dot.addEventListener("click",   () => vpGoToSlide(parseInt(dot.dataset.index))));
+    vpThumbs.forEach(thumb => thumb.addEventListener("click", () => vpGoToSlide(parseInt(thumb.dataset.index))));
+    vpColorBtns.forEach(btn => btn.addEventListener("click",  () => vpGoToSlide(parseInt(btn.dataset.index))));
 
-    vpThumbs.forEach(thumb => {
-      thumb.addEventListener("click", () => {
-        vpGoToSlide(parseInt(thumb.dataset.index));
-      });
-    });
-
-    vpColorBtns.forEach(btn => {
+    /* Size buttons */
+    document.querySelectorAll(".vp-other-option[data-type='size']").forEach(btn => {
       btn.addEventListener("click", () => {
-        vpGoToSlide(parseInt(btn.dataset.index));
+        if (btn.disabled) return;
+        document.querySelectorAll(".vp-other-option[data-type='size']").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const sizeImgEl = document.getElementById("vpSizeImage");
+        if (sizeImgEl && sizeVariant) {
+          const si = parseInt(btn.dataset.index);
+          const colorName = colorVariant.options[vpCurrentSlide] ? colorVariant.options[vpCurrentSlide].name : "";
+          if (sizeVariant.options[si] && sizeVariant.options[si].images) {
+            sizeImgEl.src = sizeVariant.options[si].images[colorName] || "";
+          }
+        }
       });
     });
 
-    document.querySelectorAll(".vp-other-option").forEach(btn => {
+    /* Các other-option không phải size */
+    document.querySelectorAll(".vp-other-option:not([data-type='size'])").forEach(btn => {
       btn.addEventListener("click", () => {
         const type = btn.dataset.type;
         document.querySelectorAll(`.vp-other-option[data-type="${type}"]`).forEach(b => b.classList.remove("active"));
@@ -814,71 +831,51 @@
       });
     });
 
-    let vpStartX = 0, vpMoveX = 0, vpIsDragging = false, vpIsHorizontal = null;
+    /* Swipe */
+    let vpSX = 0, vpMX = 0, vpDrag = false, vpHz = null;
     const vpSlider = document.getElementById("vpSlider");
-
-    vpSlider.addEventListener("touchstart", e => {
-      vpStartX = vpMoveX = e.touches[0].clientX;
-      vpIsDragging = true;
-      vpIsHorizontal = null;
-    }, { passive: true });
-
-    vpSlider.addEventListener("touchmove", e => {
-      if (!vpIsDragging) return;
-      vpMoveX = e.touches[0].clientX;
-      const diffX = Math.abs(vpMoveX - vpStartX);
-      const diffY = Math.abs(e.touches[0].clientY - vpStartX);
-      if (vpIsHorizontal === null && (diffX > 5 || diffY > 5)) {
-        vpIsHorizontal = diffX >= diffY;
-      }
-      if (vpIsHorizontal === true) e.preventDefault();
+    vpSlider.addEventListener("touchstart", e => { vpSX = vpMX = e.touches[0].clientX; vpDrag = true; vpHz = null; }, { passive: true });
+    vpSlider.addEventListener("touchmove",  e => {
+      if (!vpDrag) return; vpMX = e.touches[0].clientX;
+      const dX = Math.abs(vpMX - vpSX), dY = Math.abs(e.touches[0].clientY - vpSX);
+      if (vpHz === null && (dX > 5 || dY > 5)) vpHz = dX >= dY;
+      if (vpHz) e.preventDefault();
     }, { passive: false });
-
     vpSlider.addEventListener("touchend", () => {
-      if (!vpIsDragging) return;
-      if (vpIsHorizontal === true) {
-        const diff = vpStartX - vpMoveX;
+      if (!vpDrag) return;
+      if (vpHz) {
+        const diff = vpSX - vpMX;
         if (diff > 50 && vpCurrentSlide < vpTotalSlides - 1) vpGoToSlide(vpCurrentSlide + 1);
-        else if (diff < -50 && vpCurrentSlide > 0) vpGoToSlide(vpCurrentSlide - 1);
+        else if (diff < -50 && vpCurrentSlide > 0)           vpGoToSlide(vpCurrentSlide - 1);
       }
-      vpIsDragging = false;
-      vpIsHorizontal = null;
+      vpDrag = false; vpHz = null;
     });
 
-    function openVariantPopup() {
-      vpOverlay.classList.add("show");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeVariantPopup() {
-      vpOverlay.classList.remove("show");
-      document.body.style.overflow = "auto";
-    }
-
+    function openVariantPopup()  { vpOverlay.classList.add("show");    document.body.style.overflow = "hidden"; }
+    function closeVariantPopup() { vpOverlay.classList.remove("show"); document.body.style.overflow = "auto"; }
     vpCloseBtn.addEventListener("click", closeVariantPopup);
-    vpOverlay.addEventListener("click", e => {
-      if (e.target === vpOverlay) closeVariantPopup();
-    });
+    vpOverlay.addEventListener("click", e => { if (e.target === vpOverlay) closeVariantPopup(); });
 
     window.__variantPopup = {
       open: openVariantPopup,
       close: closeVariantPopup,
       getSelectedVariants: function () {
         const result = {};
-        const activeColor = document.querySelector(".vp-color-option.active");
-        if (activeColor) result["color"] = activeColor.dataset.value;
-        document.querySelectorAll(".variant-popup-section").forEach(section => {
-          const activeOther = section.querySelector(".vp-other-option.active");
-          if (activeOther) result[activeOther.dataset.type] = activeOther.dataset.value;
+        const ac = document.querySelector(".vp-color-option.active");
+        if (ac) result["color"] = ac.dataset.value;
+        document.querySelectorAll(".variant-popup-section").forEach(sec => {
+          const ao = sec.querySelector(".vp-other-option.active");
+          if (ao) result[ao.dataset.type] = ao.dataset.value;
         });
         return result;
       },
       hasColorVariant: true
     };
+
+    vpUpdateSizeUI(colorVariant.options[0].name);
+
   } else {
-    window.__variantPopup = {
-      hasColorVariant: false
-    };
+    window.__variantPopup = { hasColorVariant: false };
   }
 
 })();
