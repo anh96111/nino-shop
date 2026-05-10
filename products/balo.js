@@ -5,6 +5,7 @@ const PRODUCT_CONFIG = {
   slug:      "balo",
   layout:    "storytelling",
   name:      "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6 – Đệm Lưng 3D, Phản Quang 360°, Chống Nước – BH 12 Tháng",
+  displayName: "Balo chống gù cho Bé",
   shortName: "Balo Chống Gù Học Sinh Tiểu Học ",
   price:     325000,
   oldPrice:  475000,

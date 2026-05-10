@@ -501,7 +501,7 @@ function addCurrentSelectionToCart() {
     const item = {
       _key:         itemKey,
       product_id:   PRODUCT.id,
-      product_name: PRODUCT.name,
+      product_name: PRODUCT_CONFIG.displayName || PRODUCT.name,
       quantity:     quantity,
       price:        unitPrice,
       total:        unitPrice * quantity,
@@ -716,7 +716,7 @@ function doPopupBuyNow() {
 
   const item = {
     product_id:   PRODUCT.id,
-    product_name: PRODUCT.name,
+    product_name: PRODUCT_CONFIG.displayName || PRODUCT.name,
     quantity:     quantity,
     price:        unitPrice,
     total:        unitPrice * quantity,
@@ -741,7 +741,7 @@ function doBuyNow() {
 
   const item = {
     product_id:   PRODUCT.id,
-    product_name: PRODUCT.name,
+    product_name: PRODUCT_CONFIG.displayName || PRODUCT.name,
     quantity:     quantity,
     price:        unitPrice,
     total:        unitPrice * quantity,

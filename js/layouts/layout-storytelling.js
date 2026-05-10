@@ -84,16 +84,20 @@
             🚚 Miễn phí vận chuyển
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
-              <span style="font-size:14px;">🔍</span> Xem hàng trước khi trả tiền
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#B8860B; font-weight:600;">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
+              Xem hàng trước khi trả tiền
             </div>
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
-              <span style="font-size:14px;">🛡️</span> BH 12 tháng 1 đổi 1
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#B8860B; font-weight:600;">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
+              BH 12 tháng 1 đổi 1
             </div>
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;">
-              <span style="font-size:14px;">↩️</span> Hoàn tiền nếu sai mô tả
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#B8860B; font-weight:600;">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
+              Hoàn tiền nếu sai mô tả
             </div>
           </div>
+
         </div>
 
         <!-- SLIDER ẢNH MÀU -->
@@ -217,9 +221,16 @@
             ${P.combos[0].shipFee ? '🚚 Phí ship: ' + Number(P.combos[0].shipFee).toLocaleString("vi-VN") + 'đ' : '🚚 Miễn phí vận chuyển'}
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;"><span style="font-size:14px;">🔍</span> Xem hàng trước khi trả tiền</div>
-            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#2b6cb0;"><span style="font-size:14px;">↩️</span> Hoàn tiền nếu sai mô tả</div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#B8860B; font-weight:600;">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
+              Xem hàng trước khi trả tiền
+            </div>
+            <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#B8860B; font-weight:600;">
+              <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
+              Hoàn tiền nếu sai mô tả
+            </div>
           </div>
+
         </div>
         ${comboHasImages ? `
         <div class="variant-popup-gallery">
