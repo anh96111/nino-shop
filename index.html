@@ -176,7 +176,7 @@
   </div>
 
   <!-- BOOTSTRAP -->
-  <script src="/js/config.shared.js"></script>
+  <script src="/js/config.shared.js?v=2"></script>
   <script id="productScript"></script>
   <script>
     (function bootstrap() {
@@ -222,11 +222,11 @@
 
         /* ── LOAD LAYOUT JS → sau đó LOAD CORE.JS ── */
         const layoutScript = document.createElement("script");
-        layoutScript.src = `/js/layouts/layout-${layoutName}.js`;
+       layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=2`;
 
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
-          coreScript.src = "/js/core.js";
+          coreScript.src = "/js/core.js?v=2";
           document.body.appendChild(coreScript);
         };
 
