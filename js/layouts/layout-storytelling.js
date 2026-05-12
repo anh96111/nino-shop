@@ -160,12 +160,13 @@
           return `
           <div class="variant-popup-section">
             <div class="variant-popup-label">${v.label}</div>
-            ${isSizeVariant ? `
+            ${isSizeVariant && P.showSizeImage !== false ? `
               <div id="vpSizeImageWrap" style="margin-bottom:10px; border-radius:10px; overflow:hidden; max-height:180px; display:flex; align-items:center; justify-content:center; background:#f7f7f7; cursor:zoom-in; position:relative;">
                 <img id="vpSizeImage" src="${v.options[0].images[firstColorName] || ""}" alt="" loading="lazy" decoding="async" style="width:100%; object-fit:contain; max-height:180px;" />
                 <div style="position:absolute; bottom:6px; right:8px; background:rgba(0,0,0,0.38); color:#fff; font-size:10px; padding:2px 7px; border-radius:4px; pointer-events:none;">🔍 Nhấn để xem to</div>
               </div>
             ` : ""}
+
             <div class="variant-popup-options">
               ${v.options.map((opt, idx) => {
                 const isSoldOut = isSizeVariant && opt.soldOutFor && opt.soldOutFor.includes(firstColorName);

@@ -13,6 +13,7 @@ const PRODUCT_CONFIG = {
   sheetName: "balo",
   shipBar:   "Tặng Phụ kiện đeo Balo cho bé khi đặt hàng trong hôm nay",
   category:  "Học sinh",
+  showSizeImage: false,  // false = ẩn ảnh ở phần chọn size
 
   // ── SEO / OG ──
   seo: {
