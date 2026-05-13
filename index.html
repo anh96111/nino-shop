@@ -17,6 +17,209 @@
 
   <link rel="stylesheet" href="/css/core.css" />
   <link id="layoutCSS" rel="stylesheet" href="" />
+
+  <style>
+    /* ── CART ITEM COMPACT ── */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid #f3f3f3;
+    }
+    .cart-item:last-child { border-bottom: none; }
+
+    .cart-item-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 7px;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid #eee;
+      background: #f7f7f7;
+    }
+
+    .cart-item-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cart-item-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #1a202c;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .cart-item-meta {
+      font-size: 11px;
+      color: #888;
+      margin-top: 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cart-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .cart-qty-btn {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .cart-qty-display {
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .cart-remove-btn {
+      font-size: 11px;
+      color: #e53e3e;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0 2px;
+      margin-left: 2px;
+    }
+
+    .cart-item-price {
+      font-size: 13px;
+      font-weight: 700;
+      color: #e53e3e;
+      flex-shrink: 0;
+      align-self: flex-start;
+      padding-top: 2px;
+    }
+
+    /* ── LIVE ORDER NOTIF IN MODAL ── */
+    .modal-live-notif {
+      overflow: hidden;
+      height: 34px;
+      margin: 8px 0 10px;
+      border-radius: 8px;
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      position: relative;
+    }
+
+    .modal-live-notif-inner {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 11px;
+      width: 100%;
+    }
+
+    .modal-live-notif-icon { font-size: 14px; flex-shrink: 0; }
+    .modal-live-notif-text {
+      font-size: 12.5px;
+      color: #92400e;
+      font-weight: 500;
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ── FORM SECTION TITLE ── */
+    .form-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a202c;
+      margin: 14px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    /* ── REASSURANCE compact ── */
+    .reassurance {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f0fff4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      color: #166534;
+    }
+    .reassurance strong { font-weight: 700; }
+
+    /* ── GHI CHÚ COLLAPSIBLE ── */
+    .note-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 1px dashed #d1d5db;
+      border-radius: 8px;
+      color: #6b7280;
+      font-size: 12.5px;
+      padding: 7px 12px;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 4px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .note-toggle-btn:hover {
+      border-color: #9ca3af;
+      color: #374151;
+    }
+    .note-toggle-btn .note-toggle-arrow {
+      margin-left: auto;
+      font-size: 11px;
+      transition: transform 0.25s;
+    }
+    .note-toggle-btn.open .note-toggle-arrow {
+      transform: rotate(180deg);
+    }
+
+    .note-collapse {
+      display: none;
+      margin-bottom: 10px;
+    }
+    .note-collapse.open {
+      display: block;
+    }
+
+    #orderNote {
+      font-size: 13px;
+      padding: 7px 10px;
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      color: #374151;
+      margin-top: 6px;
+    }
+    #orderNote:focus {
+      border-color: var(--primary, #e53e3e);
+    }
+  </style>
 </head>
 <body>
 
@@ -42,6 +245,7 @@
         <button class="close-btn" id="closeModal">&times;</button>
       </div>
 
+      <!-- GIỎ HÀNG COMPACT -->
       <div class="order-summary">
         <div class="order-summary-title">🛒 Giỏ hàng</div>
         <div id="cartSummaryList"></div>
@@ -53,6 +257,7 @@
         </div>
       </div>
 
+      <!-- TRUST STRIP -->
       <div class="trust-strip">
         <div class="trust-strip-item" style="color:#B8860B; font-weight:600;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
@@ -60,7 +265,7 @@
         </div>
         <div class="trust-strip-item" style="color:#B8860B; font-weight:600;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
-          BH 12 tháng 1 đổi 1
+          Nhận hàng rồi mới thanh toán
         </div>
         <div class="trust-strip-item" style="color:#B8860B; font-weight:600;">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
@@ -68,77 +273,64 @@
         </div>
       </div>
 
-
+      <!-- LIVE ORDER NOTIFICATION -->
+      <div class="modal-live-notif" id="modalLiveNotif">
+        <div class="modal-live-notif-inner" id="modalLiveNotifInner">
+          <span class="modal-live-notif-icon">🔔</span>
+          <span class="modal-live-notif-text" id="modalLiveNotifText"></span>
+        </div>
+      </div>
 
       <form id="orderForm" novalidate>
+
+        <!-- TIÊU ĐỀ -->
+        <div class="form-section-title">📍 Địa chỉ nhận hàng</div>
+
+        <!-- ĐỊA CHỈ -->
         <div class="form-group">
-          <label>Họ và tên</label>
-          <input type="text" id="fullName" required placeholder="Nguyễn Văn A" />
+          <label>Địa chỉ nhận <span style="font-size:11px;font-weight:400;color:#9ca3af;">(vui lòng cho shop địa chỉ chưa sáp nhập)</span> <span style="color:var(--primary)">*</span></label>
+          <input type="text" id="address" required placeholder="Số nhà, xã/phường, quận/huyện, tỉnh/thành" />
+          <div class="field-error" id="addressError"></div>
+        </div>
+
+        <!-- TÊN NGƯỜI NHẬN -->
+        <div class="form-group">
+          <label>Tên người nhận <span style="color:var(--primary)">*</span></label>
+          <input type="text" id="fullName" required placeholder="VD: Vân Anh" />
           <div class="field-error" id="fullNameError"></div>
         </div>
-        <div class="form-group">
-          <label>Số điện thoại</label>
+
+        <!-- SỐ ĐIỆN THOẠI -->
+        <div class="form-group" style="position:relative;">
+          <label>Số điện thoại <span style="color:var(--primary)">*</span></label>
           <input type="tel" id="phone" required maxlength="12" inputmode="numeric" placeholder="09xx xxx xxx" />
           <span style="position:absolute; right:13px; top:42px; font-size:13px; color:#bbb; pointer-events:none;">🔒</span>
           <div class="field-error" id="phoneError"></div>
         </div>
 
-        <div class="form-group">
-          <label>Tỉnh/Thành Phố <span style="color:var(--primary)">*</span></label>
-          <div class="searchable-select" id="provinceSelectWrap">
-            <div class="searchable-select-display placeholder" id="provinceDisplay" onclick="toggleProvinceDropdown()">
-              -- Chọn Tỉnh/Thành Phố --
-            </div>
-            <span class="searchable-select-arrow" id="provinceArrow">⌄</span>
-            <div class="searchable-dropdown" id="provinceDropdown">
-              <div class="searchable-input-wrap">
-                <input class="searchable-input" id="provinceSearch" type="text" placeholder="Gõ để tìm tỉnh..." oninput="filterProvinces()" onclick="event.stopPropagation()" autocomplete="off" />
-              </div>
-              <div class="searchable-list" id="provinceList"></div>
-            </div>
-          </div>
-          <input type="hidden" id="provinceCode" />
-          <input type="hidden" id="provinceName" />
-          <div class="field-error" id="provinceError"></div>
-        </div>
-
-        <div class="district-ward-wrap" id="districtWardWrap">
-          <div class="form-group">
-            <label>Quận/Huyện <span style="color:var(--primary)">*</span></label>
-            <select id="district" required disabled>
-              <option value="">-- Chọn Quận/Huyện --</option>
-            </select>
-            <div class="field-error" id="districtError"></div>
-          </div>
-          <div class="form-group">
-            <label>Xã/Phường <span style="color:var(--primary)">*</span></label>
-            <select id="ward" required disabled>
-              <option value="">-- Chọn Xã/Phường --</option>
-            </select>
-            <div class="field-error" id="wardError"></div>
+        <!-- GHI CHÚ COLLAPSIBLE -->
+        <div class="form-group" style="margin-bottom:10px;">
+          <button type="button" class="note-toggle-btn" id="noteToggleBtn">
+            <span>📝 Thêm ghi chú thời gian nhận hàng cho Shop</span>
+            <span style="font-size:11px;color:#9ca3af;margin-left:4px;">(vd: giao vào giờ hành chính...)</span>
+            <span class="note-toggle-arrow">⌄</span>
+          </button>
+          <div class="note-collapse" id="noteCollapse">
+            <textarea id="orderNote" rows="2" placeholder="VD: Giao buổi sáng, gọi trước 30 phút..."></textarea>
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Địa chỉ chi tiết (số nhà, tên đường) <span style="color:var(--primary)">*</span></label>
-          <input type="text" id="address" required placeholder="VD: 123 Lê Lợi" />
-          <div class="field-error" id="addressError"></div>
-        </div>
-        <div class="form-group">
-          <label style="font-weight:400; color:#888;">Ghi chú <span style="color:#bbb;">(tuỳ chọn)</span></label>
-          <textarea id="orderNote" rows="2" placeholder="VD: Giao buổi trưa, gọi trước khi giao..."></textarea>
-        </div>
-
+        <!-- REASSURANCE -->
         <div class="reassurance">
           <span>✅</span>
-          <div>Bạn <strong>không mất tiền trước</strong> — chỉ thanh toán khi nhận và kiểm tra hàng xong.</div>
+          <div>Bạn được <strong>kiểm tra hàng</strong> trước khi thanh toán.</div>
         </div>
 
+        <!-- TỔNG TIỀN -->
         <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; font-weight:800; color:#16a34a; margin-bottom:12px; padding:0 2px;">
           <span>💳 Thanh toán khi nhận hàng</span>
           <span id="summaryGrandTotal">0đ</span>
         </div>
-
 
         <button type="submit" class="submit-btn" id="submitBtn">
           🔒 XÁC NHẬN ĐẶT HÀNG
@@ -208,10 +400,10 @@
 
         /* ── SEO / OG ── */
         document.getElementById("pageTitle").textContent = PRODUCT_CONFIG.seo.title;
-        document.getElementById("metaDesc").content       = PRODUCT_CONFIG.seo.description;
-        document.getElementById("ogTitle").content         = PRODUCT_CONFIG.seo.title;
-        document.getElementById("ogDesc").content          = PRODUCT_CONFIG.seo.description;
-        document.getElementById("ogImage").content         = PRODUCT_CONFIG.seo.ogImage;
+        document.getElementById("metaDesc").content      = PRODUCT_CONFIG.seo.description;
+        document.getElementById("ogTitle").content       = PRODUCT_CONFIG.seo.title;
+        document.getElementById("ogDesc").content        = PRODUCT_CONFIG.seo.description;
+        document.getElementById("ogImage").content       = PRODUCT_CONFIG.seo.ogImage;
 
         /* ── THANK MODAL — shop name ── */
         document.getElementById("thankShopName").textContent = SHARED_CONFIG.shop.name;
@@ -222,11 +414,11 @@
 
         /* ── LOAD LAYOUT JS → sau đó LOAD CORE.JS ── */
         const layoutScript = document.createElement("script");
-       layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=2`;
+        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=2`;
 
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
-          coreScript.src = "/js/core.js?v=3";
+          coreScript.src = "/js/core.js?v=4";
           document.body.appendChild(coreScript);
         };
 
@@ -241,6 +433,12 @@
         document.body.innerHTML = "<h2 style='text-align:center;padding:40px;'>Không tìm thấy sản phẩm.</h2>";
       };
     })();
+
+    /* ── NOTE TOGGLE ── */
+    document.getElementById("noteToggleBtn").addEventListener("click", function () {
+      this.classList.toggle("open");
+      document.getElementById("noteCollapse").classList.toggle("open");
+    });
   </script>
 </body>
 </html>
