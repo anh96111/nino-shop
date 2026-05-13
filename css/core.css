@@ -269,7 +269,7 @@ button, input, textarea, select { font: inherit; }
 .trust-strip {
   display: flex;
   margin-bottom: 16px;
-  border: 1px solid #d4a843;
+  border: 1px solid #93c5fd;
   border-radius: 10px;
   overflow: hidden;
 }
@@ -282,15 +282,14 @@ button, input, textarea, select { font: inherit; }
   justify-content: center;
   gap: 4px;
   text-align: center;
-  padding: 9px 6px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #B8860B;
-  background: #fffbf0;
-  line-height: 1.5;
-  border-right: 1px solid #d4a843;
+  padding: 7px 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #eff6ff;
+  line-height: 1.4;
+  border-right: 1px solid #93c5fd;
 }
-
 
 .trust-strip-item:last-child { border-right: none; }
 .trust-strip-item span { display: block; font-size: 16px; margin-bottom: 3px; }
