@@ -27,7 +27,7 @@ const PRODUCT_CONFIG = {
 
   // ── GALLERY ──
   images: [
-    "https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1778251760/ag_mxc127.jpg"
+    "https://res.cloudinary.com/dvtgqfe2z/image/upload/w_800,f_webp,q_auto/v1778693884/12_lszipf.jpg"
   ],
   videos: [],
 
