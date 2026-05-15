@@ -219,6 +219,97 @@
     #orderNote:focus {
       border-color: var(--primary, #e53e3e);
     }
+
+    /* ── NOTIF HISTORY POPUP ── */
+    .notif-history-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 99998;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .notif-history-overlay.show { display: flex; }
+    .notif-history-popup {
+      background: #fff;
+      width: 100%;
+      max-width: 480px;
+      max-height: 70vh;
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: notifSlideUp 0.28s ease;
+    }
+    @keyframes notifSlideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .notif-history-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid #f0f0f0;
+      flex-shrink: 0;
+    }
+    .notif-history-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+    .notif-history-close {
+      background: #f3f3f3;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      line-height: 1;
+    }
+    .notif-history-list {
+      overflow-y: auto;
+      flex: 1;
+      padding: 8px 0;
+    }
+    .notif-history-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 16px;
+      border-bottom: 1px solid #f7f7f7;
+    }
+    .notif-history-item:last-child { border-bottom: none; }
+    .notif-history-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .notif-history-body { flex: 1; min-width: 0; }
+    .notif-history-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a202c;
+    }
+    .notif-history-detail {
+      font-size: 12px;
+      color: #666;
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .notif-history-time {
+      font-size: 11px;
+      color: #aaa;
+      flex-shrink: 0;
+      margin-top: 2px;
+      white-space: nowrap;
+    }
+    .modal-live-notif { cursor: pointer; }
+    .modal-live-notif:hover { background: #fef3c7; }
   </style>
 </head>
 <body>
@@ -258,29 +349,25 @@
       </div>
 
       <!-- TRUST STRIP -->
-      <div class="trust-strip">
+      <div class="trust-strip trust-strip-compact">
         <div class="trust-strip-item">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
-          Xem hàng trước khi trả tiền
-        </div>
-        <div class="trust-strip-item">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
-          Nhận hàng rồi mới thanh toán
-        </div>
-        <div class="trust-strip-item">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/><polyline points="9 12 11 14 15 10"/></svg>
-          Hoàn tiền nếu sai mô tả
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+          <span>COD · Được xem hàng trước khi trả tiền · Hoàn tiền nếu sai mô tả</span>
         </div>
       </div>
 
 
-      <!-- LIVE ORDER NOTIFICATION -->
+      <!-- LIVE ORDER NOTIFICATION - tạm ẩn trong checkout
       <div class="modal-live-notif" id="modalLiveNotif">
         <div class="modal-live-notif-inner" id="modalLiveNotifInner">
           <span class="modal-live-notif-icon">🔔</span>
           <span class="modal-live-notif-text" id="modalLiveNotifText"></span>
         </div>
       </div>
+      -->
 
       <form id="orderForm" novalidate>
 
@@ -312,12 +399,11 @@
         <!-- GHI CHÚ COLLAPSIBLE -->
         <div class="form-group" style="margin-bottom:10px;">
           <button type="button" class="note-toggle-btn" id="noteToggleBtn">
-            <span>📝 Thêm ghi chú thời gian nhận hàng cho Shop</span>
-            <span style="font-size:11px;color:#9ca3af;margin-left:4px;">(vd: giao vào giờ hành chính...)</span>
+            <span>＋ Thêm ghi chú cho shop</span>
             <span class="note-toggle-arrow">⌄</span>
           </button>
           <div class="note-collapse" id="noteCollapse">
-            <textarea id="orderNote" rows="2" placeholder="VD: Giao buổi sáng, gọi trước 30 phút..."></textarea>
+            <textarea id="orderNote" rows="2" placeholder="VD: Giao sau 18h, gọi trước khi giao, để hàng ở bảo vệ..."></textarea>
           </div>
         </div>
 
@@ -358,6 +444,17 @@
         Hỗ trợ 24/7.
       </div>
       <button class="thank-close-btn" id="thankCloseBtn">Đã hiểu</button>
+    </div>
+  </div>
+
+  <!-- NOTIF HISTORY POPUP -->
+  <div class="notif-history-overlay" id="notifHistoryOverlay">
+    <div class="notif-history-popup" id="notifHistoryPopup">
+      <div class="notif-history-top">
+        <span class="notif-history-title">🔔 Lịch sử đặt hàng gần đây</span>
+        <button class="notif-history-close" id="notifHistoryClose">&times;</button>
+      </div>
+      <div class="notif-history-list" id="notifHistoryList"></div>
     </div>
   </div>
 

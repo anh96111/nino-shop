@@ -13,7 +13,7 @@ const PRODUCT_CONFIG = {
   sheetName: "balo",
   shipBar:   "Tặng Phụ kiện đeo Balo cho bé khi đặt hàng trong hôm nay",
   category:  "Học sinh",
-  showSizeImage: false,  // false = ẩn ảnh ở phần chọn size
+  showSizeImage: true,  // false = ẩn ảnh ở phần chọn size
 
   // ── SEO / OG ──
   seo: {
@@ -30,6 +30,17 @@ const PRODUCT_CONFIG = {
     "https://res.cloudinary.com/dvtgqfe2z/image/upload/w_800,f_webp,q_auto/v1778693884/12_lszipf.jpg"
   ],
   videos: [],
+
+  extraGalleryImages: [
+    {
+      label: "Ảnh tham khảo size nhỏ",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/xanh_nho_ftbtzd.jpg"
+    },
+    {
+      label: "Ảnh tham khảo size lớn",
+      image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/xanhto_arrcx5.jpg"
+    }
+  ],
 
   // ── HOOK (P2) ──
   hookTitle: "70% chiều cao và dáng của trẻ phụ thuộc vào quyết định và lựa chọn của bạn.",

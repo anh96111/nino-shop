@@ -623,8 +623,10 @@ function renderCartSummary() {
 }
 
 function updateSubmitBtnPrice() {
-  const total = getActiveGrandTotal();
-  submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(total)}`;
+  submitBtn.innerHTML = `
+    <span class="submit-btn-main">🔒 XÁC NHẬN ĐẶT HÀNG</span>
+    <span class="submit-btn-sub">THANH TOÁN KHI NHẬN HÀNG</span>
+  `;
 }
 
 /* ===================================================
@@ -994,8 +996,8 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     hideModal();
     openThankModal();
 
-    submitBtn.disabled  = false;
-    submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(PRODUCT.price)}`;
+    submitBtn.disabled = false;
+    updateSubmitBtnPrice();
 
     setTimeout(() => {
       fetch(GAS_URL, {
@@ -1021,7 +1023,7 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
   } catch (err) {
     console.error("Submit error:", err);
     submitBtn.disabled  = false;
-    submitBtn.innerHTML = `🔒 XÁC NHẬN ĐẶT HÀNG · ${formatPrice(PRODUCT.price)}`;
+    updateSubmitBtnPrice();
     statusMessage.style.color = "red";
     statusMessage.textContent = "Có lỗi xảy ra, vui lòng thử lại.";
 
@@ -1180,11 +1182,14 @@ function getPhoneRaw() {
 }
 
 /* ===================================================
-   MODAL LIVE NOTIFICATION
-   - Đổi nội dung mỗi 3s
-   - Animation: trượt từ dưới lên thay thế dòng cũ trượt lên trên mất
+   SHARED LIVE NOTIF ENGINE
+   window.__liveNotif — dùng chung cho mọi nơi
 =================================================== */
-function initModalLiveNotif() {
+(function initLiveNotifEngine() {
+  const MAX_HISTORY = 20;
+  const history     = [];
+  const subscribers = [];
+
   const firstNames = [
     "An","Anh","Bảo","Bích","Châu","Chi","Cường","Dung","Dương","Đạt",
     "Đức","Giang","Hà","Hải","Hằng","Hiếu","Hoa","Hoàng","Hùng","Hương",
@@ -1201,7 +1206,7 @@ function initModalLiveNotif() {
     "Văn","Thị","Minh","Quốc","Đức","Hữu","Thành","Trọng","Xuân","Ngọc"
   ];
 
-  function pickRandom(arr) {
+  function pick(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
@@ -1210,8 +1215,11 @@ function initModalLiveNotif() {
     const parts = [];
     variants.forEach(v => {
       if (v.options && v.options.length) {
-        const opt = v.options[Math.floor(Math.random() * v.options.length)];
-        parts.push(typeof opt === "object" ? opt.name : opt);
+        const opt = pick(v.options);
+        const name = typeof opt === "object" ? opt.name : opt;
+        /* Rút gọn tên size nếu quá dài */
+        const short = name.length > 20 ? name.slice(0, 20) + "…" : name;
+        parts.push(short);
       }
     });
     return parts.join(" – ");
@@ -1219,52 +1227,144 @@ function initModalLiveNotif() {
 
   function getProductShortName() {
     const name = PRODUCT_CONFIG.shortName || PRODUCT_CONFIG.name || "sản phẩm";
-    return name.length > 28 ? name.slice(0, 28) + "…" : name;
+    return name.length > 18 ? name.slice(0, 18) + "…" : name;
   }
 
-  function buildText() {
-    const last      = pickRandom(lastNames);
-    const mid       = pickRandom(midNames);
-    const first     = pickRandom(firstNames);
+  function buildEntry() {
+    const last      = pick(lastNames);
+    const mid       = pick(midNames);
+    const first     = pick(firstNames);
     const maskedMid = mid.slice(0, 1) + "**";
-    return `${last} ${maskedMid} ${first} vừa đặt hàng`;
+    const name      = `${last} ${maskedMid} ${first}`;
+    const variant   = getRandomVariantLabel();
+    const product   = getProductShortName();
+    const detail    = variant ? `${product} – ${variant}` : product;
+    return {
+      name:      name,
+      shortText: `${name} vừa đặt hàng`,
+      detail:    detail,
+      ts:        Date.now()
+    };
   }
 
+  function formatTimeAgo(ts) {
+    const diff = Math.floor((Date.now() - ts) / 1000);
+    if (diff < 60)  return `${diff} giây trước`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} phút trước`;
+    return `${Math.floor(diff / 3600)} giờ trước`;
+  }
+
+  function rnd(a, b) {
+    return Math.floor(Math.random() * (b - a + 1)) + a;
+  }
+
+  function broadcast(entry) {
+    subscribers.forEach(fn => fn(entry));
+  }
+
+  function loop() {
+    const entry = buildEntry();
+    history.unshift(entry);
+    if (history.length > MAX_HISTORY) history.pop();
+    broadcast(entry);
+    setTimeout(loop, rnd(5000, 15000));
+  }
+
+  /* Khởi động sau delay ngẫu nhiên */
+  setTimeout(loop, rnd(2000, 5000));
+
+  window.__liveNotif = {
+    subscribe:     function(fn) { subscribers.push(fn); },
+    getHistory:    function() { return history; },
+    formatTimeAgo: formatTimeAgo
+  };
+})();
+
+/* ===================================================
+   MODAL LIVE NOTIFICATION — subscribe engine
+=================================================== */
+function initModalLiveNotif() {
   const inner  = document.getElementById("modalLiveNotifInner");
   const textEl = document.getElementById("modalLiveNotifText");
   if (!inner || !textEl) return;
 
-  /* Hiển thị lần đầu ngay */
-  textEl.textContent = buildText();
-
-  /* Hiển thị lần đầu */
-  inner.style.opacity   = "1";
-  inner.style.transform = "translateY(0)";
-
-  setInterval(() => {
-    /* 1. Mờ dần + trượt lên nhẹ 6px */
+  /* Subscribe nhận entry mới từ engine */
+  window.__liveNotif.subscribe(function(entry) {
+    /* Fade out + slide up */
     inner.style.transition = "transform 0.5s ease, opacity 0.5s ease";
     inner.style.transform  = "translateY(-6px)";
     inner.style.opacity    = "0";
 
-    setTimeout(() => {
-      /* 2. Cập nhật nội dung mới */
-      textEl.textContent = buildText();
+    setTimeout(function() {
+      textEl.textContent = entry.shortText;
 
-      /* 3. Đặt vị trí xuống 6px bên dưới, ẩn — không animate */
       inner.style.transition = "none";
       inner.style.transform  = "translateY(6px)";
       inner.style.opacity    = "0";
 
-      /* 4. Force reflow */
       void inner.offsetHeight;
 
-      /* 5. Trượt vào nhẹ nhàng từ dưới lên */
       inner.style.transition = "transform 0.6s ease, opacity 0.6s ease";
       inner.style.transform  = "translateY(0)";
       inner.style.opacity    = "1";
     }, 520);
-  }, 5000);
+  });
+
+  /* Hiển thị ngay nếu đã có lịch sử */
+  const existing = window.__liveNotif.getHistory();
+  if (existing.length) {
+    textEl.textContent    = existing[0].shortText;
+    inner.style.opacity   = "1";
+    inner.style.transform = "translateY(0)";
+  }
+
+  /* ── Click mở popup lịch sử ── */
+  const notifEl = document.getElementById("modalLiveNotif");
+  if (!notifEl) return;
+
+  notifEl.addEventListener("click", function() {
+    openNotifHistory();
+  });
+}
+
+/* ===================================================
+   NOTIF HISTORY POPUP
+=================================================== */
+function openNotifHistory() {
+  const overlay  = document.getElementById("notifHistoryOverlay");
+  const list     = document.getElementById("notifHistoryList");
+  const closeBtn = document.getElementById("notifHistoryClose");
+  if (!overlay || !list) return;
+
+  const historyData = window.__liveNotif.getHistory();
+
+  if (!historyData.length) {
+    list.innerHTML = `<div style="padding:20px 16px; color:#aaa; font-size:13px; text-align:center;">Chưa có dữ liệu.</div>`;
+  } else {
+    list.innerHTML = historyData.map(function(entry) {
+      return `
+        <div class="notif-history-item">
+          <span class="notif-history-icon">🛍</span>
+          <div class="notif-history-body">
+            <div class="notif-history-name">${entry.name}</div>
+            <div class="notif-history-detail">${entry.detail}</div>
+          </div>
+          <div class="notif-history-time">${window.__liveNotif.formatTimeAgo(entry.ts)}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  overlay.classList.add("show");
+  document.body.style.overflow = "hidden";
+
+  function close() {
+    overlay.classList.remove("show");
+    document.body.style.overflow = "auto";
+  }
+
+  closeBtn.onclick          = close;
+  overlay.onclick           = function(e) { if (e.target === overlay) close(); };
 }
 
 /* ===================================================

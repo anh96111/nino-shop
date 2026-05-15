@@ -58,6 +58,88 @@
         display: flex; align-items: center; justify-content: center;
         line-height: 1;
       }
+      /* ── Variant options layout ── */
+      .variant-popup-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      /* Color options — tự co theo nội dung */
+      .vp-color-option {
+        flex: 0 0 auto;
+        padding: 8px 12px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fff;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #1a202c;
+        cursor: pointer;
+        line-height: 1.4;
+        text-align: center;
+        transition: border-color 0.15s, background 0.15s;
+      }
+
+      .vp-color-option.active {
+        border-color: #e53e3e;
+        background: #fff5f5;
+        color: #e53e3e;
+      }
+
+      /* Size options — chia đều 1 hàng */
+      .vp-other-option {
+        flex: 1 1 0;
+        min-width: 0;
+        text-align: center;
+        white-space: normal;
+        word-break: break-word;
+        padding: 10px 8px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fff;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #1a202c;
+        cursor: pointer;
+        line-height: 1.4;
+        transition: border-color 0.15s, background 0.15s;
+      }
+
+      .vp-other-option.active {
+        border-color: #e53e3e;
+        background: #fff5f5;
+        color: #e53e3e;
+      }
+
+      .vp-other-option.vp-soldout {
+        opacity: 0.45;
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
+      
+      /* ── Size tag trên slide ── */
+      .vp-size-tag {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(17, 24, 39, 0.78);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 7px 11px;
+      border-radius: 999px;
+      pointer-events: none;
+      line-height: 1.25;
+      max-width: calc(100% - 20px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+
+
+
     </style>
 
     <!-- SIZE IMAGE LIGHTBOX (ngoài popup, fixed toàn màn hình) -->
@@ -100,7 +182,7 @@
 
         </div>
 
-        <!-- SLIDER ẢNH MÀU -->
+        <!-- SLIDER ẢNH MÀU + SIZE -->
         <div class="variant-popup-gallery">
           <div class="variant-popup-slider" id="vpSlider">
             <div class="variant-popup-slides" id="vpSlides">
@@ -113,12 +195,12 @@
           </div>
           <div class="variant-popup-dots" id="vpDots">
             ${colorVariant.options.map((opt, idx) => `
-              <div class="variant-popup-dot ${idx === 0 ? "active" : ""}" data-index="${idx}"></div>
+              <div class="variant-popup-dot ${idx === 0 ? "active" : ""}" data-index="${idx}" data-dot-type="color"></div>
             `).join("")}
           </div>
           <div class="variant-popup-thumbs" id="vpThumbs">
             ${colorVariant.options.map((opt, idx) => `
-              <div class="variant-popup-thumb ${idx === 0 ? "active" : ""}" data-index="${idx}">
+              <div class="variant-popup-thumb ${idx === 0 ? "active" : ""}" data-index="${idx}" data-thumb-type="color">
                 <img src="${opt.image}" alt="${opt.name}" loading="lazy" decoding="async" />
               </div>
             `).join("")}
@@ -160,12 +242,7 @@
           return `
           <div class="variant-popup-section">
             <div class="variant-popup-label">${v.label}</div>
-            ${isSizeVariant && P.showSizeImage !== false ? `
-              <div id="vpSizeImageWrap" style="margin-bottom:10px; border-radius:10px; overflow:hidden; max-height:180px; display:flex; align-items:center; justify-content:center; background:#f7f7f7; cursor:zoom-in; position:relative;">
-                <img id="vpSizeImage" src="${v.options[0].images[firstColorName] || ""}" alt="" loading="lazy" decoding="async" style="width:100%; object-fit:contain; max-height:180px;" />
-                <div style="position:absolute; bottom:6px; right:8px; background:rgba(0,0,0,0.38); color:#fff; font-size:10px; padding:2px 7px; border-radius:4px; pointer-events:none;">🔍 Nhấn để xem to</div>
-              </div>
-            ` : ""}
+            ${isSizeVariant ? `<div style="font-size:11.5px; color:#6b7280; margin:-4px 0 8px; line-height:1.5;">📌 Lớp 1–3 chọn size nhỏ. Lớp 4–6 chọn size lớn. Cả 2 size đều đựng vừa sách giáo khoa và giấy A4.</div>` : ""}
 
             <div class="variant-popup-options">
               ${v.options.map((opt, idx) => {
@@ -180,20 +257,36 @@
                   style="${isSoldOut ? "opacity:0.45; cursor:not-allowed; text-decoration:line-through;" : ""}"
                 >
                   ${isSizeVariant ? opt.name : opt}
-                  ${isSoldOut ? `<span style="display:block; font-size:9px; color:#e53e3e; font-weight:600; margin-top:2px;">Hết hàng</span>` : ""}
+                  ${isSoldOut ? `<span style="display:block; font-size:9px; color:#e53e3e; font-weight:600; margin-top:2px;">Tạm hết màu này</span>` : ""}
                 </button>`;
               }).join("")}
             </div>
           </div>`;
         }).join("")}
 
-        <!-- NÚT THÊM VÀO GIỎ -->
-        <button class="vp-add-to-cart-btn" id="vpAddToCartBtn">🛒 Thêm vào giỏ</button>
+        <!-- TÓM TẮT LỰA CHỌN -->
+        <div class="vp-selected-summary" id="vpSelectedSummary">
+          <div class="vp-selected-summary-label">Bạn đang chọn</div>
+          <div class="vp-selected-summary-value" id="vpSelectedSummaryText">Đang cập nhật...</div>
+        </div>
 
-        <!-- NÚT ĐẾN GIỎ HÀNG + MUA NGAY -->
-        <div class="variant-popup-cta">
-          <button class="btn-ghost" id="vpGoToCartBtn">🛒 Đến giỏ hàng<span class="cart-badge" id="vpCartBadge"></span></button>
-          <button class="btn-solid" id="vpBuyNowBtn">Mua ngay</button>
+        <!-- CAM KẾT TRƯỚC KHI MUA -->
+        <div class="vp-trust-box">
+          🎁 Đơn này đã kèm full bộ quà tặng cho bé<br>
+          🚚 Được xem hàng trước khi thanh toán<br>
+          🛡️ Bảo hành 12 tháng, 1 đổi 1 nếu lỗi khóa
+        </div>
+
+        <!-- CTA TỐI ƯU -->
+        <div class="vp-popup-cta-v2">
+          <button class="btn-solid vp-main-buy-btn" id="vpBuyNowBtn">🎁 Mua ngay - nhận quà</button>
+
+          <div class="vp-cart-actions">
+            <button class="vp-cart-mini-btn" id="vpAddToCartBtn">🛒 Thêm vào giỏ</button>
+            <button class="vp-cart-mini-btn vp-go-cart-mini-btn" id="vpGoToCartBtn">
+              🛒 Đi đến giỏ<span class="cart-badge" id="vpCartBadge"></span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -503,34 +596,33 @@
   orderNotifTop.innerHTML = `<div class="order-notif-top-inner"><span class="order-notif-top-icon">🔔</span><span class="order-notif-top-text" id="orderNotifTopText"></span></div>`;
   document.body.appendChild(orderNotifTop);
 
-  (function loopOrderNotification() {
-    const names = [
-      "Nguyễn Văn Hùng","Trần Thị Mai","Lê Minh Tuấn","Phạm Thị Hoa",
-      "Hoàng Văn Đức","Ngô Thị Lan","Vũ Đình Khoa","Đặng Thị Ngọc",
-      "Bùi Quang Hải","Đỗ Thị Thanh","Phan Văn Long","Lý Thị Hương",
-      "Trịnh Minh Phát","Hồ Thị Yến","Dương Văn Tâm","Mai Thị Linh",
-      "Nguyễn Thị Bích","Lê Văn Sơn","Trần Quốc Bảo","Phạm Minh Châu",
-      "Võ Thị Diệu","Huỳnh Văn Thắng","Đinh Thị Thu","Lương Văn Hòa",
-      "Tạ Thị Kim","Châu Minh Trí","Nguyễn Hữu Phước","Trần Thị Ánh",
-      "Lê Thị Tuyết","Phạm Văn Nghĩa"
-    ];
+  (function initTopNotif() {
     const textEl = document.getElementById("orderNotifTopText");
-    let lastIndex = -1;
-    function rnd(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
-    function pickName() {
-      let idx;
-      do { idx = Math.floor(Math.random() * names.length); } while (idx === lastIndex);
-      lastIndex = idx; return names[idx];
-    }
-    function showThenHide() {
-      textEl.textContent = pickName() + " vừa đặt hàng";
+
+    function showThenHide(entry) {
+      textEl.textContent = entry.shortText;
       orderNotifTop.classList.add("show");
-      setTimeout(() => {
+      setTimeout(function() {
         orderNotifTop.classList.remove("show");
-        setTimeout(showThenHide, rnd(5000, 15000));
-      }, rnd(4000, 8000));
+      }, 5000);
     }
-    setTimeout(showThenHide, rnd(2000, 5000));
+
+    /* Nếu engine đã sẵn sàng thì subscribe ngay */
+    if (window.__liveNotif) {
+      window.__liveNotif.subscribe(showThenHide);
+    } else {
+      /* Fallback: chờ engine khởi động (core.js load sau) */
+      var waited = 0;
+      var waitInterval = setInterval(function() {
+        waited += 50;
+        if (window.__liveNotif) {
+          clearInterval(waitInterval);
+          window.__liveNotif.subscribe(showThenHide);
+        } else if (waited > 5000) {
+          clearInterval(waitInterval);
+        }
+      }, 50);
+    }
   })();
 
   /* ── LIVE COUNT ── */
@@ -695,6 +787,7 @@
     const sizeVariant  = P.variants.find(v => v.type === "size");
     let vpCurrentSlide  = 0;
     const vpTotalSlides = colorVariant.options.length;
+    let vpSelectedColorName = colorVariant.options[0].name;
 
     /* ── SIZE IMAGE LIGHTBOX ── */
     const lightbox      = document.getElementById("vpSizeImgLightbox");
@@ -770,7 +863,7 @@
             const t = document.createElement("span");
             t.className = "vp-soldout-tag";
             t.style.cssText = "display:block; font-size:9px; color:#e53e3e; font-weight:600; margin-top:2px;";
-            t.textContent = "Hết hàng";
+            t.textContent = "Tạm hết màu này";
             btn.appendChild(t);
           }
           btn.classList.remove("active");
@@ -799,23 +892,131 @@
           sizeImgEl.src = sizeVariant.options[ai].images[colorName] || "";
         }
       }
+      vpUpdateSelectedSummary();
+    }
+
+    const vpColorCount = colorVariant.options.length;
+    function vpUpdateSelectedSummary() {
+      const summaryText = document.getElementById("vpSelectedSummaryText");
+      if (!summaryText) return;
+
+      const activeSize = document.querySelector(".vp-other-option[data-type='size'].active");
+      const sizeText = activeSize ? activeSize.dataset.value : "";
+
+      summaryText.textContent = sizeText
+        ? `${vpSelectedColorName} · ${sizeText}`
+        : vpSelectedColorName;
+    }
+
+    function vpBuildExtraGallerySlides() {
+      const extraImages = Array.isArray(P.extraGalleryImages) ? P.extraGalleryImages : [];
+
+      /* Xoá các ảnh xem thêm cũ nếu có */
+      vpSlides.querySelectorAll(".vp-slide-extra").forEach(el => el.remove());
+      document.querySelectorAll("#vpDots .variant-popup-dot[data-dot-type='extra']").forEach(el => el.remove());
+      document.querySelectorAll("#vpThumbs .variant-popup-thumb[data-thumb-type='extra']").forEach(el => el.remove());
+
+      if (!extraImages.length) return;
+
+      extraImages.forEach((item, idx) => {
+        const img = item.image || "";
+        if (!img) return;
+
+        const label = item.label || `Ảnh tham khảo ${idx + 1}`;
+        const slideIndex = vpColorCount + idx;
+
+        /* Slide ảnh xem thêm */
+        const slide = document.createElement("div");
+        slide.className = "variant-popup-slide vp-slide-extra";
+        slide.style.position = "relative";
+        slide.innerHTML = `
+          <img src="${img}" alt="${label}" loading="lazy" decoding="async" data-extra-slide="true" />
+          <div class="vp-size-tag">${label}</div>
+        `;
+        vpSlides.appendChild(slide);
+
+        /* Dot ảnh xem thêm */
+        const dot = document.createElement("div");
+        dot.className = "variant-popup-dot";
+        dot.dataset.index = slideIndex;
+        dot.dataset.dotType = "extra";
+        dot.addEventListener("click", () => vpGoToSlide(slideIndex));
+        document.getElementById("vpDots").appendChild(dot);
+
+        /* Thumbnail ảnh xem thêm */
+        const thumb = document.createElement("div");
+        thumb.className = "variant-popup-thumb";
+        thumb.dataset.index = slideIndex;
+        thumb.dataset.thumbType = "extra";
+        thumb.innerHTML = `<img src="${img}" alt="${label}" loading="lazy" decoding="async" />`;
+
+        thumb.addEventListener("click", () => {
+          vpGoToSlide(slideIndex);
+        });
+
+        document.getElementById("vpThumbs").appendChild(thumb);
+      });
+
+      vpSlides.style.width = "";
+      vpSlides.querySelectorAll(".variant-popup-slide").forEach(s => {
+        s.style.minWidth = "100%";
+      });
     }
 
     function vpGoToSlide(idx) {
+      /* Tổng số slides hiện tại = color + size */
+      const totalNow = vpSlides.querySelectorAll(".variant-popup-slide").length;
+      if (idx < 0 || idx >= totalNow) return;
+
       vpCurrentSlide = idx;
       vpSlides.style.transform = `translateX(-${idx * 100}%)`;
-      vpDots.forEach((d, i)   => d.classList.toggle("active", i === idx));
-      vpThumbs.forEach((t, i) => t.classList.toggle("active", i === idx));
-      vpColorBtns.forEach((b, i) => b.classList.toggle("active", i === idx));
-      const at = document.querySelectorAll(".variant-popup-thumb")[idx];
-      if (at) at.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-      const colorName = colorVariant.options[idx] ? colorVariant.options[idx].name : "";
-      vpUpdateSizeUI(colorName);
+
+      /* Highlight dot đang active */
+      document.querySelectorAll("#vpDots .variant-popup-dot").forEach((d) => {
+        d.classList.toggle("active", parseInt(d.dataset.index) === idx);
+      });
+
+      /* Highlight thumbnail đang active, bao gồm cả thumb màu và thumb size */
+      document.querySelectorAll("#vpThumbs .variant-popup-thumb").forEach((t) => {
+        t.classList.toggle("active", parseInt(t.dataset.index) === idx);
+      });
+
+      /* Chỉ active nút màu khi slide hiện tại là ảnh màu */
+      const colorIdx = idx < vpColorCount ? idx : -1;
+
+      if (colorIdx >= 0) {
+        vpColorBtns.forEach((b, i) => {
+          b.classList.toggle("active", i === colorIdx);
+        });
+      }
+
+      /* Kéo thumbnail active vào giữa */
+      const at = document.querySelector(`#vpThumbs .variant-popup-thumb[data-index="${idx}"]`);
+      if (at) {
+        at.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+
+      if (colorIdx >= 0) {
+        vpSelectedColorName = colorVariant.options[colorIdx].name;
+
+        const at = document.querySelector(`#vpThumbs .variant-popup-thumb[data-index="${idx}"]`);
+        if (at) at.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+
+        vpUpdateSizeUI(vpSelectedColorName);
+      }
+
+      vpUpdateSelectedSummary();
     }
 
     vpDots.forEach(dot     => dot.addEventListener("click",   () => vpGoToSlide(parseInt(dot.dataset.index))));
-    vpThumbs.forEach(thumb => thumb.addEventListener("click", () => vpGoToSlide(parseInt(thumb.dataset.index))));
-    vpColorBtns.forEach(btn => btn.addEventListener("click",  () => vpGoToSlide(parseInt(btn.dataset.index))));
+    vpThumbs.forEach(thumb => thumb.addEventListener("click", () => {
+      const idx = parseInt(thumb.dataset.index);
+      vpGoToSlide(idx);
+    }));
+    vpColorBtns.forEach(btn => btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.index);
+      vpGoToSlide(idx);
+    }));
 
     /* Size buttons */
     document.querySelectorAll(".vp-other-option[data-type='size']").forEach(btn => {
@@ -823,14 +1024,7 @@
         if (btn.disabled) return;
         document.querySelectorAll(".vp-other-option[data-type='size']").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        const sizeImgEl = document.getElementById("vpSizeImage");
-        if (sizeImgEl && sizeVariant) {
-          const si = parseInt(btn.dataset.index);
-          const colorName = colorVariant.options[vpCurrentSlide] ? colorVariant.options[vpCurrentSlide].name : "";
-          if (sizeVariant.options[si] && sizeVariant.options[si].images) {
-            sizeImgEl.src = sizeVariant.options[si].images[colorName] || "";
-          }
-        }
+        vpUpdateSelectedSummary();
       });
     });
 
@@ -857,8 +1051,9 @@
       if (!vpDrag) return;
       if (vpHz) {
         const diff = vpSX - vpMX;
-        if (diff > 50 && vpCurrentSlide < vpTotalSlides - 1) vpGoToSlide(vpCurrentSlide + 1);
-        else if (diff < -50 && vpCurrentSlide > 0)           vpGoToSlide(vpCurrentSlide - 1);
+        const totalNow = vpSlides.querySelectorAll(".variant-popup-slide").length;
+        if (diff > 50 && vpCurrentSlide < totalNow - 1) vpGoToSlide(vpCurrentSlide + 1);
+        else if (diff < -50 && vpCurrentSlide > 0)      vpGoToSlide(vpCurrentSlide - 1);
       }
       vpDrag = false; vpHz = null;
     });
@@ -884,6 +1079,9 @@
       hasColorVariant: true
     };
 
+    console.log("sizeVariant:", sizeVariant);
+    console.log("colorVariant.options[0].name:", colorVariant.options[0].name);
+    vpBuildExtraGallerySlides();
     vpUpdateSizeUI(colorVariant.options[0].name);
 
   } else {
