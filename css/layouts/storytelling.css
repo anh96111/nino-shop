@@ -874,6 +874,11 @@
   overflow: visible;
 }
 
+.vp-go-cart-mini-btn {
+  position: relative;
+  overflow: visible;
+}
+
 .vp-cart-mini-btn .cart-badge {
   position: absolute !important;
   top: -7px !important;
@@ -882,7 +887,7 @@
   bottom: auto !important;
   transform: none !important;
 
-  display: inline-flex !important;
+  display: none !important;
   align-items: center;
   justify-content: center;
 
@@ -900,4 +905,8 @@
   font-weight: 900;
   line-height: 1;
   z-index: 2;
+}
+
+.vp-cart-mini-btn .cart-badge.show {
+  display: inline-flex !important;
 }

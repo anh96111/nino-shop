@@ -320,8 +320,10 @@
   <!-- BOTTOM BAR -->
   <div class="bottom-bar">
     <div class="bottom-inner">
-      <button class="btn-bar-ghost" id="goToCartBtn">Giỏ hàng<span class="cart-badge" id="cartBadge"></span></button>
-      <button class="btn-bar-solid" id="buyNowBtn">Mua ngay</button>
+      <button class="btn-bar-ghost bottom-cart-btn" id="goToCartBtn" aria-label="Mở giỏ hàng">
+      🛒<span class="cart-badge" id="cartBadge"></span>
+    </button>
+    <button class="btn-bar-solid bottom-buy-btn" id="buyNowBtn">Mua ngay</button>
     </div>
   </div>
 
@@ -516,7 +518,7 @@
 
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
-          coreScript.src = "/js/core.js?v=4";
+          coreScript.src = "/js/core.js?v=5";
           document.body.appendChild(coreScript);
         };
 

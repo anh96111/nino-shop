@@ -151,24 +151,47 @@ function setCookie(name, value, days) {
 =================================================== */
 function updateCartBadge() {
   loadCartItems();
+
   const total = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  if (!cartBadge) return;
-  if (total > 0) {
-    cartBadge.textContent = total > 99 ? "99+" : total;
-    cartBadge.classList.add("show");
-  } else {
-    cartBadge.classList.remove("show");
+  const displayTotal = total > 99 ? "99+" : total;
+
+  /* Bottom bar cart button */
+  if (goToCartBtn) {
+    goToCartBtn.classList.toggle("show", total > 0);
   }
 
-  const vpBadge = document.getElementById("vpCartBadge");
-  const cpBadge = document.getElementById("cpCartBadge");
-  if (vpBadge) {
-    if (total > 0) { vpBadge.textContent = total > 99 ? "99+" : total; vpBadge.classList.add("show"); }
-    else { vpBadge.classList.remove("show"); }
+  if (cartBadge) {
+    if (total > 0) {
+      cartBadge.textContent = displayTotal;
+      cartBadge.classList.add("show");
+    } else {
+      cartBadge.textContent = "";
+      cartBadge.classList.remove("show");
+    }
   }
+
+  /* Variant popup cart badge */
+  const vpBadge = document.getElementById("vpCartBadge");
+  if (vpBadge) {
+    if (total > 0) {
+      vpBadge.textContent = displayTotal;
+      vpBadge.classList.add("show");
+    } else {
+      vpBadge.textContent = "";
+      vpBadge.classList.remove("show");
+    }
+  }
+
+  /* Combo popup cart badge */
+  const cpBadge = document.getElementById("cpCartBadge");
   if (cpBadge) {
-    if (total > 0) { cpBadge.textContent = total > 99 ? "99+" : total; cpBadge.classList.add("show"); }
-    else { cpBadge.classList.remove("show"); }
+    if (total > 0) {
+      cpBadge.textContent = displayTotal;
+      cpBadge.classList.add("show");
+    } else {
+      cpBadge.textContent = "";
+      cpBadge.classList.remove("show");
+    }
   }
 }
 
