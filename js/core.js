@@ -52,15 +52,30 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', FB_PIXEL_ID);
 fbq('track', 'PageView');
 
+const viewContentEventId = generateEventId();
+
 fbq('track', 'ViewContent', {
-  content_name:     PRODUCT_CONFIG.name,
+  content_name: PRODUCT_CONFIG.name,
   content_category: PRODUCT_CONFIG.category,
-  content_ids:      [PRODUCT_CONFIG.id],
-  content_type:     'product',
-  value:            PRODUCT_CONFIG.price,
-  currency:         PRODUCT_CONFIG.currency
+  content_ids: [PRODUCT_CONFIG.id],
+  content_type: 'product',
+  value: PRODUCT_CONFIG.price,
+  currency: PRODUCT_CONFIG.currency
 }, {
+  eventID: viewContentEventId,
   external_id: EXTERNAL_ID
+});
+
+sendToGAS({
+  ...buildBasePayload(),
+  event_type: 'view_content',
+  view_content_event_id: viewContentEventId,
+  product_id: PRODUCT_CONFIG.id,
+  product_name: PRODUCT_CONFIG.name,
+  product_category: PRODUCT_CONFIG.category,
+  price: PRODUCT_CONFIG.price,
+  value: PRODUCT_CONFIG.price,
+  currency: PRODUCT_CONFIG.currency
 });
 
 /* ===================================================
@@ -141,6 +156,10 @@ function getCookie(name) {
   return match ? match[2] : null;
 }
 
+function generateEventId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
 function setCookie(name, value, days) {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
   document.cookie = name + "=" + value + "; expires=" + expires + "; path=/";
@@ -209,7 +228,10 @@ function updateCartBadge() {
 fetch("https://api.ipify.org?format=json")
   .then(r => r.json())
   .then(d => { clientIp = d.ip; })
-  .catch(() => {});
+  .catch(() => {})
+  .finally(() => {
+    sendViewContentToGAS();
+  });
 
 /* ===================================================
    BUILD BASE PAYLOAD
@@ -1163,16 +1185,15 @@ function setupReviewMediaLightbox() {
 /* ===================================================
    INIT — ViewContent GAS
 =================================================== */
-(function initViewContent() {
-  const eid = genEventId();
+function sendViewContentToGAS() {
   sendToGAS({
-    ...buildBasePayload({ view_content_event_id: eid }),
+    ...buildBasePayload({ view_content_event_id: viewContentEventId }),
     event_type:         "view_content",
     value:              PRODUCT.price,
     external_id:        EXTERNAL_ID,
     external_id_hashed: false
   });
-})();
+}
 
 /* ===================================================
    LAZY VIDEOS
