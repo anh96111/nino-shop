@@ -15,6 +15,36 @@ const PRODUCT = {
   sheetname: PRODUCT_CONFIG.sheetName
 };
 
+/* ===================================================
+   SEO / OPEN GRAPH
+=================================================== */
+function setMeta(selector, value) {
+  const el = document.querySelector(selector);
+  if (el && value) el.setAttribute("content", value);
+}
+
+function updateSeoMeta() {
+  const seo = PRODUCT_CONFIG.seo || {};
+
+  const title = seo.title || PRODUCT_CONFIG.name || "";
+  const description = seo.description || PRODUCT_CONFIG.description || "";
+  const image = seo.ogImage || (PRODUCT_CONFIG.images && PRODUCT_CONFIG.images[0]) || "";
+  const url = window.location.href;
+
+  document.title = title;
+
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[property="og:image"]', image);
+  setMeta('meta[property="og:url"]', url);
+
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', description);
+  setMeta('meta[name="twitter:image"]', image);
+}
+
+updateSeoMeta();
+
 const GAS_URL              = SHARED_CONFIG.gasUrl;
 const PRODUCT_EXTRA_IMAGES = PRODUCT_CONFIG.images;
 const PRODUCT_VIDEOS       = PRODUCT_CONFIG.videos;
