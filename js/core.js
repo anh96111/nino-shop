@@ -66,17 +66,6 @@ fbq('track', 'ViewContent', {
   external_id: EXTERNAL_ID
 });
 
-sendToGAS({
-  ...buildBasePayload(),
-  event_type: 'view_content',
-  view_content_event_id: viewContentEventId,
-  product_id: PRODUCT_CONFIG.id,
-  product_name: PRODUCT_CONFIG.name,
-  product_category: PRODUCT_CONFIG.category,
-  price: PRODUCT_CONFIG.price,
-  value: PRODUCT_CONFIG.price,
-  currency: PRODUCT_CONFIG.currency
-});
 
 /* ===================================================
    STATE
