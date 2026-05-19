@@ -417,18 +417,22 @@ function initUrlDiscountPopupOnPriceSection() {
   const reviewSection = document.querySelector(".review-section");
   if (!reviewSection) return;
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        maybeShowUrlDiscountPopup();
-        observer.disconnect();
-      }
-    });
-  }, {
-    threshold: 0.25
-  });
+  function checkReviewReached() {
+    if (!discountFromUrl) return;
+    if (appliedDiscountCode !== "NINO3") return;
+    if (urlDiscountPopupShown) return;
 
-  observer.observe(reviewSection);
+    const rect = reviewSection.getBoundingClientRect();
+    const triggerPoint = window.innerHeight * 0.85;
+
+    if (rect.top <= triggerPoint) {
+      maybeShowUrlDiscountPopup();
+      window.removeEventListener("scroll", checkReviewReached);
+    }
+  }
+
+  window.addEventListener("scroll", checkReviewReached, { passive: true });
+  checkReviewReached();
 }
 
 function startNino2GiftTimer() {
