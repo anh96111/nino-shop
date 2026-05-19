@@ -1215,6 +1215,10 @@
       if (typeof window.startNino2GiftTimer === "function") {
         window.startNino2GiftTimer();
       }
+
+      if (typeof window.startUrlDiscountPopupTimer === "function") {
+        window.startUrlDiscountPopupTimer();
+      }
     }
 
     function closeVariantPopup() {

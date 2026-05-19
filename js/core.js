@@ -137,6 +137,8 @@ let nino2PopupTimer = null;
 let checkoutOpenedOnce = false;
 let nino2PopupShown = false;
 let nino2PopupDismissed = false;
+let urlDiscountPopupShown = false;
+let urlDiscountPopupTimer = null;
 
 /* ===================================================
    DOM REFS
@@ -313,12 +315,6 @@ function initDiscountFromUrl() {
 
   if (result.success) {
     discountFromUrl = true;
-
-    if (codeFromUrl === "NINO3") {
-      setTimeout(() => {
-        showUrlDiscountPopup();
-      }, 500);
-    }
   }
 }
 
@@ -332,7 +328,10 @@ function showUrlDiscountPopup() {
   overlay.innerHTML = `
     <div class="discount-gift-popup">
       <div class="discount-gift-badge">🎁 Ưu đãi hôm nay</div>
-      <div class="discount-gift-title">Bạn nhận được mã giảm giá 30.000đ</div>
+      <div class="discount-gift-title">
+        Bạn nhận được mã giảm giá
+        <span class="discount-money">💵 30.000đ</span>
+      </div>
       <div class="discount-gift-desc">
         Mã giảm giá này chỉ có hiệu lực trong hôm nay.
       </div>
@@ -390,6 +389,48 @@ function showUrlDiscountPopup() {
   });
 }
 
+function maybeShowUrlDiscountPopup() {
+  if (!discountFromUrl) return;
+  if (appliedDiscountCode !== "NINO3") return;
+  if (urlDiscountPopupShown) return;
+  if (document.getElementById("urlDiscountPopupOverlay")) return;
+
+  urlDiscountPopupShown = true;
+  showUrlDiscountPopup();
+}
+
+function startUrlDiscountPopupTimer() {
+  if (!discountFromUrl) return;
+  if (appliedDiscountCode !== "NINO3") return;
+  if (urlDiscountPopupShown) return;
+
+  if (urlDiscountPopupTimer) {
+    clearTimeout(urlDiscountPopupTimer);
+  }
+
+  urlDiscountPopupTimer = setTimeout(() => {
+    maybeShowUrlDiscountPopup();
+  }, 2000);
+}
+
+function initUrlDiscountPopupOnPriceSection() {
+  const pricingSection = document.querySelector(".pricing-section");
+  if (!pricingSection) return;
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        maybeShowUrlDiscountPopup();
+        observer.disconnect();
+      }
+    });
+  }, {
+    threshold: 0.35
+  });
+
+  observer.observe(pricingSection);
+}
+
 function startNino2GiftTimer() {
   if (discountFromUrl) return;
   if (appliedDiscountCode) return;
@@ -438,7 +479,11 @@ function showNino2GiftPopup(source) {
     <div class="discount-gift-popup discount-gift-popup-small">
       <button type="button" class="discount-gift-close" id="nino2GiftCloseBtn">×</button>
       <div class="discount-gift-badge">⚡ Ưu đãi vừa mở khóa</div>
-      <div class="discount-gift-title">Giảm ngay 20.000đ cho đơn hôm nay</div>
+      <div class="discount-gift-title">
+        Giảm ngay
+        <span class="discount-money">💵 20.000đ</span>
+        cho đơn hôm nay
+      </div>
       <div class="discount-gift-desc">
         Chỉ còn 27 suất áp dụng trong hôm nay. Dùng mã này trước khi rời trang.
       </div>
@@ -1899,6 +1944,7 @@ window.syncDiscountInputs = syncDiscountInputs;
 window.startNino2GiftTimer = startNino2GiftTimer;
 window.stopNino2GiftTimer = stopNino2GiftTimer;
 window.showNino2GiftPopupOnCheckoutExit = showNino2GiftPopupOnCheckoutExit;
+window.startUrlDiscountPopupTimer = startUrlDiscountPopupTimer;
 
 function bindCheckoutExitDiscountPopup() {
   const orderModal = document.getElementById("orderModal");
@@ -1936,4 +1982,5 @@ function bindCheckoutExitDiscountPopup() {
   });
 
   bindCheckoutExitDiscountPopup();
+  initUrlDiscountPopupOnPriceSection();
 })();

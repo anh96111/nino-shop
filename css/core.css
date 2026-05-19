@@ -1092,3 +1092,8 @@ button, input, textarea, select { font: inherit; }
   color: #16a34a;
   font-weight: 900;
 }
+.discount-money {
+  color: #16a34a;
+  font-weight: 900;
+  white-space: nowrap;
+}
