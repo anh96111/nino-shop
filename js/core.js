@@ -414,28 +414,21 @@ function startUrlDiscountPopupTimer() {
 }
 
 function initUrlDiscountPopupOnPriceSection() {
-  const pricingSection = document.querySelector(".pricing-section");
-  if (!pricingSection) return;
-
-  let hasSeenPriceSection = false;
+  const reviewSection = document.querySelector(".review-section");
+  if (!reviewSection) return;
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        hasSeenPriceSection = true;
-        return;
-      }
-
-      if (hasSeenPriceSection && !entry.isIntersecting) {
         maybeShowUrlDiscountPopup();
         observer.disconnect();
       }
     });
   }, {
-    threshold: 0.6
+    threshold: 0.25
   });
 
-  observer.observe(pricingSection);
+  observer.observe(reviewSection);
 }
 
 function startNino2GiftTimer() {
