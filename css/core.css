@@ -1097,3 +1097,27 @@ button, input, textarea, select { font: inherit; }
   font-weight: 900;
   white-space: nowrap;
 }
+.discount-slot-count {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 900;
+  color: #dc2626;
+  padding: 0 2px;
+}
+
+.discount-slot-count {
+  display: inline-block;
+  min-width: 18px;
+  text-align: center;
+  font-weight: 900;
+  color: #dc2626;
+  transform-origin: center;
+}
+
+.discount-slot-count.is-changing {
+  animation: discountDigitDrop 0.22s ease forwards;
+}
+
+.discount-slot-count.is-changed {
+  color: #b91c1c;
+}

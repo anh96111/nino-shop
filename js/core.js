@@ -489,7 +489,9 @@ function showNino2GiftPopup(source) {
         cho đơn hôm nay
       </div>
       <div class="discount-gift-desc">
-        Chỉ còn 27 suất áp dụng trong hôm nay. Dùng mã này trước khi rời trang.
+        Chỉ còn 
+        <span class="discount-slot-count" id="nino2SlotCount">27</span>
+        suất áp dụng trong hôm nay. Dùng mã này trước khi rời trang.
       </div>
       <div class="discount-gift-code">NINO2</div>
       <div class="discount-gift-actions">
@@ -509,6 +511,41 @@ function showNino2GiftPopup(source) {
   requestAnimationFrame(() => {
     overlay.classList.add("show");
   });
+
+  function animateSlotCountTo(newValue) {
+    const countEl = document.getElementById("nino2SlotCount");
+    if (!countEl) return;
+
+    countEl.classList.add("is-changing");
+
+    setTimeout(() => {
+      countEl.textContent = String(newValue);
+      countEl.classList.remove("is-changing");
+      countEl.classList.add("is-changed");
+    }, 220);
+  }
+
+  let nino2SlotCount = 27;
+
+  setTimeout(() => {
+    nino2SlotCount = 25;
+    animateSlotCountTo(nino2SlotCount);
+
+    const slotInterval = setInterval(() => {
+      if (!document.getElementById("nino2GiftPopupOverlay")) {
+        clearInterval(slotInterval);
+        return;
+      }
+
+      if (nino2SlotCount <= 18) {
+        clearInterval(slotInterval);
+        return;
+      }
+
+      nino2SlotCount -= 1;
+      animateSlotCountTo(nino2SlotCount);
+    }, 4000);
+  }, 1500);
 
   function closePopup(markDismissed) {
     overlay.classList.remove("show");
