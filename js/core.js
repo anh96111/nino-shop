@@ -112,6 +112,33 @@ let buyNowItems    = [];
 let vpPendingAction = null;
 
 /* ===================================================
+   DISCOUNT — MÃ GIẢM GIÁ
+=================================================== */
+const DISCOUNT_CODES = {
+  NINO2: {
+    code: "NINO2",
+    type: "fixed",
+    value: 20000,
+    label: "Mã giảm giá NINO2"
+  },
+  NINO3: {
+    code: "NINO3",
+    type: "fixed",
+    value: 30000,
+    label: "Mã giảm giá NINO3"
+  }
+};
+
+let appliedDiscountCode = "";
+let appliedDiscountAmount = 0;
+let appliedDiscountSource = "";
+let discountFromUrl = false;
+let nino2PopupTimer = null;
+let checkoutOpenedOnce = false;
+let nino2PopupShown = false;
+let nino2PopupDismissed = false;
+
+/* ===================================================
    DOM REFS
 =================================================== */
 const slidesEl           = document.getElementById("slides");
@@ -152,6 +179,354 @@ function genEventId() {
 
 function formatPrice(num) {
   return num.toLocaleString("vi-VN") + "đ";
+}
+
+function normalizeDiscountCode(code) {
+  return String(code || "").trim().toUpperCase();
+}
+
+function getDiscountConfig(code) {
+  const normalizedCode = normalizeDiscountCode(code);
+  return DISCOUNT_CODES[normalizedCode] || null;
+}
+
+function getDiscountBaseAmount() {
+  const subtotal = Number(getActiveSubTotal() || 0);
+
+  if (subtotal > 0) {
+    return subtotal;
+  }
+
+  return Number(getCurrentPrice() || 0);
+}
+
+function calculateDiscountAmount(code, subtotal) {
+  const cfg = getDiscountConfig(code);
+  if (!cfg) return 0;
+
+  const safeSubtotal = Math.max(0, Number(subtotal || 0));
+
+  if (cfg.type === "fixed") {
+    return Math.min(cfg.value, safeSubtotal);
+  }
+
+  if (cfg.type === "percent") {
+    return Math.floor(safeSubtotal * cfg.value / 100);
+  }
+
+  return 0;
+}
+
+function applyDiscountCode(code, source) {
+  const normalizedCode = normalizeDiscountCode(code);
+  const cfg = getDiscountConfig(normalizedCode);
+
+  if (!cfg) {
+    return {
+      success: false,
+      message: "Mã giảm giá không hợp lệ."
+    };
+  }
+
+  const discountBase = getDiscountBaseAmount();
+  const discountAmount = calculateDiscountAmount(normalizedCode, discountBase);
+
+  appliedDiscountCode = normalizedCode;
+  appliedDiscountAmount = discountAmount;
+  appliedDiscountSource = source || "manual";
+
+  if (appliedDiscountSource === "url") {
+    discountFromUrl = true;
+  }
+
+  syncDiscountInputs();
+  renderDiscountUI();
+
+  return {
+    success: true,
+    code: normalizedCode,
+    amount: discountAmount
+  };
+}
+
+function clearDiscountCode() {
+  appliedDiscountCode = "";
+  appliedDiscountAmount = 0;
+  appliedDiscountSource = "";
+  discountFromUrl = false;
+
+  syncDiscountInputs();
+  renderDiscountUI();
+}
+
+function getActiveDiscountAmount() {
+  if (!appliedDiscountCode) return 0;
+
+  const discountBase = getDiscountBaseAmount();
+  appliedDiscountAmount = calculateDiscountAmount(appliedDiscountCode, discountBase);
+
+  return appliedDiscountAmount;
+}
+
+function syncDiscountInputs() {
+  document.querySelectorAll("[data-discount-input]").forEach(input => {
+    input.value = appliedDiscountCode || "";
+  });
+}
+
+function renderDiscountUI() {
+  const discountAmount = getActiveDiscountAmount();
+
+  document.querySelectorAll("[data-discount-code-text]").forEach(el => {
+    el.textContent = appliedDiscountCode || "";
+  });
+
+  document.querySelectorAll("[data-discount-amount-text]").forEach(el => {
+    el.textContent = discountAmount > 0 ? "-" + formatPrice(discountAmount) : "";
+  });
+
+  document.querySelectorAll("[data-discount-row]").forEach(el => {
+    el.style.display = discountAmount > 0 ? "" : "none";
+  });
+
+  document.querySelectorAll("[data-price-after-discount]").forEach(el => {
+    const priceAfterDiscount = Math.max(0, getCurrentPrice() - discountAmount);
+    el.textContent = formatPrice(priceAfterDiscount);
+  });
+}
+
+function detectDiscountCodeFromUrl() {
+  const path = window.location.pathname || "";
+  const match = path.match(/\+([a-zA-Z0-9_-]+)$/);
+
+  if (!match || !match[1]) return "";
+
+  return normalizeDiscountCode(match[1]);
+}
+
+function initDiscountFromUrl() {
+  const codeFromUrl = detectDiscountCodeFromUrl();
+
+  if (!codeFromUrl) return;
+
+  const result = applyDiscountCode(codeFromUrl, "url");
+
+  if (result.success) {
+    discountFromUrl = true;
+
+    if (codeFromUrl === "NINO3") {
+      setTimeout(() => {
+        showUrlDiscountPopup();
+      }, 500);
+    }
+  }
+}
+
+function showUrlDiscountPopup() {
+  if (!appliedDiscountCode || appliedDiscountCode !== "NINO3") return;
+  if (document.getElementById("urlDiscountPopupOverlay")) return;
+
+  const overlay = document.createElement("div");
+  overlay.id = "urlDiscountPopupOverlay";
+  overlay.className = "discount-gift-overlay";
+  overlay.innerHTML = `
+    <div class="discount-gift-popup">
+      <div class="discount-gift-badge">🎁 Ưu đãi hôm nay</div>
+      <div class="discount-gift-title">Bạn nhận được mã giảm giá 30.000đ</div>
+      <div class="discount-gift-desc">
+        Mã giảm giá này chỉ có hiệu lực trong hôm nay.
+      </div>
+      <div class="discount-gift-code">NINO3</div>
+      <div class="discount-gift-actions">
+        <button type="button" class="discount-gift-btn discount-gift-use" id="urlDiscountUseBtn">
+          Sử dụng mã
+        </button>
+        <button type="button" class="discount-gift-btn discount-gift-ok" id="urlDiscountOkBtn">
+          OK
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = "hidden";
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("show");
+  });
+
+  function closePopup() {
+    overlay.classList.remove("show");
+    document.body.style.overflow = "auto";
+
+    setTimeout(() => {
+      overlay.remove();
+    }, 180);
+  }
+
+  const useBtn = document.getElementById("urlDiscountUseBtn");
+  const okBtn = document.getElementById("urlDiscountOkBtn");
+
+  useBtn.addEventListener("click", () => {
+    applyDiscountCode("NINO3", "url");
+    closePopup();
+
+    if (window.__variantPopup && typeof window.__variantPopup.open === "function") {
+      setTimeout(() => {
+        window.__variantPopup.open();
+      }, 220);
+    }
+  });
+
+  okBtn.addEventListener("click", () => {
+    applyDiscountCode("NINO3", "url");
+    closePopup();
+  });
+
+  overlay.addEventListener("click", e => {
+    if (e.target === overlay) {
+      closePopup();
+    }
+  });
+}
+
+function startNino2GiftTimer() {
+  if (discountFromUrl) return;
+  if (appliedDiscountCode) return;
+  if (nino2PopupShown) return;
+  if (nino2PopupDismissed) return;
+
+  if (nino2PopupTimer) {
+    clearTimeout(nino2PopupTimer);
+  }
+
+  nino2PopupTimer = setTimeout(() => {
+    if (discountFromUrl) return;
+    if (appliedDiscountCode) return;
+    if (nino2PopupShown) return;
+    if (nino2PopupDismissed) return;
+
+    const orderModal = document.getElementById("orderModal");
+    const isCheckoutOpen = orderModal && orderModal.classList.contains("show");
+
+    if (isCheckoutOpen) return;
+
+    showNino2GiftPopup();
+  }, 10000);
+}
+
+function stopNino2GiftTimer() {
+  if (nino2PopupTimer) {
+    clearTimeout(nino2PopupTimer);
+    nino2PopupTimer = null;
+  }
+}
+
+function showNino2GiftPopup(source) {
+  if (discountFromUrl) return;
+  if (appliedDiscountCode) return;
+  if (nino2PopupShown) return;
+  if (nino2PopupDismissed) return;
+  if (document.getElementById("nino2GiftPopupOverlay")) return;
+
+  nino2PopupShown = true;
+
+  const overlay = document.createElement("div");
+  overlay.id = "nino2GiftPopupOverlay";
+  overlay.className = "discount-gift-overlay";
+  overlay.innerHTML = `
+    <div class="discount-gift-popup discount-gift-popup-small">
+      <button type="button" class="discount-gift-close" id="nino2GiftCloseBtn">×</button>
+      <div class="discount-gift-badge">⚡ Ưu đãi vừa mở khóa</div>
+      <div class="discount-gift-title">Giảm ngay 20.000đ cho đơn hôm nay</div>
+      <div class="discount-gift-desc">
+        Chỉ còn 27 suất áp dụng trong hôm nay. Dùng mã này trước khi rời trang.
+      </div>
+      <div class="discount-gift-code">NINO2</div>
+      <div class="discount-gift-actions">
+        <button type="button" class="discount-gift-btn discount-gift-use" id="nino2GiftUseBtn">
+          Sử dụng mã
+        </button>
+        <button type="button" class="discount-gift-btn discount-gift-ok" id="nino2GiftCancelBtn">
+          Hủy
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  document.body.style.overflow = "hidden";
+
+  requestAnimationFrame(() => {
+    overlay.classList.add("show");
+  });
+
+  function closePopup(markDismissed) {
+    overlay.classList.remove("show");
+    document.body.style.overflow = "auto";
+
+    if (markDismissed) {
+      nino2PopupDismissed = true;
+    }
+
+    setTimeout(() => {
+      overlay.remove();
+    }, 180);
+  }
+
+  const useBtn = document.getElementById("nino2GiftUseBtn");
+  const cancelBtn = document.getElementById("nino2GiftCancelBtn");
+  const closeBtn = document.getElementById("nino2GiftCloseBtn");
+
+  useBtn.addEventListener("click", () => {
+    applyDiscountCode("NINO2", "gift_popup");
+    syncDiscountInputs();
+    renderDiscountUI();
+    renderCartSummary();
+    updateSubmitBtnPrice();
+
+    document.querySelectorAll("[data-discount-message]").forEach(el => {
+      el.textContent = "Đã áp dụng mã giảm giá.";
+      el.classList.remove("is-error");
+      el.classList.add("is-success");
+    });
+
+    closePopup(false);
+
+    if (source === "checkout_exit") {
+      setTimeout(() => {
+        const orderModal = document.getElementById("orderModal");
+
+        if (orderModal) {
+          orderModal.classList.add("show");
+          document.body.style.overflow = "hidden";
+          renderCartSummary();
+          updateSubmitBtnPrice();
+        }
+      }, 220);
+    }
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    closePopup(true);
+  });
+
+  closeBtn.addEventListener("click", () => {
+    closePopup(true);
+  });
+
+  
+}
+
+function showNino2GiftPopupOnCheckoutExit() {
+  if (discountFromUrl) return;
+  if (appliedDiscountCode) return;
+  if (document.getElementById("nino2GiftPopupOverlay")) return;
+
+  nino2PopupDismissed = false;
+  nino2PopupShown = false;
+
+  showNino2GiftPopup("checkout_exit");
 }
 
 let toastTimer = null;
@@ -241,6 +616,8 @@ function updateCartBadge() {
   if (fbclid) sessionStorage.setItem("fbclid_raw", fbclid);
 })();
 
+
+initDiscountFromUrl();
 /* ===================================================
    LẤY CLIENT IP
 =================================================== */
@@ -570,7 +947,11 @@ function getActiveShipFee() {
 }
 
 function getActiveGrandTotal() {
-  return getActiveSubTotal() + getActiveShipFee();
+  const subtotal = getActiveSubTotal();
+  const shipFee = getActiveShipFee();
+  const discountAmount = getActiveDiscountAmount();
+
+  return Math.max(0, subtotal + shipFee - discountAmount);
 }
 
 /* ===================================================
@@ -612,6 +993,13 @@ function renderCartSummary() {
     return;
   }
 
+  const cartDiscountAmountForItems = getActiveDiscountAmount();
+  const cartSubtotalForItems = activeItems.reduce((sum, item) => {
+    return sum + Number(item.total || 0);
+  }, 0);
+
+  let remainingDiscountForItems = cartDiscountAmountForItems;
+
   cartSummaryList.innerHTML = activeItems.map((item, idx) => {
     const MAX_NAME  = 32;
     const rawName   = item.product_name || "";
@@ -626,6 +1014,18 @@ function renderCartSummary() {
     const thumbHtml = thumb
       ? `<img class="cart-item-thumb" src="${thumb}" alt="${shortName}" loading="lazy" decoding="async" />`
       : `<div class="cart-item-thumb" style="display:flex;align-items:center;justify-content:center;font-size:18px;">🛍</div>`;
+    let itemDiscountAmount = 0;
+
+    if (cartDiscountAmountForItems > 0 && cartSubtotalForItems > 0) {
+      if (idx === activeItems.length - 1) {
+        itemDiscountAmount = remainingDiscountForItems;
+      } else {
+        itemDiscountAmount = Math.floor(Number(item.total || 0) / cartSubtotalForItems * cartDiscountAmountForItems);
+        remainingDiscountForItems -= itemDiscountAmount;
+      }
+    }
+
+    const itemTotalAfterDiscount = Math.max(0, Number(item.total || 0) - itemDiscountAmount);
 
     return `
     <div class="cart-item">
@@ -640,9 +1040,23 @@ function renderCartSummary() {
           <button class="cart-remove-btn" data-action="remove" data-idx="${idx}">🗑 Xoá</button>
         </div>
       </div>
-      <div class="cart-item-price">${formatPrice(item.total)}</div>
+      <div class="cart-item-price ${itemDiscountAmount > 0 ? "is-discounted" : ""}">
+        ${formatPrice(itemTotalAfterDiscount)}
+      </div>
     </div>`;
   }).join("");
+
+  const cartDiscountAmount = getActiveDiscountAmount();
+
+  if (cartDiscountAmount > 0 && appliedDiscountCode) {
+    cartSummaryList.innerHTML += `
+      <div class="cart-discount-row">
+        <span>Mã giảm giá ${appliedDiscountCode}</span>
+        <strong>-${formatPrice(cartDiscountAmount)}</strong>
+      </div>
+    `;
+  }
+
 
   const shipFee     = getActiveShipFee();
   const freeshipRow = document.querySelector(".order-totals-row.freeship");
@@ -657,6 +1071,39 @@ function renderCartSummary() {
   }
 
   grandTotalEl.textContent = formatPrice(getActiveGrandTotal());
+  const discountAmount = getActiveDiscountAmount();
+  const discountCode = appliedDiscountCode;
+
+  let discountRow = document.getElementById("summaryDiscountRow");
+
+  if (!discountRow && grandTotalEl) {
+    const totalRow = grandTotalEl.closest(".order-totals-row");
+
+    if (totalRow) {
+      discountRow = document.createElement("div");
+      discountRow.id = "summaryDiscountRow";
+      discountRow.className = "order-totals-row discount-row";
+      discountRow.innerHTML = `
+        <span>Mã giảm giá <strong id="summaryDiscountCode"></strong></span>
+        <span id="summaryDiscountAmount"></span>
+      `;
+
+      totalRow.parentNode.insertBefore(discountRow, totalRow);
+    }
+  }
+
+  if (discountRow) {
+    const codeEl = document.getElementById("summaryDiscountCode");
+    const amountEl = document.getElementById("summaryDiscountAmount");
+
+    if (discountAmount > 0 && discountCode) {
+      discountRow.style.display = "";
+      if (codeEl) codeEl.textContent = discountCode;
+      if (amountEl) amountEl.textContent = "-" + formatPrice(discountAmount);
+    } else {
+      discountRow.style.display = "none";
+    }
+  }
   updateSubmitBtnPrice();
 
   cartSummaryList.querySelectorAll("[data-action]").forEach(btn => {
@@ -1021,14 +1468,22 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       return clean;
     });
 
+    const subtotalBeforeDiscount = getActiveSubTotal();
+    const discountAmount = getActiveDiscountAmount();
+    const totalAfterDiscount = getActiveGrandTotal();
     const payload = {
       ...buildBasePayload({ purchase_event_id: purchaseEventId }),
       event_type:         "purchase",
       items:              payloadItems,
       quantity:           activeItems.reduce((sum, item) => sum + item.quantity, 0),
-      subtotal:           getActiveSubTotal(),
-      total:              finalGrandTotal,
-      value:              finalGrandTotal,
+      subtotal:           subtotalBeforeDiscount,
+      total:              totalAfterDiscount,
+      value:              totalAfterDiscount,
+
+      discount_code:      appliedDiscountCode || "",
+      discount_amount:    discountAmount,
+      subtotal_before_discount: subtotalBeforeDiscount,
+      total_after_discount:     totalAfterDiscount,
       hashed_phone:       hashedPhone,
       external_id:        EXTERNAL_ID,
       external_id_hashed: false,
@@ -1070,7 +1525,7 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
         headers: { "Content-Type": "application/json" },
         body:    JSON.stringify(payload)
       }).catch(fetchErr => {
-        sendErrorReport("Fetch GAS thất bại: " + fetchErr.toString(), customerData, payloadItems, finalGrandTotal);
+        sendErrorReport("Fetch GAS thất bại: " + fetchErr.toString(), customerData, payloadItems, totalAfterDiscount);
       });
 
       if (typeof fbq !== "undefined") {
@@ -1078,7 +1533,7 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
           content_name: PRODUCT.name,
           content_ids:  [PRODUCT.id],
           content_type: 'product',
-          value:        finalGrandTotal,
+          value:        totalAfterDiscount,
           currency:     PRODUCT.currency
         }, { eventID: purchaseEventId, external_id: EXTERNAL_ID });
       }
@@ -1424,10 +1879,42 @@ function openNotifHistory() {
   function close() {
     overlay.classList.remove("show");
     document.body.style.overflow = "auto";
+
+    setTimeout(() => {
+      showNino2GiftPopupOnCheckoutExit();
+    }, 220);
   }
 
   closeBtn.onclick          = close;
   overlay.onclick           = function(e) { if (e.target === overlay) close(); };
+}
+
+/* ===================================================
+   EXPOSE DISCOUNT FUNCTIONS
+=================================================== */
+window.applyDiscountCode = applyDiscountCode;
+window.clearDiscountCode = clearDiscountCode;
+window.renderDiscountUI = renderDiscountUI;
+window.syncDiscountInputs = syncDiscountInputs;
+window.startNino2GiftTimer = startNino2GiftTimer;
+window.stopNino2GiftTimer = stopNino2GiftTimer;
+window.showNino2GiftPopupOnCheckoutExit = showNino2GiftPopupOnCheckoutExit;
+
+function bindCheckoutExitDiscountPopup() {
+  const orderModal = document.getElementById("orderModal");
+  const closeBtn = document.getElementById("closeModal");
+
+  if (!orderModal || !closeBtn) return;
+
+  closeBtn.addEventListener("click", () => {
+    setTimeout(() => {
+      const isOrderModalOpen = orderModal.classList.contains("show");
+
+      if (!isOrderModalOpen) {
+        showNino2GiftPopupOnCheckoutExit();
+      }
+    }, 250);
+  });
 }
 
 /* ===================================================
@@ -1447,4 +1934,6 @@ function openNotifHistory() {
   document.querySelectorAll(".combo-option").forEach(btn => {
     btn.addEventListener("click", () => updatePriceDisplay());
   });
+
+  bindCheckoutExitDiscountPopup();
 })();

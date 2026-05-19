@@ -117,7 +117,96 @@
         cursor: not-allowed;
         text-decoration: line-through;
       }
+
+      .vp-price-discount-mini {
+        margin-top: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        font-size: 12px;
+        line-height: 1.35;
+        color: #16a34a;
+        font-weight: 700;
+      }
+
+      .vp-price-discount-mini strong {
+        font-weight: 900;
+      }
+
+      .vp-price-discount-mini span:last-child {
+        color: #dc2626;
+      }
       
+      .vp-discount-box {
+        margin-top: 8px;
+      }
+
+      .vp-discount-input-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .vp-discount-input {
+        flex: 1;
+        min-width: 0;
+        height: 30px;
+        border: 1px solid #e5e7eb;
+        border-radius: 7px;
+        padding: 0 9px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #111827;
+        outline: none;
+        text-transform: uppercase;
+        background: #fff;
+      }
+
+      .vp-discount-apply {
+        height: 30px;
+        border: none;
+        border-radius: 7px;
+        padding: 0 10px;
+        background: #e96f0bff;
+        color: #fff;
+        font-size: 11.5px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .vp-discount-message {
+        margin-top: 4px;
+        font-size: 11px;
+        font-weight: 500;
+        min-height: 14px;
+      }
+
+      .vp-discount-message.is-success {
+        color: #16a34a;
+      }
+
+      .vp-discount-message.is-error {
+        color: #dc2626;
+      }
+
+      .vp-discount-result {
+        margin-top: 4px;
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 11.5px;
+        color: #16a34a;
+        font-weight: 700;
+      }
+
+      .vp-price-after-discount {
+        margin-top: 2px;
+        font-size: 12px;
+        color: #dc2626;
+        font-weight: 800;
+      }
+
       /* ── Size tag trên slide ── */
       .vp-size-tag {
       position: absolute;
@@ -162,8 +251,38 @@
             <span style="font-size:14px; color:#aaa; text-decoration:line-through;">${Number(P.oldPrice).toLocaleString("vi-VN")}đ</span>
             <span style="font-size:12px; font-weight:700; color:#fff; background:#e53e3e; padding:2px 7px; border-radius:4px;">-${discountNum}%</span>
           </div>
+          <div class="vp-price-discount-mini" data-discount-row style="display:none;">
+            <span>
+              - <strong data-discount-amount-text></strong> từ mã giảm giá
+              <strong data-discount-code-text></strong>
+            </span>
+            <span>
+              Giá sau giảm:
+              <strong data-price-after-discount></strong>
+            </span>
+          </div>
           <div style="margin-top:6px; display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#38a169; font-weight:600; background:#f0fff4; padding:3px 8px; border-radius:4px;">
             🚚 Miễn phí vận chuyển
+          </div>
+          <div class="vp-discount-box">
+            <div class="vp-discount-input-row">
+              <input
+                type="text"
+                class="vp-discount-input"
+                data-discount-input
+                placeholder="Mã giảm giá"
+              />
+              <button
+                type="button"
+                class="vp-discount-apply"
+                data-discount-apply
+              >
+                Áp dụng
+              </button>
+            </div>
+
+            <div class="vp-discount-message" data-discount-message></div>
+
           </div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:10px;">
             <div style="display:flex; align-items:center; gap:4px; font-size:11px; color:#B8860B; font-weight:600;">
@@ -1018,6 +1137,29 @@
       vpGoToSlide(idx);
     }));
 
+        /* Discount apply */
+    document.querySelectorAll("[data-discount-apply]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const box = btn.closest(".vp-discount-box");
+        const input = box?.querySelector("[data-discount-input]");
+        const message = box?.querySelector("[data-discount-message]");
+        const code = input?.value || "";
+
+        if (typeof window.applyDiscountCode !== "function") return;
+
+        const result = window.applyDiscountCode(code, "manual");
+
+        if (message) {
+          message.textContent = result.success
+            ? "Đã áp dụng mã giảm giá."
+            : result.message;
+
+          message.classList.toggle("is-error", !result.success);
+          message.classList.toggle("is-success", result.success);
+        }
+      });
+    });
+
     /* Size buttons */
     document.querySelectorAll(".vp-other-option[data-type='size']").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -1058,8 +1200,31 @@
       vpDrag = false; vpHz = null;
     });
 
-    function openVariantPopup()  { vpOverlay.classList.add("show");    document.body.style.overflow = "hidden"; }
-    function closeVariantPopup() { vpOverlay.classList.remove("show"); document.body.style.overflow = "auto"; }
+    function openVariantPopup()  {
+      vpOverlay.classList.add("show");
+      document.body.style.overflow = "hidden";
+
+      if (typeof window.syncDiscountInputs === "function") {
+        window.syncDiscountInputs();
+      }
+
+      if (typeof window.renderDiscountUI === "function") {
+        window.renderDiscountUI();
+      }
+
+      if (typeof window.startNino2GiftTimer === "function") {
+        window.startNino2GiftTimer();
+      }
+    }
+
+    function closeVariantPopup() {
+      vpOverlay.classList.remove("show");
+      document.body.style.overflow = "auto";
+
+      if (typeof window.stopNino2GiftTimer === "function") {
+        window.stopNino2GiftTimer();
+      }
+    }
     vpCloseBtn.addEventListener("click", closeVariantPopup);
     vpOverlay.addEventListener("click", e => { if (e.target === vpOverlay) closeVariantPopup(); });
 

@@ -940,3 +940,155 @@ button, input, textarea, select { font: inherit; }
   font-size: 10px;
   border: 2px solid #fff;
 }
+
+.discount-gift-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.48);
+}
+
+.discount-gift-overlay.show {
+  display: flex;
+}
+
+.discount-gift-popup {
+  width: min(92vw, 340px);
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 16px 16px;
+  text-align: center;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.2);
+  transform: translateY(8px) scale(0.98);
+  animation: discountGiftIn 0.18s ease forwards;
+}
+
+.discount-gift-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.discount-gift-title {
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 900;
+  color: #111827;
+}
+
+.discount-gift-desc {
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #6b7280;
+}
+
+.discount-gift-code {
+  margin: 12px auto 14px;
+  width: fit-content;
+  min-width: 110px;
+  padding: 8px 14px;
+  border: 1px dashed #f97316;
+  border-radius: 10px;
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.discount-gift-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.discount-gift-btn {
+  flex: 1;
+  height: 40px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.discount-gift-use {
+  border: none;
+  background: #111827;
+  color: #fff;
+}
+
+.discount-gift-ok {
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #374151;
+}
+
+@keyframes discountGiftIn {
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.discount-gift-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.discount-gift-popup {
+  position: relative;
+}
+
+.order-totals-row.discount-row {
+  color: #16a34a;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.order-totals-row.discount-row span:last-child {
+  color: #16a34a;
+  font-weight: 800;
+}
+
+.cart-discount-row {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #16a34a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cart-discount-row strong {
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.cart-item-price.is-discounted {
+  color: #16a34a;
+  font-weight: 900;
+}
