@@ -320,6 +320,154 @@
     }
     .modal-live-notif { cursor: pointer; }
     .modal-live-notif:hover { background: #fef3c7; }
+    /* ── CHECKOUT ADDRESS COMPACT ── */
+    .checkout-name-phone-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .checkout-address-field {
+      position: relative;
+      width: 100%;
+      height: 44px;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      display: grid;
+      grid-template-columns: 6.5fr auto 3.5fr;
+      align-items: center;
+      background: #fff;
+    }
+
+    .checkout-address-field.active {
+      border-color: var(--primary, #e53e3e);
+    }
+
+    .checkout-location-display {
+      height: 42px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .checkout-location-text {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: 13px;
+      color: #111827;
+    }
+
+    .checkout-location-text.placeholder {
+      color: #9ca3af;
+    }
+
+    .checkout-address-separator {
+      color: #cbd5e1;
+      font-size: 15px;
+      padding: 0 2px;
+      user-select: none;
+    }
+
+    .checkout-street-input {
+      height: 42px !important;
+      border: none !important;
+      border-radius: 0 8px 8px 0 !important;
+      padding: 0 10px !important;
+      outline: none !important;
+      background: transparent !important;
+      font-size: 13px !important;
+    }
+
+    .checkout-street-input:focus {
+      border: none !important;
+      box-shadow: none !important;
+    }
+
+    .checkout-location-menu {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      width: calc(65% - 8px);
+      max-height: 260px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      z-index: 50;
+      display: none;
+    }
+
+    .checkout-location-menu.show {
+      display: block;
+    }
+
+    .checkout-menu-title {
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #f9fafb;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .checkout-location-option {
+      padding: 11px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      border-bottom: 1px solid #f3f4f6;
+    }
+
+    .checkout-location-option:last-child {
+      border-bottom: none;
+    }
+
+    .checkout-location-option:hover {
+      background: #f9fafb;
+    }
+
+    .checkout-full-address-preview {
+      margin-top: 6px;
+      font-size: 11.5px;
+      line-height: 1.4;
+      color: #6b7280;
+      background: #f9fafb;
+      border: 1px dashed #e5e7eb;
+      border-radius: 7px;
+      padding: 6px 8px;
+    }
+
+    .checkout-full-address-preview.has-value {
+      color: #374151;
+    }
+
+    @media (max-width: 480px) {
+      .checkout-name-phone-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .checkout-location-menu {
+        width: 100%;
+      }
+
+      .checkout-location-display {
+        padding: 0 9px;
+      }
+
+      .checkout-location-text,
+      .checkout-location-option,
+      .checkout-street-input {
+        font-size: 12.5px !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -384,28 +532,58 @@
       <form id="orderForm" novalidate>
 
         <!-- TIÊU ĐỀ -->
-        <div class="form-section-title">📍 Địa chỉ nhận hàng</div>
+        <div class="form-section-title">📍 Thông tin nhận hàng</div>
 
-        <!-- ĐỊA CHỈ -->
+        <!-- TÊN + SỐ ĐIỆN THOẠI -->
+        <div class="checkout-name-phone-row">
+          <div class="form-group">
+            <label>Tên người nhận <span style="color:var(--primary)">*</span></label>
+            <input type="text" id="fullName" required placeholder="VD: Vân Anh" />
+            <div class="field-error" id="fullNameError"></div>
+          </div>
+
+          <div class="form-group" style="position:relative;">
+            <label>Số điện thoại <span style="color:var(--primary)">*</span></label>
+            <input type="tel" id="phone" required maxlength="12" inputmode="numeric" placeholder="09xx xxx xxx" />
+            <span style="position:absolute; right:13px; top:42px; font-size:13px; color:#bbb; pointer-events:none;">🔒</span>
+            <div class="field-error" id="phoneError"></div>
+          </div>
+        </div>
+
+        <!-- ĐỊA CHỈ COMPACT -->
         <div class="form-group">
-          <label>Địa chỉ nhận <span style="font-size:11px;font-weight:400;color:#9ca3af;">(vui lòng cho shop địa chỉ chưa sáp nhập)</span> <span style="color:var(--primary)">*</span></label>
-          <input type="text" id="address" required placeholder="Số nhà, xã/phường, quận/huyện, tỉnh/thành" />
+          <label>Địa chỉ nhận <span style="color:var(--primary)">*</span></label>
+
+          <div id="checkoutAddressField" class="checkout-address-field">
+            <div id="checkoutLocationDisplay" class="checkout-location-display">
+              <div id="checkoutLocationText" class="checkout-location-text placeholder">
+                Chọn tỉnh/thành
+              </div>
+            </div>
+
+            <div class="checkout-address-separator">|</div>
+
+            <input
+              id="streetAddress"
+              class="checkout-street-input"
+              type="text"
+              placeholder="VD: số nhà, ngõ..."
+              autocomplete="street-address"
+            />
+
+            <div id="checkoutLocationMenu" class="checkout-location-menu"></div>
+          </div>
+
+          <div id="checkoutFullAddressPreview" class="checkout-full-address-preview">
+            Địa chỉ đầy đủ sẽ hiển thị tại đây.
+          </div>
+
+          <input type="hidden" id="address" />
+          <input type="hidden" id="province" />
+          <input type="hidden" id="district" />
+          <input type="hidden" id="ward" />
+
           <div class="field-error" id="addressError"></div>
-        </div>
-
-        <!-- TÊN NGƯỜI NHẬN -->
-        <div class="form-group">
-          <label>Tên người nhận <span style="color:var(--primary)">*</span></label>
-          <input type="text" id="fullName" required placeholder="VD: Vân Anh" />
-          <div class="field-error" id="fullNameError"></div>
-        </div>
-
-        <!-- SỐ ĐIỆN THOẠI -->
-        <div class="form-group" style="position:relative;">
-          <label>Số điện thoại <span style="color:var(--primary)">*</span></label>
-          <input type="tel" id="phone" required maxlength="12" inputmode="numeric" placeholder="09xx xxx xxx" />
-          <span style="position:absolute; right:13px; top:42px; font-size:13px; color:#bbb; pointer-events:none;">🔒</span>
-          <div class="field-error" id="phoneError"></div>
         </div>
 
         <!-- GHI CHÚ COLLAPSIBLE -->
@@ -532,7 +710,7 @@
 
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
-          coreScript.src = "/js/core.js?v=5";
+          coreScript.src = "/js/core.js?v=7";
           document.body.appendChild(coreScript);
         };
 
