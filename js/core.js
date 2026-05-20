@@ -112,27 +112,16 @@ let buyNowItems    = [];
 let vpPendingAction = null;
 
 /* ===================================================
-   DISCOUNT — MÃ GIẢM GIÁ
+   DISCOUNT — MÃ GIẢM GIÁ + NGUỒN ĐƠN
 =================================================== */
-const DISCOUNT_CODES = {
-  NINO2: {
-    code: "NINO2",
-    type: "fixed",
-    value: 20000,
-    label: "Mã giảm giá NINO2"
-  },
-  NINO3: {
-    code: "NINO3",
-    type: "fixed",
-    value: 30000,
-    label: "Mã giảm giá NINO3"
-  }
-};
+const DISCOUNT_CONFIG = window.DISCOUNT_CODES || {};
+const ORDER_SOURCE_CONFIG = window.ORDER_SOURCES || {};
 
 let appliedDiscountCode = "";
 let appliedDiscountAmount = 0;
 let appliedDiscountSource = "";
 let discountFromUrl = false;
+let detectedOrderSource = "";
 let nino2PopupTimer = null;
 let checkoutOpenedOnce = false;
 let nino2PopupShown = false;
@@ -184,12 +173,49 @@ function formatPrice(num) {
 }
 
 function normalizeDiscountCode(code) {
-  return String(code || "").trim().toUpperCase();
+  return String(code || "").trim().toLowerCase();
 }
 
 function getDiscountConfig(code) {
   const normalizedCode = normalizeDiscountCode(code);
-  return DISCOUNT_CODES[normalizedCode] || null;
+  return DISCOUNT_CONFIG[normalizedCode] || null;
+}
+
+function getDisplayDiscountCode(code) {
+  return String(code || "").trim().toUpperCase();
+}
+
+function normalizeOrderSource(source) {
+  return String(source || "").trim().toLowerCase();
+}
+
+function getUrlParts() {
+  const path = (window.location.pathname || "")
+    .replace(/^\/+|\/+$/g, "");
+
+  const cleanPath = decodeURIComponent(path);
+  const parts = cleanPath
+    .split("+")
+    .map(p => p.trim())
+    .filter(Boolean);
+
+  return {
+    productSlug: parts[0] || "",
+    discountCode: parts[1] || "",
+    orderSource: parts[2] || ""
+  };
+}
+
+function detectOrderSourceFromUrl() {
+  const source = normalizeOrderSource(getUrlParts().orderSource);
+
+  if (!source) return "";
+
+  if (ORDER_SOURCE_CONFIG[source]) {
+    return source;
+  }
+
+  return "";
 }
 
 function getDiscountBaseAmount() {
@@ -224,16 +250,13 @@ function applyDiscountCode(code, source) {
   const cfg = getDiscountConfig(normalizedCode);
 
   if (!cfg) {
-    return {
-      success: false,
-      message: "Mã giảm giá không hợp lệ."
-    };
+    return { success: false, message: "Mã giảm giá không hợp lệ." };
   }
 
   const discountBase = getDiscountBaseAmount();
   const discountAmount = calculateDiscountAmount(normalizedCode, discountBase);
 
-  appliedDiscountCode = normalizedCode;
+  appliedDiscountCode = getDisplayDiscountCode(normalizedCode);
   appliedDiscountAmount = discountAmount;
   appliedDiscountSource = source || "manual";
 
@@ -298,12 +321,7 @@ function renderDiscountUI() {
 }
 
 function detectDiscountCodeFromUrl() {
-  const path = window.location.pathname || "";
-  const match = path.match(/\+([a-zA-Z0-9_-]+)$/);
-
-  if (!match || !match[1]) return "";
-
-  return normalizeDiscountCode(match[1]);
+  return normalizeDiscountCode(getUrlParts().discountCode);
 }
 
 function initDiscountFromUrl() {
@@ -704,6 +722,7 @@ function updateCartBadge() {
 
 
 initDiscountFromUrl();
+detectedOrderSource = detectOrderSourceFromUrl();
 /* ===================================================
    LẤY CLIENT IP
 =================================================== */
@@ -737,6 +756,7 @@ function buildBasePayload(eventIdObj) {
     utm_medium:       _p.get("utm_medium")   || "",
     utm_campaign:     _p.get("utm_campaign") || "",
     utm_content:      _p.get("utm_content")  || "",
+    order_source:     detectedOrderSource || "",
     ...eventIdObj
   };
 }
