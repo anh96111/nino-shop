@@ -16,5 +16,8 @@ window.ORDER_SOURCES = {
   cmthong: "cmthong",
   cmttim: "cmttim",
   videocmt1: "videocmt1",
-  videocmt2: "videocmt2"
+  videocmt2: "videocmt2",
+  videocmt3: "videocmt3",
+  videocmt4: "videocmt4",
+  videocmt5: "videocmt5"
 };
