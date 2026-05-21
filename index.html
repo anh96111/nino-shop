@@ -509,15 +509,7 @@
       </div>
 
       <!-- TRUST STRIP -->
-      <div class="trust-strip trust-strip-compact">
-        <div class="trust-strip-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7z"/>
-            <polyline points="9 12 11 14 15 10"/>
-          </svg>
-          <span>COD · Được xem hàng trước khi trả tiền · Hoàn tiền nếu sai mô tả</span>
-        </div>
-      </div>
+      
 
 
       <!-- LIVE ORDER NOTIFICATION - tạm ẩn trong checkout
@@ -550,38 +542,22 @@
           </div>
         </div>
 
-        <!-- ĐỊA CHỈ COMPACT -->
+        <!-- ĐỊA CHỈ ĐƠN GIẢN -->
         <div class="form-group">
-          <label>Địa chỉ nhận <span style="color:var(--primary)">*</span></label>
+          <label>Địa chỉ người nhận <span style="color:var(--primary)">*</span></label>
 
-          <div id="checkoutAddressField" class="checkout-address-field">
-            <div id="checkoutLocationDisplay" class="checkout-location-display">
-              <div id="checkoutLocationText" class="checkout-location-text placeholder">
-                Chọn tỉnh/thành
-              </div>
-            </div>
+          <textarea
+            id="address"
+            rows="3"
+            required
+            placeholder="VD: Số nhà, đường, xã/phường, quận/huyện, tỉnh/thành khi chưa sáp nhập"
+            style="width:100%; min-height:76px; resize:vertical;"
+          ></textarea>
 
-            <div class="checkout-address-separator">|</div>
-
-            <input
-              id="streetAddress"
-              class="checkout-street-input"
-              type="text"
-              placeholder="VD: số nhà, ngõ..."
-              autocomplete="street-address"
-            />
-
-            <div id="checkoutLocationMenu" class="checkout-location-menu"></div>
-          </div>
-
-          <div id="checkoutFullAddressPreview" class="checkout-full-address-preview">
-            Địa chỉ đầy đủ sẽ hiển thị tại đây.
-          </div>
-
-          <input type="hidden" id="address" />
-          <input type="hidden" id="province" />
-          <input type="hidden" id="district" />
-          <input type="hidden" id="ward" />
+          <input type="hidden" id="province" value="">
+          <input type="hidden" id="district" value="">
+          <input type="hidden" id="ward" value="">
+          <input type="hidden" id="streetAddress" value="">
 
           <div class="field-error" id="addressError"></div>
         </div>

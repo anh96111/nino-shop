@@ -14,6 +14,12 @@ const PRODUCT_CONFIG = {
   shipBar:   "Tặng Phụ kiện đeo Balo cho bé khi đặt hàng trong hôm nay",
   category:  "Học sinh",
   showSizeImage: true,  // false = ẩn ảnh ở phần chọn size
+  sizeGuideImage: "https://res.cloudinary.com/dfppbfjkm/image/upload/w_800,f_webp,q_auto/v1779390878/d_o4wv7e.jpg",
+  extraBagGift: {
+    enabled: true,
+    image: "https://res.cloudinary.com/dfppbfjkm/image/upload/w_800,f_webp,q_auto/v1779385612/x4_irdvni.jpg",
+    initialStock: 14
+  },
 
   // ── SEO / OG ──
   seo: {
@@ -30,6 +36,16 @@ const PRODUCT_CONFIG = {
     "https://res.cloudinary.com/dvtgqfe2z/image/upload/w_800,f_webp,q_auto/v1778693884/12_lszipf.jpg"
   ],
   videos: [],
+
+  popupExtraImages: [
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x4_irdvni.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779390387/xanhto_sym0tv.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779390382/20_tv3gio.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779390380/nvay_hongto_b96aui.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x3_z5poxu.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/c1_cxneiz.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/x2_fatdti.jpg"
+  ],
 
   extraGalleryImages: [
     {
@@ -97,25 +113,21 @@ const PRODUCT_CONFIG = {
       options: [
         {
           name:       "Navy Phối Xanh Lá",
-          image:      "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/13_cqnoto.jpg",
+          image:      "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/c11_h17nrr.jpg",
           soldBadge:  "🔥 Đã bán 1.5k"
         },
         {
           name:  "Navy",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/14_p5n76h.jpg"
+          image: "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385611/c5_u4xhbl.jpg"
         },
         {
           name:      "Navy Phối Hồng",
-          image:     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/16_urqk3f.jpg",
+          image:     "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385611/c3_mrk14f.jpg",
           soldBadge: "🔥 Đã bán 1.5k"
         },
         {
-          name:  "Tím Lavender",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777058700/15_kgeqxz.jpg"
-        },
-        {
-          name:  "Hồng",
-          image: "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1777836709/50cc654b-1e0d-4496-b87c-ecf0a2e3d507_qoc85w.jpg"
+          name:  "Nâu",
+          image: "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385612/c6_niqa7d.jpg"
         }
       ]
     },
@@ -124,26 +136,47 @@ const PRODUCT_CONFIG = {
       label: "Size",
       options: [
         {
-          name: "Nhỏ — Lớp 1–3 (39×28×18cm)",
+          name: "Nhỏ — Lớp 1–3",
           soldOutFor: [],
           images: {
             "Navy Phối Xanh Lá": "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/xanh_nho_ftbtzd.jpg",
             "Navy":              "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/navy_nho_sjolsz.jpg",
             "Navy Phối Hồng":   "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/navyhongnhooo_x4qo1j.jpg",
-            "Tím Lavender":     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/hong_nho_tvkfgx.jpg",
-            "Hồng":             "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/nhohong_x6tc3v.jpg"
+            "Nâu":     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/hong_nho_tvkfgx.jpg"
           }
         },
         {
-          name: "Lớn — Lớp 4–6 (42×32×20cm)",
-          soldOutFor: ["Hồng"],
+          name: "Lớn — Lớp 4–6",
+          soldOutFor: [],
           images: {
             "Navy Phối Xanh Lá": "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/xanhto_arrcx5.jpg",
             "Navy":              "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/navyto_optqqr.jpg",
             "Navy Phối Hồng":   "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/nvay_hongto_lcegan.jpg",
-            "Tím Lavender":     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/hong_to_a0v1tv.jpg",
-            "Hồng":             "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778351293/h%C3%B4ng_to_mwjlva.jpg"
+            "Nâu":     "https://res.cloudinary.com/dezednxpz/image/upload/w_500,f_webp,q_auto/v1778348396/hong_to_a0v1tv.jpg"
           }
+        }
+      ]
+    },
+
+    {
+      type:  "extra_bag_color",
+      label: "Màu túi học thêm",
+      options: [
+        {
+          name:  "Xanh",
+          image: "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x4_irdvni.jpg"
+        },
+        {
+          name:  "Nâu",
+          image: "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x3_z5poxu.jpg"
+        },
+        {
+          name:  "Hồng",
+          image: "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/c1_cxneiz.jpg"
+        },
+        {
+          name:  "Navy",
+          image: "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/x2_fatdti.jpg"
         }
       ]
     }
@@ -333,7 +366,7 @@ const PRODUCT_CONFIG = {
         avatar:   "https://res.cloudinary.com/dezednxpz/image/upload/w_80,h_80,c_fill,f_webp,q_80/v1777263432/608432069_4208202082731817_7593177311780112717_n_s7wuio.jpg",
         stars:    4,
         date:     "2026-04-05 21:30",
-        classify: "Tím Lavender – Size Lớn",
+        classify: "Nâu – Size Lớn",
         match:    "Đúng",
         material: "Dày dặn",
         content:  "Balo đẹp nha, con gái cứ khoe bạn bè hoài. Túi bình nước bên hông hơi chật với bình to, mình phải mua bình nhỏ hơn. Ngoài ra ok hết.",

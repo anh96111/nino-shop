@@ -58,6 +58,83 @@
         display: flex; align-items: center; justify-content: center;
         line-height: 1;
       }
+
+      /* ── Welcome gift popup ── */
+      #welcomeGiftOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 99998;
+        background: rgba(0,0,0,0.45);
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      #welcomeGiftOverlay.show {
+        display: flex;
+      }
+
+      .welcome-gift-popup {
+        width: 100%;
+        max-width: 360px;
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px;
+        text-align: center;
+        box-shadow: 0 18px 45px rgba(0,0,0,0.22);
+      }
+
+      .welcome-gift-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: #dc2626;
+        margin-bottom: 8px;
+      }
+
+      .welcome-gift-text {
+        font-size: 13.5px;
+        line-height: 1.55;
+        color: #374151;
+        margin-bottom: 12px;
+      }
+
+      .welcome-gift-img {
+        width: 100%;
+        max-height: 210px;
+        object-fit: contain;
+        border-radius: 10px;
+        margin-bottom: 12px;
+      }
+
+      .welcome-gift-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .welcome-gift-order {
+        flex: 1;
+        border: none;
+        border-radius: 9px;
+        background: #e53e3e;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 800;
+        padding: 10px 12px;
+        cursor: pointer;
+      }
+
+      .welcome-gift-close {
+        width: 86px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #fff;
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 10px 12px;
+        cursor: pointer;
+      }
       /* ── Variant options layout ── */
       .variant-popup-options {
         display: flex;
@@ -110,6 +187,47 @@
         border-color: #e53e3e;
         background: #fff5f5;
         color: #e53e3e;
+      }
+
+      .vp-extra-bag-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 6px;
+      }
+
+      .vp-extra-bag-thumb {
+        width: 42px;
+        height: 42px;
+        border-radius: 6px;
+        object-fit: cover;
+        display: block;
+      }
+
+      .vp-size-guide-link {
+        margin-left: 8px;
+        border: none;
+        background: transparent;
+        color: #6b7280;
+        font-size: 11px;
+        font-weight: 500;
+        text-decoration: underline;
+        cursor: pointer;
+        padding: 0;
+        vertical-align: middle;
+      }
+
+      .vp-extra-bag-stock {
+        margin-left: 6px;
+        color: #9ca3af;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .vp-extra-bag-stock.is-low {
+        color: #dc2626;
+        font-weight: 700;
       }
 
       .vp-other-option.vp-soldout {
@@ -237,6 +355,27 @@
       <img id="vpSizeImgLightboxImg" src="" alt="Xem ảnh size" />
     </div>
 
+    <!-- WELCOME GIFT POPUP -->
+    <div id="welcomeGiftOverlay">
+      <div class="welcome-gift-popup">
+        <div class="welcome-gift-title">Chúc Mừng Ba Mẹ</div>
+
+        <div class="welcome-gift-text">
+          Đặt hàng ngay hôm nay để nhận miễn phí túi học thêm cho bé.
+          Số lượng túi có hạn Ba Mẹ nhanh tay đặt hàng nhận quà cho Bé nha.
+        </div>
+
+        ${P.extraBagGift && P.extraBagGift.image ? `
+          <img class="welcome-gift-img" src="${P.extraBagGift.image}" alt="Túi học thêm" loading="lazy" decoding="async" />
+        ` : ""}
+
+        <div class="welcome-gift-actions">
+          <button type="button" class="welcome-gift-order" id="welcomeGiftOrderBtn">Đặt Ngay</button>
+          <button type="button" class="welcome-gift-close" id="welcomeGiftCloseBtn">Đóng</button>
+        </div>
+      </div>
+    </div>
+
     <div class="variant-popup-overlay" id="variantPopupOverlay">
       <div class="variant-popup" id="variantPopup">
         <div class="variant-popup-top">
@@ -360,34 +499,50 @@
           const isSizeVariant = v.type === "size";
           return `
           <div class="variant-popup-section">
-            <div class="variant-popup-label">${v.label}</div>
-            ${isSizeVariant ? `<div style="font-size:11.5px; color:#6b7280; margin:-4px 0 8px; line-height:1.5;">📌 Lớp 1–3 chọn size nhỏ. Lớp 4–6 chọn size lớn. Cả 2 size đều đựng vừa sách giáo khoa và giấy A4.</div>` : ""}
+            <div class="variant-popup-label">
+              ${v.label}
+
+              ${isSizeVariant && P.sizeGuideImage ? `
+                <button type="button" class="vp-size-guide-link" id="vpSizeGuideBtn">
+                  Chi tiết size balo
+                </button>
+              ` : ""}
+
+              ${v.type === "extra_bag_color" && P.extraBagGift ? `
+                <span class="vp-extra-bag-stock">
+                  (số lượng túi còn: <span id="vpExtraBagStockCount">${P.extraBagGift.initialStock || 14}</span>)
+                </span>
+              ` : ""}
+            </div>
 
             <div class="variant-popup-options">
               ${v.options.map((opt, idx) => {
+                const isExtraBagColor = v.type === "extra_bag_color";
+                const optionName = typeof opt === "object" ? opt.name : opt;
+                const optionImage = typeof opt === "object" ? opt.image : "";
                 const isSoldOut = isSizeVariant && opt.soldOutFor && opt.soldOutFor.includes(firstColorName);
+
                 return `
                 <button
-                  class="variant-popup-option vp-other-option ${idx === 0 && !isSoldOut ? "active" : ""} ${isSoldOut ? "vp-soldout" : ""}"
+                  class="variant-popup-option vp-other-option ${idx === 0 && !isSoldOut ? "active" : ""} ${isSoldOut ? "vp-soldout" : ""} ${isExtraBagColor ? "vp-extra-bag-option" : ""}"
                   data-type="${v.type}"
-                  data-value="${isSizeVariant ? opt.name : opt}"
+                  data-value="${optionName}"
                   data-index="${idx}"
                   ${isSoldOut ? "disabled" : ""}
                   style="${isSoldOut ? "opacity:0.45; cursor:not-allowed; text-decoration:line-through;" : ""}"
                 >
-                  ${isSizeVariant ? opt.name : opt}
+                  ${isExtraBagColor && optionImage ? `
+                    <img class="vp-extra-bag-thumb" src="${optionImage}" alt="${optionName}" loading="lazy" decoding="async" />
+                  ` : ""}
+                  <span>${optionName}</span>
                   ${isSoldOut ? `<span style="display:block; font-size:9px; color:#e53e3e; font-weight:600; margin-top:2px;">Tạm hết màu này</span>` : ""}
                 </button>`;
               }).join("")}
             </div>
+
           </div>`;
         }).join("")}
 
-        <!-- TÓM TẮT LỰA CHỌN -->
-        <div class="vp-selected-summary" id="vpSelectedSummary">
-          <div class="vp-selected-summary-label">Bạn đang chọn</div>
-          <div class="vp-selected-summary-value" id="vpSelectedSummaryText">Đang cập nhật...</div>
-        </div>
 
         <!-- CAM KẾT TRƯỚC KHI MUA -->
         <div class="vp-trust-box">
@@ -898,6 +1053,12 @@
   if (hasColorVariant) {
     const vpOverlay   = document.getElementById("variantPopupOverlay");
     const vpCloseBtn  = document.getElementById("variantPopupClose");
+    let hasOpenedVariantPopup = false;
+    let hasShownWelcomeGiftPopup = false;
+
+    const welcomeGiftOverlay = document.getElementById("welcomeGiftOverlay");
+    const welcomeGiftOrderBtn = document.getElementById("welcomeGiftOrderBtn");
+    const welcomeGiftCloseBtn = document.getElementById("welcomeGiftCloseBtn");
     const vpSlides    = document.getElementById("vpSlides");
     const vpDots      = document.querySelectorAll(".variant-popup-dot");
     const vpThumbs    = document.querySelectorAll(".variant-popup-thumb");
@@ -912,6 +1073,87 @@
     const lightbox      = document.getElementById("vpSizeImgLightbox");
     const lightboxImg   = document.getElementById("vpSizeImgLightboxImg");
     const lightboxClose = document.getElementById("vpSizeImgLightboxClose");
+
+    function closeWelcomeGiftPopup() {
+      if (welcomeGiftOverlay) {
+        welcomeGiftOverlay.classList.remove("show");
+      }
+    }
+
+    function openWelcomeGiftPopup() {
+      if (!welcomeGiftOverlay) return;
+      if (!P.extraBagGift || P.extraBagGift.enabled !== true) return;
+      if (hasOpenedVariantPopup) return;
+      if (hasShownWelcomeGiftPopup) return;
+
+      hasShownWelcomeGiftPopup = true;
+      welcomeGiftOverlay.classList.add("show");
+      startExtraBagStockTimer();
+    }
+
+    if (welcomeGiftCloseBtn) {
+      welcomeGiftCloseBtn.addEventListener("click", closeWelcomeGiftPopup);
+    }
+
+    if (welcomeGiftOrderBtn) {
+      welcomeGiftOrderBtn.addEventListener("click", () => {
+        closeWelcomeGiftPopup();
+
+        if (typeof openVariantPopup === "function") {
+          openVariantPopup();
+        } else if (vpOverlay) {
+          hasOpenedVariantPopup = true;
+          vpOverlay.classList.add("show");
+        }
+      });
+    }
+
+    setTimeout(openWelcomeGiftPopup, 10000);
+
+    let extraBagStockTimerStarted = false;
+
+    function startExtraBagStockTimer() {
+      if (extraBagStockTimerStarted) return;
+
+      const stockEl = document.getElementById("vpExtraBagStockCount");
+      if (!stockEl) return;
+
+      extraBagStockTimerStarted = true;
+
+      let stock = Number(stockEl.textContent || P.extraBagGift?.initialStock || 14);
+      let stepIndex = 0;
+      let nextDelay = 5000;
+
+      function updateStockDisplay() {
+        stockEl.textContent = stock;
+
+        const stockWrap = stockEl.closest(".vp-extra-bag-stock");
+        if (stockWrap) {
+          stockWrap.classList.toggle("is-low", stock < 10);
+        }
+      }
+
+      function decreaseStock() {
+        if (stock <= 3) return;
+
+        if (stepIndex === 0) {
+          stock = Math.max(3, stock - 2);
+        } else {
+          stock = Math.max(3, stock - 1);
+        }
+
+        stepIndex++;
+        updateStockDisplay();
+
+        if (stock <= 3) return;
+
+        nextDelay += 1000;
+        setTimeout(decreaseStock, nextDelay);
+      }
+
+      updateStockDisplay();
+      setTimeout(decreaseStock, nextDelay);
+    }
 
     function openLightbox(src) {
       lightboxImg.src = src;
@@ -930,6 +1172,13 @@
     if (vpSizeImageWrap && vpSizeImage) {
       vpSizeImageWrap.addEventListener("click", () => {
         if (vpSizeImage.src) openLightbox(vpSizeImage.src);
+      });
+    }
+    const vpSizeGuideBtn = document.getElementById("vpSizeGuideBtn");
+
+    if (vpSizeGuideBtn && P.sizeGuideImage) {
+      vpSizeGuideBtn.addEventListener("click", () => {
+        openLightbox(P.sizeGuideImage);
       });
     }
 
@@ -1010,25 +1259,13 @@
         if (sizeImgEl && sizeVariant.options[ai] && sizeVariant.options[ai].images) {
           sizeImgEl.src = sizeVariant.options[ai].images[colorName] || "";
         }
-      }
-      vpUpdateSelectedSummary();
+      }  
     }
 
     const vpColorCount = colorVariant.options.length;
-    function vpUpdateSelectedSummary() {
-      const summaryText = document.getElementById("vpSelectedSummaryText");
-      if (!summaryText) return;
-
-      const activeSize = document.querySelector(".vp-other-option[data-type='size'].active");
-      const sizeText = activeSize ? activeSize.dataset.value : "";
-
-      summaryText.textContent = sizeText
-        ? `${vpSelectedColorName} · ${sizeText}`
-        : vpSelectedColorName;
-    }
 
     function vpBuildExtraGallerySlides() {
-      const extraImages = Array.isArray(P.extraGalleryImages) ? P.extraGalleryImages : [];
+      const extraImages = Array.isArray(P.popupExtraImages) ? P.popupExtraImages : [];
 
       /* Xoá các ảnh xem thêm cũ nếu có */
       vpSlides.querySelectorAll(".vp-slide-extra").forEach(el => el.remove());
@@ -1038,10 +1275,12 @@
       if (!extraImages.length) return;
 
       extraImages.forEach((item, idx) => {
-        const img = item.image || "";
+        const img = typeof item === "string" ? item : (item.image || "");
         if (!img) return;
 
-        const label = item.label || `Ảnh tham khảo ${idx + 1}`;
+        const label = typeof item === "string"
+          ? `Ảnh chi tiết ${idx + 1}`
+          : (item.label || `Ảnh chi tiết ${idx + 1}`);
         const slideIndex = vpColorCount + idx;
 
         /* Slide ảnh xem thêm */
@@ -1050,7 +1289,6 @@
         slide.style.position = "relative";
         slide.innerHTML = `
           <img src="${img}" alt="${label}" loading="lazy" decoding="async" data-extra-slide="true" />
-          <div class="vp-size-tag">${label}</div>
         `;
         vpSlides.appendChild(slide);
 
@@ -1124,7 +1362,6 @@
         vpUpdateSizeUI(vpSelectedColorName);
       }
 
-      vpUpdateSelectedSummary();
     }
 
     vpDots.forEach(dot     => dot.addEventListener("click",   () => vpGoToSlide(parseInt(dot.dataset.index))));
@@ -1166,7 +1403,6 @@
         if (btn.disabled) return;
         document.querySelectorAll(".vp-other-option[data-type='size']").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        vpUpdateSelectedSummary();
       });
     });
 
@@ -1201,6 +1437,8 @@
     });
 
     function openVariantPopup()  {
+      hasOpenedVariantPopup = true;
+      startExtraBagStockTimer();
       vpOverlay.classList.add("show");
       document.body.style.overflow = "hidden";
 

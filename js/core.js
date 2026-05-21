@@ -1152,8 +1152,19 @@ function renderCartSummary() {
     const shortName = rawName.length > MAX_NAME ? rawName.slice(0, MAX_NAME) + "…" : rawName;
 
     const metaParts = [];
-    if (item.variants) Object.values(item.variants).forEach(v => metaParts.push(v));
-    if (item.combo)    metaParts.push(item.combo);
+    let extraBagText = "";
+
+    if (item.variants) {
+      if (item.variants.color) metaParts.push(item.variants.color);
+      if (item.variants.size) metaParts.push(item.variants.size);
+
+      if (item.variants.extra_bag_color) {
+        extraBagText = "Túi học thêm màu " + item.variants.extra_bag_color;
+      }
+    }
+
+    if (item.combo) metaParts.push(item.combo);
+
     const metaStr = metaParts.join(" · ");
 
     const thumb = getThumbnailForItem(item);
@@ -1179,6 +1190,7 @@ function renderCartSummary() {
       <div class="cart-item-body">
         <div class="cart-item-name" title="${rawName}">${shortName}</div>
         ${metaStr ? `<div class="cart-item-meta">${metaStr}</div>` : ""}
+        ${extraBagText ? `<div class="cart-item-meta">${extraBagText}</div>` : ""}
         <div class="cart-item-controls">
           <button class="cart-qty-btn" data-action="minus" data-idx="${idx}">−</button>
           <span class="cart-qty-display">${item.quantity}</span>
@@ -1791,21 +1803,19 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
   clearAllFieldErrors();
 
   try {
-    updateCheckoutAddressValue();
-
     const fullName  = document.getElementById("fullName").value.trim();
     const phoneRaw  = getPhoneRaw();
     const address   = document.getElementById("address").value.trim();
-    const province  = document.getElementById("province").value.trim();
-    const district  = document.getElementById("district").value.trim();
-    const ward      = document.getElementById("ward").value.trim();
-    const street    = document.getElementById("streetAddress").value.trim();
+    const province  = "";
+    const district  = "";
+    const ward      = "";
+    const street    = "";
     const orderNote = document.getElementById("orderNote").value.trim();
 
     let hasError = false;
 
-    if (!province || !district || !ward || !street) {
-      showFieldError("address", "addressError", "Vui lòng chọn tỉnh/huyện/xã và nhập số nhà, ngõ");
+    if (!address) {
+      showFieldError("address", "addressError", "Vui lòng nhập địa chỉ người nhận");
       hasError = true;
     }
 
@@ -1841,23 +1851,31 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     const finalGrandTotal = getActiveGrandTotal();
 
     const customerData = {
-      full_name:      fullName,
-      phone:          phoneRaw,
-      address:        address,
-      province:       province,
-      district:       district,
-      ward:           ward,
-      street_address: street
+      full_name: fullName,
+      phone: phoneRaw,
+      address: address,
+      province: "",
+      district: "",
+      ward: "",
+      street_address: ""
     };
 
     const payloadItems = activeItems.map(item => {
       const clean = { ...item };
       delete clean._key;
+
       if (clean.variants) {
         if (clean.variants.color) clean.color = clean.variants.color;
-        if (clean.variants.size)  clean.size  = clean.variants.size;
+        if (clean.variants.size) clean.size = clean.variants.size;
+
+        if (clean.variants.extra_bag_color) {
+          clean.product_name =
+            "Balo Chống Gù + túi học thêm màu " + clean.variants.extra_bag_color;
+        }
+
         delete clean.variants;
       }
+
       return clean;
     });
 
