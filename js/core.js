@@ -197,7 +197,16 @@ function normalizeDiscountCode(code) {
 
 function getDiscountConfig(code) {
   const normalizedCode = normalizeDiscountCode(code);
-  return DISCOUNT_CONFIG[normalizedCode] || null;
+  const cfg = DISCOUNT_CONFIG[normalizedCode] || null;
+
+  if (!cfg) return null;
+  if (cfg.enabled !== true) return null;
+
+  return cfg;
+}
+
+function isDiscountEnabled(code) {
+  return !!getDiscountConfig(code);
 }
 
 function getDisplayDiscountCode(code) {
@@ -209,11 +218,16 @@ function normalizeOrderSource(source) {
 }
 
 function getUrlParts() {
-  const path = (window.location.pathname || "")
+  const params = new URLSearchParams(window.location.search);
+
+  const rawFromQuery = params.get("p") || "";
+  const rawFromPath = (window.location.pathname || "")
     .replace(/^\/+|\/+$/g, "");
 
-  const cleanPath = decodeURIComponent(path);
-  const parts = cleanPath
+  const rawRoute = rawFromQuery || rawFromPath;
+  const cleanRoute = decodeURIComponent(rawRoute);
+
+  const parts = cleanRoute
     .split("+")
     .map(p => p.trim())
     .filter(Boolean);
@@ -356,6 +370,7 @@ function initDiscountFromUrl() {
 }
 
 function showUrlDiscountPopup() {
+  if (!isDiscountEnabled("nino3")) return;
   if (!appliedDiscountCode || appliedDiscountCode !== "NINO3") return;
   if (document.getElementById("urlDiscountPopupOverlay")) return;
 
@@ -427,6 +442,7 @@ function showUrlDiscountPopup() {
 }
 
 function maybeShowUrlDiscountPopup() {
+  if (!isDiscountEnabled("nino3")) return;
   if (!discountFromUrl) return;
   if (appliedDiscountCode !== "NINO3") return;
   if (urlDiscountPopupShown) return;
@@ -437,6 +453,7 @@ function maybeShowUrlDiscountPopup() {
 }
 
 function startUrlDiscountPopupTimer() {
+  if (!isDiscountEnabled("nino3")) return;
   if (!discountFromUrl) return;
   if (appliedDiscountCode !== "NINO3") return;
   if (urlDiscountPopupShown) return;
@@ -451,6 +468,7 @@ function startUrlDiscountPopupTimer() {
 }
 
 function initUrlDiscountPopupOnPriceSection() {
+  if (!isDiscountEnabled("nino3")) return;
   const reviewSection = document.querySelector(".review-section");
   if (!reviewSection) return;
 
@@ -473,6 +491,7 @@ function initUrlDiscountPopupOnPriceSection() {
 }
 
 function startNino2GiftTimer() {
+  if (!isDiscountEnabled("nino2")) return;
   if (discountFromUrl) return;
   if (appliedDiscountCode) return;
   if (nino2PopupShown) return;
@@ -505,6 +524,7 @@ function stopNino2GiftTimer() {
 }
 
 function showNino2GiftPopup(source) {
+  if (!isDiscountEnabled("nino2")) return;
   if (discountFromUrl) return;
   if (appliedDiscountCode) return;
   if (nino2PopupShown) return;
@@ -642,6 +662,7 @@ function showNino2GiftPopup(source) {
 }
 
 function showNino2GiftPopupOnCheckoutExit() {
+  if (!isDiscountEnabled("nino2")) return;
   if (discountFromUrl) return;
   if (appliedDiscountCode) return;
   if (document.getElementById("nino2GiftPopupOverlay")) return;

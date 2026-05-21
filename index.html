@@ -664,8 +664,15 @@
   <script>
     (function bootstrap() {
       const pathname = window.location.pathname.replace(/^\/+|\/+$/g, "");
-      const rawSlug = pathname || new URLSearchParams(window.location.search).get("p") || "";
-      const slug = rawSlug.split("+")[0];
+
+      function getRawRouteFromQuery() {
+        const search = window.location.search || "";
+        const match = search.match(/[?&]p=([^&]*)/);
+        return match ? decodeURIComponent(match[1]) : "";
+      }
+
+      const rawSlug = pathname || getRawRouteFromQuery() || "";
+      const slug = rawSlug.split("+")[0].trim();
 
       if (!slug) {
         document.body.innerHTML = "<h2 style='text-align:center;padding:40px;'>Không tìm thấy sản phẩm.</h2>";
