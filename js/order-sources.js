@@ -20,5 +20,6 @@ window.ORDER_SOURCES = {
   videocmt3: "videocmt3",
   videocmt4: "videocmt4",
   videocmt5: "videocmt5",
-  automess: "automess"
+  automess: "automess",
+  quanhoang: "quanhoang"
 };
