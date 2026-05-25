@@ -23,5 +23,9 @@ window.ORDER_SOURCES = {
   automess: "automess",
   quanhoang: "quanhoang",
   baloninocmtanh: "baloninocmtanh",
-  baloninocmtvideo: "baloninocmtvideo"
+  baloninocmtvideo: "baloninocmtvideo",
+  cmtphunuanh: "cmtphunuanh",
+  postphunuanh: "postphunuanh",
+  postphunuvideo: "postphunuvideo",
+  cmtphunuvideo: "cmtphunuvideo"
 };
