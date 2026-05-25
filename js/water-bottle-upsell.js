@@ -439,6 +439,205 @@
         box-shadow: 0 4px 12px rgba(0,0,0,.2);
       }
 
+      .nino-thank-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100001;
+        background: rgba(0,0,0,.58);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px;
+        font-family: Arial, sans-serif;
+      }
+
+      .nino-thank-modal {
+        width: 100%;
+        max-width: 465px;
+        max-height: 92vh;
+        overflow-y: auto;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 18px 45px rgba(0,0,0,.22);
+      }
+
+      .nino-thank-icon {
+        text-align: center;
+        font-size: 42px;
+        margin-bottom: 8px;
+      }
+
+      .nino-thank-title {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 900;
+        color: #111111;
+        margin-bottom: 8px;
+      }
+
+      .nino-thank-sub {
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.45;
+        color: #555555;
+        margin-bottom: 14px;
+      }
+
+      .nino-thank-box {
+        background: #f9fafb;
+        border: 1px solid #eeeeee;
+        border-radius: 14px;
+        padding: 13px;
+        margin-bottom: 12px;
+      }
+
+      .nino-thank-section-title {
+        font-size: 14px;
+        font-weight: 900;
+        color: #111111;
+        margin-bottom: 10px;
+      }
+
+      .nino-thank-customer-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 13.5px;
+        margin-bottom: 7px;
+      }
+
+      .nino-thank-customer-row span {
+        color: #666666;
+      }
+
+      .nino-thank-customer-row strong {
+        color: #111111;
+        text-align: right;
+      }
+
+      .nino-thank-address {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px dashed #dddddd;
+        font-size: 13.5px;
+        line-height: 1.45;
+        color: #374151;
+      }
+
+      .nino-thank-item {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid #eeeeee;
+      }
+
+      .nino-thank-item:last-child {
+        border-bottom: none;
+      }
+
+      .nino-thank-item.upsell {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 12px;
+        padding: 10px;
+        margin-bottom: 8px;
+      }
+
+      .nino-thank-item-main {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .nino-thank-item-name {
+        font-size: 13.5px;
+        font-weight: 800;
+        color: #111111;
+        line-height: 1.35;
+      }
+
+      .nino-thank-item-meta {
+        margin-top: 3px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      .nino-thank-item-side {
+        flex-shrink: 0;
+        text-align: right;
+        font-size: 12.5px;
+        color: #666666;
+      }
+
+      .nino-thank-item-side strong {
+        display: block;
+        margin-top: 3px;
+        color: #ef4444;
+        font-size: 13.5px;
+      }
+
+      .nino-thank-total-box {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 14px;
+        padding: 13px;
+        margin-bottom: 14px;
+      }
+
+      .nino-thank-total-box > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 14px;
+        margin-bottom: 8px;
+      }
+
+      .nino-thank-total-box > div:last-child {
+        margin-bottom: 0;
+      }
+
+      .nino-thank-total-box span {
+        color: #666666;
+      }
+
+      .nino-thank-total-box strong {
+        color: #111111;
+      }
+
+      .nino-thank-total-box .final {
+        border-top: 1px dashed #f59e0b;
+        padding-top: 9px;
+        margin-top: 9px;
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .nino-thank-total-box .final strong {
+        color: #ef4444;
+        font-size: 18px;
+      }
+
+      .nino-thank-ship-note {
+        margin: -2px 0 14px;
+        text-align: center;
+        font-size: 12.5px;
+        line-height: 1.45;
+        color: #6b7280;
+      }
+
+      .nino-thank-close {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        background: #16a34a;
+        color: #ffffff;
+        font-size: 17px;
+        font-weight: 900;
+        padding: 15px 14px;
+        cursor: pointer;
+      }
+
       @media (max-width: 420px) {
         .nino-water-modal {
           border-radius: 18px;
@@ -603,10 +802,147 @@
   function closePopup() {
     const overlay = document.getElementById("ninoWaterOverlay");
     if (overlay) overlay.remove();
+  }
 
-    if (typeof window.openThankModal === "function") {
-      window.openThankModal();
+  function buildOrderItemsHtml(items) {
+    const safeItems = Array.isArray(items) ? items : [];
+
+    if (!safeItems.length) {
+      return `<div class="nino-thank-empty">Không có sản phẩm.</div>`;
     }
+
+    return safeItems.map(item => {
+      const name = item.product_name || item.name || "Sản phẩm";
+      const color = item.color ? `Màu: ${item.color}` : "";
+      const size = item.size ? `Size: ${item.size}` : "";
+      const qty = Number(item.quantity || item.qty || 1);
+      const price = Number(item.price || 0);
+
+      return `
+        <div class="nino-thank-item">
+          <div class="nino-thank-item-main">
+            <div class="nino-thank-item-name">${name}</div>
+            <div class="nino-thank-item-meta">${[color, size].filter(Boolean).join(" • ")}</div>
+          </div>
+          <div class="nino-thank-item-side">
+            <div>SL: ${qty}</div>
+            <strong>${formatMoney(price * qty)}</strong>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function buildUpsellItemsHtml(upsellItems) {
+    const safeItems = Array.isArray(upsellItems) ? upsellItems : [];
+
+    if (!safeItems.length) return "";
+
+    return `
+      <div class="nino-thank-section-title">🥤 Bình nước đặt thêm</div>
+      ${safeItems.map(item => {
+        const qty = Number(item.quantity || 0);
+        const price = Number(item.price || WATER_BOTTLE_PRICE);
+
+        return `
+          <div class="nino-thank-item upsell">
+            <div class="nino-thank-item-main">
+              <div class="nino-thank-item-name">${WATER_BOTTLE_NAME} màu ${item.color || ""}</div>
+              <div class="nino-thank-item-meta">Gộp chung vào đơn vừa đặt</div>
+            </div>
+            <div class="nino-thank-item-side">
+              <div>SL: ${qty}</div>
+              <strong>${formatMoney(price * qty)}</strong>
+            </div>
+          </div>
+        `;
+      }).join("")}
+    `;
+  }
+
+  function showOrderDetailThankModal(options) {
+    const opts = options || {};
+    const customer = state.customer || {};
+    const originalTotal = Number(state.orderTotal || 0);
+    const upsellItems = Array.isArray(opts.upsellItems) ? opts.upsellItems : [];
+    const upsellTotal = Number(opts.upsellTotal || 0);
+    const finalTotal = originalTotal + upsellTotal;
+
+    const oldThank = document.getElementById("ninoOrderDetailThankOverlay");
+    if (oldThank) oldThank.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "ninoOrderDetailThankOverlay";
+    overlay.className = "nino-thank-overlay";
+
+    overlay.innerHTML = `
+      <div class="nino-thank-modal">
+        <div class="nino-thank-icon">✅</div>
+        <div class="nino-thank-title">Cảm ơn bạn đã đặt hàng</div>
+        <div class="nino-thank-sub">
+          Shop đã ghi nhận đơn hàng. Vui lòng giữ điện thoại, shop sẽ liên hệ xác nhận.
+        </div>
+
+        <div class="nino-thank-box">
+          <div class="nino-thank-section-title">📋 Thông tin nhận hàng</div>
+
+          <div class="nino-thank-customer-row">
+            <span>Người nhận</span>
+            <strong>${customer.full_name || "—"}</strong>
+          </div>
+
+          <div class="nino-thank-customer-row">
+            <span>Số điện thoại</span>
+            <strong>${customer.phone || "—"}</strong>
+          </div>
+
+          <div class="nino-thank-address">
+            ${customer.address || "—"}
+          </div>
+        </div>
+
+        <div class="nino-thank-box">
+          <div class="nino-thank-section-title">🛒 Sản phẩm đã đặt</div>
+          ${buildOrderItemsHtml(state.items)}
+          ${buildUpsellItemsHtml(upsellItems)}
+        </div>
+
+        <div class="nino-thank-total-box">
+          <div>
+            <span>Tổng đơn chính</span>
+            <strong>${formatMoney(originalTotal)}</strong>
+          </div>
+
+          ${
+            upsellTotal > 0
+              ? `<div>
+                  <span>Bình nước đặt thêm</span>
+                  <strong>${formatMoney(upsellTotal)}</strong>
+                </div>`
+              : ""
+          }
+
+          <div class="final">
+            <span>Tổng thanh toán khi nhận hàng</span>
+            <strong>${formatMoney(finalTotal)}</strong>
+          </div>
+        </div>
+
+        <div class="nino-thank-ship-note">
+          Sau vài hôm bạn vui lòng chú ý điện thoại, Bạn ship sẽ liên hệ. Cảm ơn.
+        </div>
+
+        <button class="nino-thank-close" type="button" id="ninoOrderDetailThankClose">
+          OK
+        </button>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    document.getElementById("ninoOrderDetailThankClose").addEventListener("click", function () {
+      overlay.remove();
+    });
   }
 
   function openImageViewer(imageUrl) {
@@ -733,6 +1069,12 @@
     }
 
     closePopup();
+
+    showOrderDetailThankModal({
+      hasUpsell: true,
+      upsellItems: upsellItems,
+      upsellTotal: getUpsellTotal()
+    });
   }
 
   function bindEvents(root) {
@@ -745,6 +1087,11 @@
 
       if (action === "close") {
         closePopup();
+        showOrderDetailThankModal({
+          hasUpsell: false,
+          upsellItems: [],
+          upsellTotal: 0
+        });
         return;
       }
 
