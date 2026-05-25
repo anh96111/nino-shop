@@ -187,6 +187,18 @@ function genEventId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
 
+function generateClientOrderId() {
+  const now = new Date();
+
+  return "DH"
+    + now.getFullYear().toString().slice(-2)
+    + String(now.getMonth() + 1).padStart(2, "0")
+    + String(now.getDate()).padStart(2, "0")
+    + String(now.getHours()).padStart(2, "0")
+    + String(now.getMinutes()).padStart(2, "0")
+    + String(now.getSeconds()).padStart(2, "0");
+}
+
 function formatPrice(num) {
   return num.toLocaleString("vi-VN") + "đ";
 }
@@ -1847,7 +1859,8 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     statusMessage.textContent = "";
 
     const purchaseEventId = genEventId();
-    const hashedPhone     = await sha256(phoneRaw);
+    const clientOrderId = generateClientOrderId();
+    const hashedPhone = await sha256(phoneRaw);
     const finalGrandTotal = getActiveGrandTotal();
 
     const customerData = {
@@ -1884,7 +1897,8 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     const totalAfterDiscount = getActiveGrandTotal();
     const payload = {
       ...buildBasePayload({ purchase_event_id: purchaseEventId }),
-      event_type:         "purchase",
+      event_type: "purchase",
+      order_id: clientOrderId,
       items:              payloadItems,
       quantity:           activeItems.reduce((sum, item) => sum + item.quantity, 0),
       subtotal:           subtotalBeforeDiscount,
@@ -1925,7 +1939,23 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     renderCartSummary();
     updateCartBadge();
     hideModal();
-    openThankModal();
+
+    if (
+      window.NinoWaterBottleUpsell &&
+      typeof window.NinoWaterBottleUpsell.open === "function"
+    ) {
+      window.NinoWaterBottleUpsell.open({
+        gasUrl: GAS_URL,
+        orderId: clientOrderId,
+        sheetName: payload.sheet_name || "",
+        basePayload: payload,
+        customer: customerData,
+        items: payloadItems,
+        orderTotal: totalAfterDiscount
+      });
+    } else {
+      openThankModal();
+    }
 
     submitBtn.disabled = false;
     updateSubmitBtnPrice();
