@@ -1928,8 +1928,13 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
         if (clean.variants.size) clean.size = clean.variants.size;
 
         if (clean.variants.extra_bag_color) {
+          const baseProductName =
+            PRODUCT_CONFIG.displayName ||
+            PRODUCT_CONFIG.shortName ||
+            PRODUCT.name;
+
           clean.product_name =
-            "Balo Chống Gù + túi học thêm màu " + clean.variants.extra_bag_color;
+            baseProductName + " + túi học thêm màu " + clean.variants.extra_bag_color;
         }
 
         delete clean.variants;
