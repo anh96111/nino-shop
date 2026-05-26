@@ -706,6 +706,52 @@ function getCookie(name) {
   return match ? match[2] : null;
 }
 
+function isValidFbc(value) {
+  if (!value || typeof value !== "string") return false;
+
+  const fbc = value.trim();
+
+  // Format chuẩn: fb.1.[timestamp_ms].[fbclid]
+  const match = /^fb\.1\.(\d{13})\.(.+)$/.exec(fbc);
+
+  if (!match) return false;
+
+  const timestamp = Number(match[1]);
+  const fbclid = match[2];
+
+  if (!Number.isFinite(timestamp)) return false;
+  if (!fbclid || fbclid.trim() === "") return false;
+
+  return true;
+}
+
+function buildFbcFromFbclid() {
+  const fbclid = getQueryParam("fbclid");
+
+  if (!fbclid) return null;
+
+  // Giữ nguyên fbclid, không lowercase, không cắt chuỗi
+  return "fb.1." + Date.now() + "." + fbclid;
+}
+
+function getValidFbc() {
+  const cookieFbc = getCookie("_fbc");
+
+  if (isValidFbc(cookieFbc)) {
+    return cookieFbc.trim();
+  }
+
+  if (!cookieFbc) {
+    const generatedFbc = buildFbcFromFbclid();
+
+    if (isValidFbc(generatedFbc)) {
+      return generatedFbc;
+    }
+  }
+
+  return null;
+}
+
 function generateEventId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
@@ -802,7 +848,7 @@ function buildBasePayload(eventIdObj) {
     user_agent:       navigator.userAgent,
     client_ip:        clientIp || null,
     fbp:              getCookie("_fbp") || null,
-    fbc:              getCookie("_fbc") || null,
+    fbc:              getValidFbc(),
     fbclid:           getQueryParam("fbclid") || null,
     utm_source:       _p.get("utm_source")   || "",
     utm_medium:       _p.get("utm_medium")   || "",
