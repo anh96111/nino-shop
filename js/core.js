@@ -2437,3 +2437,5 @@ function bindCheckoutExitDiscountPopup() {
   bindCheckoutExitDiscountPopup();
   initUrlDiscountPopupOnPriceSection();
 })();
+
+// force reupload
