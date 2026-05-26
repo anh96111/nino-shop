@@ -1929,7 +1929,7 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
 
         if (clean.variants.extra_bag_color) {
           const baseProductName =
-            PRODUCT_CONFIG.displayName ||
+            PRODUCT_CONFIG.sheetProductName ||
             PRODUCT_CONFIG.shortName ||
             PRODUCT.name;
 
