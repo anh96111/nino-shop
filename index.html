@@ -696,25 +696,10 @@
         layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=3`;
 
         layoutScript.onload = function () {
-          const upsellScript = document.createElement("script");
-          upsellScript.defer = true;
-          upsellScript.src = "/js/water-bottle-upsell.js?v=2";
-
-          upsellScript.onload = function () {
-            const coreScript = document.createElement("script");
-            coreScript.defer = true;
-            coreScript.src = "/js/core.js?v=9";
-            document.body.appendChild(coreScript);
-          };
-
-          upsellScript.onerror = function () {
-            const coreScript = document.createElement("script");
-            coreScript.defer = true;
-            coreScript.src = "/js/core.js?v=9";
-            document.body.appendChild(coreScript);
-          };
-
-          document.body.appendChild(upsellScript);
+          const coreScript = document.createElement("script");
+          coreScript.defer = true;
+          coreScript.src = "/js/core.js?v=10";
+          document.body.appendChild(coreScript);
         };
 
         layoutScript.onerror = function () {

@@ -110,6 +110,39 @@ let checkoutMode   = "cart";
 let buyNowItems    = [];
 
 let vpPendingAction = null;
+let waterBottleUpsellLoadPromise = null;
+
+function ensureWaterBottleUpsellLoaded() {
+  if (window.NinoWaterBottleUpsell) {
+    return Promise.resolve(true);
+  }
+
+  if (waterBottleUpsellLoadPromise) {
+    return waterBottleUpsellLoadPromise;
+  }
+
+  waterBottleUpsellLoadPromise = new Promise(resolve => {
+    const existingScript = document.querySelector('script[data-nino-upsell="water-bottle"]');
+
+    if (existingScript) {
+      existingScript.addEventListener("load", () => resolve(!!window.NinoWaterBottleUpsell), { once: true });
+      existingScript.addEventListener("error", () => resolve(false), { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = "/js/water-bottle-upsell.js?v=3";
+    script.async = true;
+    script.dataset.ninoUpsell = "water-bottle";
+
+    script.onload = () => resolve(!!window.NinoWaterBottleUpsell);
+    script.onerror = () => resolve(false);
+
+    document.body.appendChild(script);
+  });
+
+  return waterBottleUpsellLoadPromise;
+}
 
 /* ===================================================
    DISCOUNT — MÃ GIẢM GIÁ + NGUỒN ĐƠN
@@ -1360,6 +1393,7 @@ function updateSubmitBtnPrice() {
    OPEN CHECKOUT — InitiateCheckout
 =================================================== */
 function openCheckout() {
+  ensureWaterBottleUpsellLoaded();
   renderCartSummary();
 
   const eid = genEventId();
@@ -1990,6 +2024,8 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     renderCartSummary();
     updateCartBadge();
     hideModal();
+
+    await ensureWaterBottleUpsellLoaded();
 
     if (
       window.NinoWaterBottleUpsell &&
