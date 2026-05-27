@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Đèn Năng Lượng Mặt Trời - Nino Viet Nam</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-bright": "#f9f9fb",
+            "surface-tint": "#b62506",
+            "surface-container-low": "#f3f3f5",
+            "on-tertiary": "#ffffff",
+            "secondary-container": "#feb700",
+            "tertiary": "#5c5c5c",
+            "on-surface": "#1a1c1d",
+            "surface-container": "#eeeef0",
+            "surface-variant": "#e2e2e4",
+            "surface": "#f9f9fb",
+            "surface-container-high": "#e8e8ea",
+            "surface-container-highest": "#e2e2e4",
+            "on-surface-variant": "#5b403b",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "background": "#f9f9fb",
+            "primary": "#ee4d2d", /* Brand Color */
+            "primary-container": "#ffdad3",
+            "on-primary": "#ffffff",
+            "secondary": "#7c5800",
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #f3f3f5;
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #1a1c1d 0%, #3e0500 100%);
+    }
+    .brand-text {
+      background: linear-gradient(to right, #ffb4a4, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .combo-card input:checked + .combo-ui {
+      border-color: #ee4d2d;
+      background-color: #fff9f8;
+      box-shadow: 0 4px 12px rgba(238, 77, 45, 0.1);
+    }
+    .combo-card input:checked + .combo-ui .check-mark {
+      display: flex;
+    }
+    .price-shadow {
+      text-shadow: 0 2px 4px rgba(238, 77, 45, 0.1);
+    }
+  </style>
+</head>
+<body class="text-on-surface">
+<main class="max-w-[520px] mx-auto min-h-screen bg-white relative shadow-xl">
+<!-- Header Section -->
+<header class="hero-gradient px-6 pt-10 pb-16 relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-black brand-text tracking-tighter">Nino</span>
+<span class="text-xs font-bold uppercase tracking-widest text-primary-container opacity-80">Viet Nam</span>
+</div>
+<p class="text-sm mt-1 text-white/70 font-medium">Giải pháp chiếu sáng thông minh &amp; bền bỉ</p>
+</div>
+<!-- Decorative circle -->
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl"></div>
+</header>
+<!-- Product Content Wrap -->
+<div class="bg-white rounded-t-3xl -mt-8 relative z-20 px-4 pt-6">
+<!-- Gallery Section -->
+<section class="mb-8">
+<div class="relative group">
+<div class="aspect-square w-full rounded-2xl bg-surface-container overflow-hidden shadow-sm">
+<div class="flex custom-scrollbar overflow-x-auto snap-x snap-mandatory h-full">
+<div class="min-w-full h-full snap-start flex items-center justify-center text-tertiary font-semibold text-lg bg-surface-variant/50">
+<span class="material-symbols-outlined text-6xl mb-2 opacity-20 block text-center">image</span>
+<span>Ảnh sản phẩm 1</span>
+</div>
+<div class="min-w-full h-full snap-start flex items-center justify-center text-tertiary font-semibold text-lg bg-surface-container">
+                Ảnh sản phẩm 2
+              </div>
+</div>
+</div>
+<!-- Dots -->
+<div class="flex justify-center gap-1.5 mt-4">
+<div class="w-6 h-1.5 rounded-full bg-primary"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-surface-variant"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-surface-variant"></div>
+</div>
+<!-- Feature Tags -->
+<div class="grid grid-cols-3 gap-3 mt-6">
+<div class="bg-white border border-surface-variant/50 p-3 rounded-xl shadow-sm flex flex-col items-center text-center transition-all hover:shadow-md">
+<span class="material-symbols-outlined text-primary mb-1 text-[20px]">bolt</span>
+<p class="text-[10px] font-bold text-tertiary leading-tight uppercase tracking-tighter">Công suất</p>
+<p class="text-xs font-black text-on-surface">40W</p>
+</div>
+<div class="bg-white border border-surface-variant/50 p-3 rounded-xl shadow-sm flex flex-col items-center text-center transition-all hover:shadow-md">
+<span class="material-symbols-outlined text-primary mb-1 text-[20px]">schedule</span>
+<p class="text-[10px] font-bold text-tertiary leading-tight uppercase tracking-tighter">Sử dụng</p>
+<p class="text-xs font-black text-on-surface">8h liên tục</p>
+</div>
+<div class="bg-white border border-surface-variant/50 p-3 rounded-xl shadow-sm flex flex-col items-center text-center transition-all hover:shadow-md">
+<span class="material-symbols-outlined text-primary mb-1 text-[20px]">verified</span>
+<p class="text-[10px] font-bold text-tertiary leading-tight uppercase tracking-tighter">Bảo hành</p>
+<p class="text-xs font-black text-on-surface">6 tháng</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Info Section -->
+<section class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="bg-primary px-2 py-0.5 rounded text-[10px] font-bold text-white uppercase">Yêu thích</span>
+<span class="text-xs text-tertiary font-medium">Đèn năng lượng mặt trời</span>
+</div>
+<h1 class="text-xl font-bold text-on-surface leading-tight tracking-tight">
+          Đèn Năng Lượng Mặt Trời 40W - Tự Sạc Ban Ngày, Tự Sáng Ban Đêm
+        </h1>
+<div class="flex items-center gap-3 text-sm">
+<div class="flex items-center text-secondary-container">
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<span class="material-symbols-outlined text-sm fill-1">star</span>
+<strong class="text-on-surface ml-1">5.0</strong>
+</div>
+<span class="text-surface-variant">|</span>
+<span class="text-tertiary">Đã bán <span class="font-semibold text-on-surface">112.5k</span></span>
+</div>
+<!-- Pricing Area -->
+<div class="bg-primary/5 rounded-2xl p-5 border border-primary/10">
+<div class="flex items-baseline gap-3 flex-wrap">
+<span class="text-3xl font-black text-primary price-shadow">145.000đ</span>
+<span class="text-tertiary/60 line-through text-sm">199.000đ</span>
+<span class="bg-primary text-white text-[10px] font-black px-1.5 py-0.5 rounded">-27%</span>
+</div>
+<p class="text-xs text-primary/70 mt-2 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">info</span>
+            Giá lẻ 1 chiếc, chọn combo để nhận ưu đãi tốt hơn.
+          </p>
+</div>
+<!-- Combo Selection -->
+<div class="py-4">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-bold text-lg">Chọn combo ưu đãi</h3>
+<span class="text-xs font-bold text-primary">Chưa chọn</span>
+</div>
+<div class="space-y-3">
+<!-- Option 1 -->
+<label class="combo-card cursor-pointer block relative">
+<input class="hidden" name="combo" type="radio"/>
+<div class="combo-ui p-4 border-2 border-surface-container-high rounded-2xl transition-all duration-200">
+<div class="flex justify-between items-center">
+<div class="space-y-1">
+<p class="font-extrabold text-on-surface text-base">1 chiếc</p>
+<p class="text-xs text-tertiary">Phù hợp mua dùng thử</p>
+<p class="text-[11px] font-bold text-error/80 mt-1 uppercase">+30K Ship</p>
+</div>
+<div class="text-right">
+<p class="text-2xl font-black text-on-surface">145K</p>
+<div class="check-mark hidden absolute right-3 bottom-3 w-6 h-6 bg-primary rounded-full items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm font-bold">check</span>
+</div>
+</div>
+</div>
+</div>
+</label>
+<!-- Option 2 (Hot) -->
+<label class="combo-card cursor-pointer block relative">
+<input class="hidden" name="combo" type="radio"/>
+<div class="combo-ui p-4 border-2 border-surface-container-high rounded-2xl transition-all duration-200">
+<span class="absolute -top-2.5 right-4 bg-primary text-white text-[10px] font-black px-3 py-1 rounded-full shadow-sm z-10">BÁN CHẠY</span>
+<div class="flex justify-between items-center">
+<div class="space-y-1">
+<p class="font-extrabold text-on-surface text-base">Combo 2 chiếc</p>
+<p class="text-xs text-tertiary">Phù hợp lắp cổng + sân</p>
+<p class="text-[11px] font-bold text-secondary mt-1 uppercase">Miễn phí vận chuyển</p>
+</div>
+<div class="text-right">
+<p class="text-2xl font-black text-primary">260K</p>
+<div class="check-mark hidden absolute right-3 bottom-3 w-6 h-6 bg-primary rounded-full items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm font-bold">check</span>
+</div>
+</div>
+</div>
+</div>
+</label>
+<!-- Option 3 (Save) -->
+<label class="combo-card cursor-pointer block relative">
+<input class="hidden" name="combo" type="radio"/>
+<div class="combo-ui p-4 border-2 border-surface-container-high rounded-2xl transition-all duration-200">
+<span class="absolute -top-2.5 right-4 bg-secondary text-white text-[10px] font-black px-3 py-1 rounded-full shadow-sm z-10">TIẾT KIỆM</span>
+<div class="flex justify-between items-center">
+<div class="space-y-1">
+<p class="font-extrabold text-on-surface text-base">Combo 3 chiếc</p>
+<p class="text-xs text-tertiary">Phù hợp lắp nhiều vị trí</p>
+<p class="text-[11px] font-bold text-secondary mt-1 uppercase">Miễn phí vận chuyển</p>
+</div>
+<div class="text-right">
+<p class="text-2xl font-black text-primary">380K</p>
+<div class="check-mark hidden absolute right-3 bottom-3 w-6 h-6 bg-primary rounded-full items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm font-bold">check</span>
+</div>
+</div>
+</div>
+</div>
+</label>
+</div>
+<div class="mt-4 p-3 bg-secondary-container/10 border border-secondary-container/20 rounded-xl text-[11px] text-secondary font-semibold text-center uppercase tracking-wider">
+            Vui lòng chọn combo trước khi đặt hàng
+          </div>
+</div>
+<!-- Detailed Sections -->
+<div class="border-t border-surface-container mt-6 py-6 space-y-8 pb-32">
+<div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-xl">description</span>
+<h2 class="font-bold text-base">Mô tả sản phẩm</h2>
+</div>
+<p class="text-sm text-tertiary leading-relaxed">
+              Sản phẩm cao cấp từ Nino Viet Nam, sử dụng chip LED thế hệ mới siêu sáng và tiết kiệm điện năng. Tấm pin năng lượng mặt trời đơn tinh thể hiệu suất cao, sạc đầy chỉ trong 4-6h nắng.
+            </p>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-xl">reviews</span>
+<h2 class="font-bold text-base">Đánh giá sản phẩm</h2>
+</div>
+<div class="space-y-4">
+<div class="p-4 bg-surface-container-lowest rounded-xl border border-surface-container">
+<div class="flex items-center gap-1 mb-1 text-secondary-container">
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+<span class="material-symbols-outlined text-xs fill-1">star</span>
+</div>
+<p class="text-xs text-on-surface font-medium mb-1">Giao hàng nhanh, đèn rất sáng.</p>
+<p class="text-[10px] text-tertiary">Người mua: ng***1 - 02/03/2024</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Bottom Action Bar -->
+<div class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[520px] bg-white border-t border-surface-container p-4 flex gap-3 z-50 shadow-[0_-8px_20px_rgba(0,0,0,0.05)]">
+<button class="flex-1 h-14 rounded-2xl border-2 border-primary text-primary font-black flex items-center justify-center gap-2 transition-all active:scale-95 hover:bg-primary/5">
+<span class="material-symbols-outlined">shopping_cart</span>
+        Giỏ hàng
+      </button>
+<button class="flex-[1.5] h-14 rounded-2xl bg-primary text-white font-black shadow-lg shadow-primary/25 flex items-center justify-center gap-2 transition-all active:scale-95 hover:brightness-110">
+<span class="material-symbols-outlined fill-1">bolt</span>
+        MUA NGAY
+      </button>
+</div>
+</main>
+<script>
+    // Minimal interaction logic for demo
+    const comboCards = document.querySelectorAll('.combo-card input');
+    const hint = document.querySelector('.text-primary.font-bold');
+    
+    comboCards.forEach(input => {
+      input.addEventListener('change', (e) => {
+        const name = e.target.closest('.combo-card').querySelector('.font-extrabold').innerText;
+        hint.innerText = `Đã chọn: ${name}`;
+        hint.classList.remove('text-primary');
+        hint.classList.add('text-secondary');
+      });
+    });
+  </script>
+</body></html>

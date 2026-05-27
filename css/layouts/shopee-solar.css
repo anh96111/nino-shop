@@ -4,9 +4,8 @@
 
 body {
   margin: 0;
-  background: #f3f3f3;
-  font-family: Arial, sans-serif;
-  color: #222;
+  background: #f3f3f5;
+  color: #1a1c1d;
 }
 
 #layoutRoot {
@@ -15,6 +14,7 @@ body {
   min-height: 100vh;
   background: #fff;
   padding-bottom: 82px;
+  box-shadow: 0 0 24px rgba(0,0,0,.08);
 }
 
 .solar-page {
@@ -22,74 +22,95 @@ body {
   min-height: 100vh;
 }
 
+/* ─────────────────────────────────────────────
+   HERO
+───────────────────────────────────────────── */
 .solar-hero {
   position: relative;
-  background: linear-gradient(135deg, #101010 0%, #2a2018 55%, #fff 100%);
+  background: linear-gradient(135deg, #1a1c1d 0%, #3e0500 100%);
   color: #fff;
-  padding: 12px 14px 42px;
+    padding: 20px 24px 42px;
   overflow: hidden;
 }
 
-.solar-hero::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 42px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
-  pointer-events: none;
-}
-
-.solar-brand,
-.solar-hero-desc {
+.solar-hero-inner {
   position: relative;
   z-index: 2;
 }
 
 .solar-brand {
   display: flex;
-  align-items: flex-end;
-  gap: 6px;
+  align-items: baseline;
+  gap: 8px;
   line-height: 1;
 }
 
 .solar-brand-nino {
-  font-size: 27px;
+  font-size: 24px;
   font-weight: 900;
-  background: linear-gradient(90deg, #b87333, #ffd28a, #a5642a);
+  letter-spacing: -0.04em;
+  background: linear-gradient(to right, #ffb4a4, #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .solar-brand-vn {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 700;
-  color: #f3dfbf;
-  padding-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #ffdad3;
+  opacity: 0.8;
 }
 
 .solar-hero-desc {
   margin: 6px 0 0;
-  font-size: 14px;
-  color: #f6d69a;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
 }
 
+.solar-hero-blur {
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 160px;
+  height: 160px;
+  background: rgba(238, 77, 45, 0.2);
+  border-radius: 9999px;
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─────────────────────────────────────────────
+   PRODUCT WRAP
+───────────────────────────────────────────── */
 .solar-product-wrap {
   background: #fff;
+  border-radius: 24px 24px 0 0;
+  margin-top: -32px;
+  position: relative;
+  z-index: 20;
+  padding: 24px 16px 0;
 }
 
+/* ─────────────────────────────────────────────
+   GALLERY
+───────────────────────────────────────────── */
 .solar-gallery {
   position: relative;
   background: #fff;
-  padding: 10px 10px 0;
+  margin-bottom: 24px;
 }
 
 .solar-slider {
   position: relative;
   overflow: hidden;
   border-radius: 16px;
-  background: #e5e7eb;
+  background: #eeeef0;
+  box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
 
 .solar-slides {
@@ -107,13 +128,15 @@ body {
   min-width: 100%;
   aspect-ratio: 1 / 1;
   scroll-snap-align: start;
-  background: #e5e7eb;
-  color: #999;
+  background: #e2e2e4;
+  color: #5c5c5c;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 700;
+  gap: 4px;
 }
 
 .slide img {
@@ -123,147 +146,222 @@ body {
   display: block;
 }
 
-.slide-placeholder:nth-child(2) {
-  background: #dedede;
-}
-
-.slide-placeholder:nth-child(3) {
-  background: #d7d7d7;
-}
-
-.solar-slider-tags {
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.solar-slider-tag {
-  min-height: 46px;
-  border-radius: 11px;
-  background: rgba(255, 247, 236, .94);
-  border: 1px solid rgba(240, 192, 121, .95);
-  color: #783f00;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 6px 4px;
-  font-size: 11.5px;
-  line-height: 1.2;
-  font-weight: 900;
-  box-shadow: 0 3px 10px rgba(0,0,0,.12);
-  backdrop-filter: blur(4px);
+.slide-placeholder-icon {
+  font-size: 56px !important;
+  opacity: 0.2;
+  margin-bottom: 4px;
 }
 
 .solar-dots {
   display: flex;
   justify-content: center;
-  gap: 5px;
-  padding: 8px 0 4px;
+  gap: 6px;
+  padding: 16px 0 0;
 }
 
 .dot {
   width: 6px;
   height: 6px;
-  border-radius: 999px;
-  background: #ddd;
-  transition: .2s;
+  border-radius: 9999px;
+  background: #e2e2e4;
+  transition: .25s;
 }
 
 .dot.active {
-  width: 16px;
+  width: 24px;
   background: #ee4d2d;
 }
 
-.solar-info {
-  padding: 8px 12px 0;
+/* Feature tags */
+.solar-feature-tags {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.solar-feature-tag {
   background: #fff;
+  border: 1px solid rgba(226, 226, 228, 0.5);
+  border-radius: 12px;
+  padding: 12px 8px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: box-shadow .2s;
+}
+
+.solar-feature-tag:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+}
+
+.solar-feature-icon {
+  font-size: 20px !important;
+  color: #ee4d2d;
+  margin-bottom: 4px;
+}
+
+.solar-feature-label {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #5c5c5c;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.solar-feature-value {
+  margin: 2px 0 0;
+  font-size: 12px;
+  font-weight: 900;
+  color: #1a1c1d;
+  line-height: 1.2;
+}
+
+/* ─────────────────────────────────────────────
+   INFO
+───────────────────────────────────────────── */
+.solar-info {
+  padding: 0;
+  background: #fff;
+}
+
+.solar-info > * + * {
+  margin-top: 16px;
 }
 
 .solar-shop-row {
   display: flex;
   align-items: center;
-  gap: 7px;
-  font-size: 13px;
-  color: #555;
+  gap: 8px;
+  font-size: 12px;
+  color: #5c5c5c;
 }
 
 .solar-fav-badge {
   background: #ee4d2d;
   color: #fff;
-  padding: 3px 6px;
+  padding: 2px 8px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.solar-shop-cat {
+  font-weight: 500;
 }
 
 .solar-info h1 {
-  font-size: 17px;
-  line-height: 1.36;
-  margin: 9px 0 7px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: #1a1c1d;
 }
 
 .solar-rating-row {
   display: flex;
   align-items: center;
-  gap: 7px;
-  color: #ee4d2d;
+  gap: 10px;
   font-size: 13px;
-  margin-bottom: 10px;
+}
+
+.solar-rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  color: #feb700;
+}
+
+.solar-rating-stars .material-symbols-outlined {
+  font-size: 16px !important;
+  font-variation-settings: 'FILL' 1;
+}
+
+.solar-rating-stars strong {
+  color: #1a1c1d;
+  margin-left: 6px;
+  font-weight: 700;
+}
+
+.solar-rating-sep {
+  color: #e2e2e4;
 }
 
 .solar-sold {
-  color: #555;
+  color: #5c5c5c;
 }
 
+.solar-sold strong {
+  color: #1a1c1d;
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────
+   PRICE BOX
+───────────────────────────────────────────── */
 .solar-price-box {
-  background: linear-gradient(90deg, #fff1eb, #fff7f2);
-  margin: 0 -12px;
-  padding: 12px;
+  background: rgba(238, 77, 45, 0.05);
+  border: 1px solid rgba(238, 77, 45, 0.1);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 0;
 }
 
 .solar-price-line {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 12px;
 }
 
 .solar-price {
   color: #ee4d2d;
-  font-size: 29px;
+  font-size: 30px;
   font-weight: 900;
+  text-shadow: 0 2px 4px rgba(238, 77, 45, 0.1);
 }
 
 .solar-old-price {
-  color: #999;
+  color: rgba(92, 92, 92, 0.6);
   text-decoration: line-through;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .solar-discount {
   color: #fff;
   background: #ee4d2d;
-  padding: 3px 6px;
+  padding: 2px 6px;
   border-radius: 4px;
-  font-size: 12px;
-  font-weight: 800;
+  font-size: 10px;
+  font-weight: 900;
 }
 
 .solar-price-note {
-  margin: 5px 0 0;
-  color: #777;
+  margin: 8px 0 0;
+  color: rgba(238, 77, 45, 0.7);
   font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
+.solar-price-note .material-symbols-outlined {
+  font-size: 14px !important;
+}
+
+/* ─────────────────────────────────────────────
+   COMBO
+───────────────────────────────────────────── */
 .solar-combo-area {
-  padding: 13px 0 0;
+  padding: 16px 0 0;
   background: #fff;
 }
 
@@ -271,12 +369,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 9px;
+  margin-bottom: 16px;
 }
 
 .solar-section-title {
-  font-size: 16px;
-  font-weight: 900;
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .solar-section-hint {
@@ -287,18 +385,18 @@ body {
 
 .solar-combo-list {
   display: grid;
-  gap: 9px;
+  gap: 12px;
 }
 
 .combo-card {
   position: relative;
   display: block;
-  border: 2px solid #e8e8e8;
-  border-radius: 14px;
+  border: 2px solid #e2e2e4;
+  border-radius: 16px;
   background: #fff;
-  padding: 12px;
-  overflow: hidden;
+  padding: 16px;
   cursor: pointer;
+  transition: border-color .2s, background .2s, box-shadow .2s;
 }
 
 .combo-card input {
@@ -308,45 +406,73 @@ body {
 .combo-content {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 8px;
+  gap: 12px;
   align-items: center;
+}
+
+.combo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
 .combo-name {
   font-size: 16px;
-  font-weight: 900;
-  margin-bottom: 4px;
+  font-weight: 800;
+  color: #1a1c1d;
 }
 
 .combo-desc {
   font-size: 12px;
-  color: #666;
-  line-height: 1.35;
+  color: #5c5c5c;
+  line-height: 1.4;
 }
 
 .combo-ship {
-  margin-top: 5px;
-  color: #0f9f4f;
-  font-size: 12px;
-  font-weight: 800;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.combo-ship.ship-fee {
+  color: rgba(186, 26, 26, 0.8);
+}
+
+.combo-ship.ship-free {
+  color: #7c5800;
+}
+
+.combo-price-wrap {
+  text-align: right;
 }
 
 .combo-price {
-  color: #ee4d2d;
-  font-size: 22px;
+  color: #1a1c1d;
+  font-size: 24px;
   font-weight: 900;
   white-space: nowrap;
+  line-height: 1.1;
+}
+
+.combo-card.active .combo-price {
+  color: #ee4d2d;
 }
 
 .combo-tag {
   position: absolute;
-  top: 0;
-  right: 0;
-  padding: 4px 9px;
+  top: -10px;
+  right: 16px;
+  padding: 4px 12px;
   color: #fff;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
-  border-radius: 0 12px 0 12px;
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  z-index: 2;
+  letter-spacing: 0.02em;
 }
 
 .tag-hot {
@@ -354,40 +480,52 @@ body {
 }
 
 .tag-save {
-  background: #0f9f4f;
+  background: #7c5800;
 }
 
 .combo-card.active {
   border-color: #ee4d2d;
-  background: #fff7f2;
+  background: #fff9f8;
+  box-shadow: 0 4px 12px rgba(238, 77, 45, 0.1);
 }
 
-.combo-card.active::after {
-  content: "✓";
+.combo-check {
   position: absolute;
-  right: 10px;
-  bottom: 9px;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
+  right: 12px;
+  bottom: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
   background: #ee4d2d;
-  color: #fff;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
-  font-weight: 900;
-  font-size: 14px;
+}
+
+.combo-check .material-symbols-outlined {
+  color: #fff;
+  font-size: 16px !important;
+  font-weight: 700;
+  font-variation-settings: 'FILL' 1, 'wght' 700;
+}
+
+.combo-card.active .combo-check {
+  display: flex;
 }
 
 .solar-notice {
-  background: #fffbe8;
-  border: 1px solid #f1d46d;
-  color: #6b4b00;
-  border-radius: 11px;
-  padding: 9px 10px;
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 16px;
+  background: rgba(254, 183, 0, 0.1);
+  border: 1px solid rgba(254, 183, 0, 0.2);
+  color: #7c5800;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 11px;
+  font-weight: 600;
   line-height: 1.35;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .solar-notice.shake {
@@ -401,29 +539,492 @@ body {
   75% { transform: translateX(-3px); }
 }
 
+/* ─────────────────────────────────────────────
+   CONTENT
+───────────────────────────────────────────── */
 .solar-content-area {
-  padding: 14px 0 0;
+  padding: 24px 0 0;
   background: #fff;
+  border-top: 1px solid #eeeef0;
+  margin-top: 24px;
 }
 
 .solar-soft-line {
   height: 1px;
-  background: #f0f0f0;
-  margin: 14px 0;
+  background: #eeeef0;
+  margin: 24px 0;
+}
+
+.solar-content-block {
+  margin-bottom: 8px;
+}
+
+.solar-content-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.solar-content-icon {
+  color: #ee4d2d;
+  font-size: 20px !important;
 }
 
 .solar-content-block h2 {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 16px;
+  font-weight: 700;
+  color: #1a1c1d;
 }
 
-.solar-content-block p {
+.solar-content-block > p {
   margin: 0;
   font-size: 13px;
-  color: #666;
+  color: #5c5c5c;
+  line-height: 1.55;
+}
+
+/* ─────────────────────────────────────────────
+   REVIEWS
+───────────────────────────────────────────── */
+.solar-review-empty {
+  margin: 0;
+  font-size: 13px;
+  color: #5c5c5c;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.solar-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.solar-review-item {
+  background: #f9f9fb;
+  border: 1px solid #eeeef0;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.solar-review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.solar-review-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  object-fit: cover;
+  background: #e2e2e4;
+  flex-shrink: 0;
+}
+
+.solar-review-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.solar-review-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1c1d;
+  line-height: 1.2;
+}
+
+.solar-review-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  margin-top: 2px;
+}
+
+.solar-review-star {
+  font-size: 13px !important;
+  color: #e2e2e4;
+}
+
+.solar-review-star.filled {
+  color: #feb700;
+  font-variation-settings: 'FILL' 1;
+}
+
+.solar-review-date {
+  font-size: 10px;
+  color: #888;
+  margin-top: 2px;
+}
+
+.solar-review-classify {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #5c5c5c;
+}
+
+.solar-review-content {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #1a1c1d;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.solar-review-media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.solar-review-media-item {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #e2e2e4;
+  display: block;
+}
+
+.solar-review-media-item.is-video {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.solar-review-media-item.is-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.solar-review-media-item.is-video .material-symbols-outlined {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 28px;
+  height: 28px;
+  color: #fff;
+  font-size: 28px !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solar-review-more {
+  margin-top: 12px;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e2e2e4;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ee4d2d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background .2s;
+}
+
+.solar-review-more:hover {
+  background: #fff9f8;
+}
+
+.solar-review-more .material-symbols-outlined {
+  font-size: 18px !important;
+}
+
+/* ─────────────────────────────────────────────
+   SHOP BLOCK
+───────────────────────────────────────────── */
+.solar-shop-block {
+  background: #fff;
+  border: 1px solid #eeeef0;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.03);
+}
+
+.solar-shop-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.solar-shop-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  object-fit: cover;
+  background: #e2e2e4;
+  flex-shrink: 0;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #eeeef0;
+}
+
+.solar-shop-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.solar-shop-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1c1d;
+  line-height: 1.2;
+}
+
+.solar-shop-online {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #5c5c5c;
+  margin-top: 4px;
+}
+
+.solar-shop-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #0f9f4f;
+  box-shadow: 0 0 0 3px rgba(15, 159, 79, 0.15);
+}
+
+.solar-shop-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #eeeef0;
+}
+
+.solar-shop-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4px;
+}
+
+.solar-shop-stat-label {
+  font-size: 10px;
+  color: #5c5c5c;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.solar-shop-stat-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: #ee4d2d;
+  margin-top: 2px;
+  line-height: 1.2;
+}
+
+/* ─────────────────────────────────────────────
+   GENERIC CARD (contact, stores, policies, faq)
+───────────────────────────────────────────── */
+.solar-card {
+  background: #fff;
+  border: 1px solid #eeeef0;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.03);
+}
+
+.solar-card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.solar-card-icon {
+  color: #ee4d2d;
+  font-size: 20px !important;
+}
+
+.solar-card h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1c1d;
+}
+
+.solar-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.solar-info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #1a1c1d;
   line-height: 1.45;
 }
 
+.solar-info-icon {
+  color: #ee4d2d;
+  font-size: 18px !important;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.solar-info-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.solar-info-text strong {
+  font-weight: 700;
+  color: #1a1c1d;
+}
+
+.solar-store-map {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 12px;
+  display: block;
+}
+
+/* ─────────────────────────────────────────────
+   FAQ
+───────────────────────────────────────────── */
+.solar-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.solar-faq-item {
+  background: #f9f9fb;
+  border: 1px solid #eeeef0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.solar-faq-head {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.solar-faq-q {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1a1c1d;
+  flex: 1;
+  line-height: 1.4;
+}
+
+.solar-faq-arrow {
+  color: #5c5c5c;
+  font-size: 20px !important;
+  transition: transform .25s;
+}
+
+.solar-faq-item.open .solar-faq-arrow {
+  transform: rotate(180deg);
+  color: #ee4d2d;
+}
+
+.solar-faq-body {
+  display: none;
+  padding: 0 14px 12px;
+}
+
+.solar-faq-item.open .solar-faq-body {
+  display: block;
+}
+
+.solar-faq-body p {
+  margin: 0;
+  font-size: 13px;
+  color: #5c5c5c;
+  line-height: 1.55;
+}
+
+/* ─────────────────────────────────────────────
+   HIDDEN STUBS cho core.js
+───────────────────────────────────────────── */
+.solar-core-stubs {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Ẩn bottom bar mặc định của index.html */
+.bottom-bar {
+  display: none !important;
+}
+
+/* ─────────────────────────────────────────────
+   ERROR STATE — chưa chọn combo
+───────────────────────────────────────────── */
+.solar-notice.is-error {
+  background: #ffeceb;
+  border-color: #ee4d2d;
+  color: #ba1a1a;
+  font-weight: 800;
+}
+
+.solar-section-hint.is-error {
+  color: #ba1a1a;
+}
+
+.solar-combo-area.is-error .combo-card {
+  border-color: #ee4d2d;
+}
+
+.solar-combo-area.is-error {
+  animation: solarShakeArea .5s ease;
+}
+
+@keyframes solarShakeArea {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-6px); }
+  30% { transform: translateX(6px); }
+  45% { transform: translateX(-5px); }
+  60% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+  90% { transform: translateX(3px); }
+}
+
+.solar-notice.shake-error {
+  animation: solarShake .35s ease;
+}
+
+/* ─────────────────────────────────────────────
+   BOTTOM BAR — 1 nút Mua ngay full-width
+───────────────────────────────────────────── */
 .solar-bottom-bar {
   position: fixed;
   left: 50%;
@@ -431,37 +1032,101 @@ body {
   bottom: 0;
   width: 100%;
   max-width: 520px;
-  display: grid;
-  grid-template-columns: 36% 64%;
   background: #fff;
   border-top: 1px solid #eee;
   z-index: 50;
   box-shadow: 0 -4px 14px rgba(0,0,0,.08);
+  padding: 10px 16px;
 }
 
-.solar-bottom-bar button {
-  height: 58px;
-  border: 0;
-  font-size: 15px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.solar-bottom-cart {
-  background: #fff;
-  color: #ee4d2d;
-  border-right: 1px solid #eee !important;
+.solar-bottom-bar--single {
+  display: block;
 }
 
 .solar-bottom-buy {
+  width: 100%;
+  height: 56px;
+  border: 0;
+  border-radius: 16px;
   background: #ee4d2d;
   color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 16px rgba(238, 77, 45, 0.25);
+  transition: transform .15s, filter .15s;
 }
 
-@media (min-width: 769px) {
-  #layoutRoot {
-    margin-top: 12px;
-    border-radius: 16px;
-    overflow: hidden;
-  }
+.solar-bottom-buy:hover {
+  filter: brightness(1.08);
+}
+
+.solar-bottom-buy:active {
+  transform: scale(0.97);
+}
+
+.solar-bottom-buy .material-symbols-outlined {
+  font-size: 22px !important;
+  font-variation-settings: 'FILL' 1;
+}
+/* ─────────────────────────────────────────────
+   COMBO — số tiền tiết kiệm
+───────────────────────────────────────────── */
+.combo-save-amount {
+  position: absolute;
+  top: -10px;
+  right: 16px;
+  transform: translateY(28px);
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #0f9f4f;
+  background: #e8faf0;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  white-space: nowrap;
+  z-index: 2;
+}
+/* ─────────────────────────────────────────────
+   GALLERY THUMBNAILS
+───────────────────────────────────────────── */
+.solar-thumbs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px;
+}
+
+.solar-thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.solar-thumb {
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: #eeeef0;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color .2s;
+}
+
+.solar-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.solar-thumb.active {
+  border-color: #ee4d2d;
 }
