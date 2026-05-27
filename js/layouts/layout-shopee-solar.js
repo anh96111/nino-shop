@@ -152,17 +152,21 @@
 
     const mediaArr = Array.isArray(rv.media) ? rv.media : [];
     const mediaHtml = mediaArr.length
-      ? `<div class="solar-review-media">
-          ${mediaArr.map(m => {
-            const src = typeof m === "string" ? m : (m && m.src ? m.src : "");
-            const poster = typeof m === "object" && m.poster ? m.poster : src;
-            const isVideo = typeof m === "object" && m.type === "video";
-            return isVideo
-              ? `<div class="solar-review-media-item is-video"><img src="${poster}" alt="review media" loading="lazy"><span class="material-symbols-outlined">play_circle</span></div>`
-              : `<img class="solar-review-media-item" src="${src}" alt="review media" loading="lazy">`;
-          }).join("")}
-        </div>`
-      : "";
+     ? `<div class="solar-review-media">
+         ${mediaArr.map(m => {
+           const src = typeof m === "string" ? m : (m && m.src ? m.src : "");
+           const poster = typeof m === "object" && m.poster ? m.poster : src;
+           const isVideo = typeof m === "object" && m.type === "video";
+
+           return isVideo
+             ? `<button type="button" class="solar-review-media-item is-video" data-review-video="${src}">
+                  <img src="${poster}" alt="review video" loading="lazy">
+                  <span class="material-symbols-outlined">play_circle</span>
+                </button>`
+             : `<img class="solar-review-media-item" src="${src}" alt="review media" loading="lazy">`;
+         }).join("")}
+       </div>`
+     : "";
 
     const classifyHtml = rv.classify ? `<div class="solar-review-classify">Phân loại: ${rv.classify}</div>` : "";
 
@@ -307,10 +311,11 @@
 
   /* ── HIDDEN STUBS cho core.js ── */
   const hiddenCombosHtml = combos.map((c, idx) => {
-    const qty = Math.max(1, Number(c.quantity || 1));
-    const unitPrice = Math.round(Number(c.price || 0) / qty);
-    return `
-      <button type="button" class="combo-option" data-index="${idx}" data-price="${unitPrice}" data-shipfee="${Number(c.shipFee || 0)}">
+   const qty = Math.max(1, Number(c.quantity || 1));
+   const comboTotal = Number(c.price || 0);
+   const unitPrice = Math.floor(comboTotal / qty);
+   return `
+     <button type="button" class="combo-option" data-index="${idx}" data-price="${unitPrice}" data-combo-total="${comboTotal}" data-shipfee="${Number(c.shipFee || 0)}">
         <span class="combo-name">${c.name || ""}</span>
         <span class="combo-price">${unitPrice}</span>
       </button>
@@ -353,6 +358,10 @@
             <div class="solar-slides" id="solarSlides">
               ${slidesHtml}
             </div>
+
+            <div class="solar-feature-tags solar-feature-tags--sticky">
+              ${featureTagsHtml}
+            </div>
           </div>
 
           <div class="solar-dots">
@@ -362,14 +371,8 @@
           <div class="solar-thumbs" id="solarThumbs">
             ${thumbsHtml}
           </div>
-
-
-          
-
-          <div class="solar-feature-tags">
-            ${featureTagsHtml}
           </div>
-        </div>
+         </div>
 
         <div class="solar-info">
           <div class="solar-shop-row">
@@ -400,7 +403,7 @@
             </div>
             <p class="solar-price-note">
               <span class="material-symbols-outlined">info</span>
-              Giá lẻ 1 chiếc, chọn combo để nhận ưu đãi tốt hơn.
+              Giá lẻ 1 chiếc, chọn combo để tiết kiệm được 216.000đ.
             </p>
           </div>
 
@@ -420,34 +423,50 @@
           </div>
 
           <div class="solar-content-area">
-            <div class="solar-soft-line"></div>
 
-            <div class="solar-content-block">
-              <div class="solar-content-head">
-                <span class="material-symbols-outlined solar-content-icon">description</span>
-                <h2>Mô tả sản phẩm</h2>
-              </div>
-              <p>Nội dung mô tả chi tiết sẽ bổ sung sau.</p>
+           <div class="solar-content-block solar-review-section">
+            <h2 class="solar-review-main-title">Khách hàng nói gì về sản phẩm</h2>
+
+            <div class="solar-content-head solar-review-small-head">
+              <span class="material-symbols-outlined solar-content-icon">reviews</span>
+              <h3>Đánh giá sản phẩm</h3>
             </div>
 
-            <div class="solar-soft-line"></div>
-
-            <div class="solar-content-block">
-              <div class="solar-content-head">
-                <span class="material-symbols-outlined solar-content-icon">reviews</span>
-                <h2>Đánh giá sản phẩm</h2>
-              </div>
-              <div id="solarReviewWrap">${buildReviewsHtml()}</div>
-            </div>
-
-            <div class="solar-soft-line"></div>
-
-            ${shopHtml}
-            ${contactHtml}
-            ${storesHtml}
-            ${policiesHtml}
-            ${faqsHtml}
+            <div id="solarReviewWrap">${buildReviewsHtml()}</div>
           </div>
+
+           <div class="solar-soft-line"></div>
+
+           <div class="solar-content-block">
+             <div class="solar-content-head">
+               <span class="material-symbols-outlined solar-content-icon">description</span>
+               <h2>Mô tả sản phẩm</h2>
+             </div>
+
+             <div class="solar-desc-content">
+               <div class="solar-desc-short">
+                 ${P.description?.shortHtml || ""}
+               </div>
+
+               <div id="solarDescFull" class="solar-desc-full">
+                 ${P.description?.fullHtml || ""}
+               </div>
+
+               <button id="solarDescMoreBtn" class="solar-desc-more" type="button">
+                 Xem thêm
+                 <span class="material-symbols-outlined">expand_more</span>
+               </button>
+             </div>
+           </div>
+
+           <div class="solar-soft-line"></div>
+
+           ${shopHtml}
+           ${contactHtml}
+           ${storesHtml}
+           ${policiesHtml}
+           ${faqsHtml}
+         </div>
         </div>
       </section>
 
@@ -529,16 +548,17 @@
     if (!combo) return;
 
     const qty = Math.max(1, Number(combo.quantity || 1));
-    const unitPrice = Math.round(Number(combo.price || 0) / qty);
+    const comboTotal = Number(combo.price || 0);
+    const unitPrice = Math.floor(comboTotal / qty);
 
     window.__selectedSolarCombo = {
-      name: combo.name,
-      quantity: qty,
-      price: Number(combo.price || 0),
-      unitPrice: unitPrice,
-      oldPrice: Number(combo.oldPrice || 0),
-      shipFee: Number(combo.shipFee || 0),
-      note: combo.note || ""
+     name: combo.name,
+     quantity: qty,
+     price: comboTotal,
+     unitPrice: unitPrice,
+     oldPrice: Number(combo.oldPrice || 0),
+     shipFee: Number(combo.shipFee || 0),
+     note: combo.note || ""
     };
 
     P.selectedCombo = window.__selectedSolarCombo;
@@ -632,10 +652,61 @@
       if (wrap) {
         wrap.innerHTML = buildReviewsHtml();
         bindReviewMoreBtn();
+        bindReviewVideoBtns();
       }
     });
   }
   bindReviewMoreBtn();
+
+  function openReviewVideo(src) {
+    if (!src) return;
+
+    const old = document.getElementById("solarReviewVideoOverlay");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "solarReviewVideoOverlay";
+    overlay.className = "solar-review-video-overlay";
+    overlay.innerHTML = `
+      <div class="solar-review-video-box">
+        <button type="button" class="solar-review-video-close" id="solarReviewVideoClose">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <video src="${src}" controls autoplay playsinline></video>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const closeBtn = document.getElementById("solarReviewVideoClose");
+    closeBtn.addEventListener("click", function () {
+      overlay.remove();
+    });
+
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) overlay.remove();
+    });
+  }
+
+  function bindReviewVideoBtns() {
+    document.querySelectorAll("[data-review-video]").forEach(btn => {
+      btn.addEventListener("click", function () {
+        openReviewVideo(btn.dataset.reviewVideo);
+      });
+    });
+  }
+
+  bindReviewVideoBtns();
+
+  const descMoreBtn = document.getElementById("solarDescMoreBtn");
+  const descFull = document.getElementById("solarDescFull");
+
+  if (descMoreBtn && descFull) {
+    descMoreBtn.addEventListener("click", function () {
+      descFull.classList.add("show");
+      descMoreBtn.remove();
+    });
+  }
 
   document.querySelectorAll("[data-faq-toggle]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -647,6 +718,88 @@
 
   const buyBtn = document.getElementById("solarBuyNow");
   if (buyBtn) buyBtn.addEventListener("click", openCheckout);
+
+  /* ── ORDER NOTIFICATION RIÊNG CHO ĐÈN ── */
+  function initSolarOrderNotificationTop() {
+    if (document.getElementById("solarOrderNotifTop")) return;
+
+    const orderNotifTop = document.createElement("div");
+    orderNotifTop.id = "solarOrderNotifTop";
+    orderNotifTop.className = "order-notif-top solar-order-notif";
+    orderNotifTop.innerHTML = `
+      <div class="order-notif-icon">✓</div>
+      <div class="order-notif-content">
+        <div id="solarOrderNotifTopText"></div>
+        <div class="order-notif-sub">Vừa đặt hàng trên Nino Việt Nam</div>
+      </div>
+    `;
+
+    document.body.appendChild(orderNotifTop);
+
+    const textEl = document.getElementById("solarOrderNotifTopText");
+    if (!textEl) return;
+
+    const comboTexts = [
+      "1 đèn năng lượng mặt trời",
+      "Combo 2 đèn năng lượng mặt trời",
+      "Combo 3 đèn năng lượng mặt trời"
+    ];
+
+    function pickComboText() {
+      return comboTexts[Math.floor(Math.random() * comboTexts.length)];
+    }
+
+    let lastShownAt = 0;
+    let minGapMs = 5000;
+
+    function randomGap() {
+      return 5000 + Math.floor(Math.random() * 5000);
+      // khoảng 5–10 giây/lần
+    }
+
+    function showThenHide(entry) {
+      const now = Date.now();
+
+      if (now - lastShownAt < minGapMs) return;
+
+      lastShownAt = now;
+      minGapMs = randomGap();
+
+      const customerName = entry && entry.name ? entry.name : "Khách hàng";
+      textEl.textContent = customerName + " vừa đặt " + pickComboText();
+
+      orderNotifTop.classList.add("show");
+
+      setTimeout(function () {
+        orderNotifTop.classList.remove("show");
+      }, 3500);
+    }
+
+    function subscribeWhenReady() {
+      if (window.__liveNotif && typeof window.__liveNotif.subscribe === "function") {
+        window.__liveNotif.subscribe(showThenHide);
+        return;
+      }
+
+      let waited = 0;
+      const timer = setInterval(function () {
+        waited += 100;
+
+        if (window.__liveNotif && typeof window.__liveNotif.subscribe === "function") {
+          clearInterval(timer);
+          window.__liveNotif.subscribe(showThenHide);
+        }
+
+        if (waited >= 8000) {
+          clearInterval(timer);
+        }
+      }, 100);
+    }
+
+    subscribeWhenReady();
+  }
+
+  setTimeout(initSolarOrderNotificationTop, 3000);
 
   /* ═══════════════════════════════════════════════
      POPUP CẢM ƠN CHI TIẾT
