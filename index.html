@@ -659,7 +659,7 @@
 
       const productScript = document.getElementById("productScript");
       productScript.defer = true;
-      productScript.src = `/products/${slug}.js?v=2`;
+      productScript.src = `/products/${slug}.js?v=3`;
 
       productScript.onload = function () {
         if (typeof PRODUCT_CONFIG === "undefined") {
@@ -693,12 +693,12 @@
         /* ── LOAD LAYOUT JS → sau đó LOAD CORE.JS ── */
         const layoutScript = document.createElement("script");
         layoutScript.defer = true;
-        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=3`;
+        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=4`;
 
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
           coreScript.defer = true;
-          coreScript.src = "/js/core.js?v=10";
+          coreScript.src = "/js/core.js?v=11";
           document.body.appendChild(coreScript);
         };
 

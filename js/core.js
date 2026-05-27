@@ -1393,7 +1393,9 @@ function updateSubmitBtnPrice() {
    OPEN CHECKOUT — InitiateCheckout
 =================================================== */
 function openCheckout() {
-  ensureWaterBottleUpsellLoaded();
+  if (PRODUCT_CONFIG.disableWaterBottleUpsell !== true) {
+    ensureWaterBottleUpsellLoaded();
+  }
   renderCartSummary();
 
   const eid = genEventId();
@@ -2025,23 +2027,27 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     updateCartBadge();
     hideModal();
 
-    await ensureWaterBottleUpsellLoaded();
-
-    if (
-      window.NinoWaterBottleUpsell &&
-      typeof window.NinoWaterBottleUpsell.open === "function"
-    ) {
-      window.NinoWaterBottleUpsell.open({
-        gasUrl: GAS_URL,
-        orderId: clientOrderId,
-        sheetName: payload.sheet_name || "",
-        basePayload: payload,
-        customer: customerData,
-        items: payloadItems,
-        orderTotal: totalAfterDiscount
-      });
-    } else {
+    if (PRODUCT_CONFIG.disableWaterBottleUpsell === true) {
       openThankModal();
+    } else {
+      await ensureWaterBottleUpsellLoaded();
+
+      if (
+        window.NinoWaterBottleUpsell &&
+        typeof window.NinoWaterBottleUpsell.open === "function"
+      ) {
+        window.NinoWaterBottleUpsell.open({
+          gasUrl: GAS_URL,
+          orderId: clientOrderId,
+          sheetName: payload.sheet_name || "",
+          basePayload: payload,
+          customer: customerData,
+          items: payloadItems,
+          orderTotal: totalAfterDiscount
+        });
+      } else {
+        openThankModal();
+      }
     }
 
     submitBtn.disabled = false;
