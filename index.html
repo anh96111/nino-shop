@@ -10,18 +10,20 @@
   <meta property="og:type" content="product">
   <meta id="ogTitle" property="og:title" content="Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6">
   <meta id="ogDesc" property="og:description" content="Balo học sinh chống gù cột sống, đệm lưng 3D, chống nước, phản quang 360 độ, nhiều ngăn tiện lợi.">
-  <meta id="ogImage" property="og:image" content="https://res.cloudinary.com/dvtgqfe2z/image/upload/v1779005373/Chot_jyylwm.jpg">
+  <meta id="ogImage" property="og:image" content="https://res.cloudinary.com/dfppbfjkm/image/upload/f_auto,q_auto,w_1200/v1779385611/c3_mrk14f.jpg">
   <meta property="og:url" content="https://www.nino9611.store/balo">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6">
   <meta name="twitter:description" content="Balo học sinh chống gù cột sống, đệm lưng 3D, chống nước, phản quang 360 độ, nhiều ngăn tiện lợi.">
-  <meta name="twitter:image" content="https://res.cloudinary.com/dvtgqfe2z/image/upload/v1779005373/Chot_jyylwm.jpg">
+  <meta name="twitter:image" content="https://res.cloudinary.com/dfppbfjkm/image/upload/f_auto,q_auto,w_1200/v1779385611/c3_mrk14f.jpg">
 
   <title id="pageTitle">Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="dns-prefetch" href="https://res.cloudinary.com">
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
 
@@ -632,13 +634,13 @@
   </div>
 
   <!-- BOOTSTRAP -->
-  <script src="/js/config.shared.js?v=2"></script>
-  <script src="/js/discount-codes.js?v=1"></script>
-  <script src="/js/order-sources.js?v=1"></script>
+  <script src="/js/config.shared.js?v=3" defer></script>
+  <script src="/js/discount-codes.js?v=2" defer></script>
+  <script src="/js/order-sources.js?v=2" defer></script>
 
   <script id="productScript"></script>
   <script>
-    (function bootstrap() {
+    window.addEventListener("DOMContentLoaded", function bootstrap() {
       const pathname = window.location.pathname.replace(/^\/+|\/+$/g, "");
 
       function getRawRouteFromQuery() {
@@ -656,7 +658,8 @@
       }
 
       const productScript = document.getElementById("productScript");
-      productScript.src = `/products/${slug}.js`;
+      productScript.defer = true;
+      productScript.src = `/products/${slug}.js?v=2`;
 
       productScript.onload = function () {
         if (typeof PRODUCT_CONFIG === "undefined") {
@@ -689,21 +692,25 @@
 
         /* ── LOAD LAYOUT JS → sau đó LOAD CORE.JS ── */
         const layoutScript = document.createElement("script");
-        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=2`;
+        layoutScript.defer = true;
+        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=3`;
 
         layoutScript.onload = function () {
           const upsellScript = document.createElement("script");
-          upsellScript.src = "/js/water-bottle-upsell.js?v=1";
+          upsellScript.defer = true;
+          upsellScript.src = "/js/water-bottle-upsell.js?v=2";
 
           upsellScript.onload = function () {
             const coreScript = document.createElement("script");
-            coreScript.src = "/js/core.js?v=8";
+            coreScript.defer = true;
+            coreScript.src = "/js/core.js?v=9";
             document.body.appendChild(coreScript);
           };
 
           upsellScript.onerror = function () {
             const coreScript = document.createElement("script");
-            coreScript.src = "/js/core.js?v=8";
+            coreScript.defer = true;
+            coreScript.src = "/js/core.js?v=9";
             document.body.appendChild(coreScript);
           };
 
@@ -720,13 +727,18 @@
       productScript.onerror = function () {
         document.body.innerHTML = "<h2 style='text-align:center;padding:40px;'>Không tìm thấy sản phẩm.</h2>";
       };
-    })();
+    });
 
     /* ── NOTE TOGGLE ── */
-    document.getElementById("noteToggleBtn").addEventListener("click", function () {
-      this.classList.toggle("open");
-      document.getElementById("noteCollapse").classList.toggle("open");
-    });
+    const noteToggleBtn = document.getElementById("noteToggleBtn");
+    const noteCollapse = document.getElementById("noteCollapse");
+
+    if (noteToggleBtn && noteCollapse) {
+      noteToggleBtn.addEventListener("click", function () {
+        this.classList.toggle("open");
+        noteCollapse.classList.toggle("open");
+      });
+    }
   </script>
 </body>
 </html>

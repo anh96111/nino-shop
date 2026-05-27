@@ -18,6 +18,12 @@
     ? P.discount.replace(/[^0-9]/g, "")
     : Math.round((1 - P.price / P.oldPrice) * 100);
 
+  function imgAttrs(priority) {
+    return priority
+      ? 'loading="eager" fetchpriority="high" decoding="async"'
+      : 'loading="lazy" fetchpriority="low" decoding="async"';
+  }  
+
   /* ── Build variant popup HTML ── */
   let variantPopupHTML = "";
   if (hasColorVariant) {
@@ -704,10 +710,10 @@
           <div class="benefit-img">
             ${b.video
               ? `<div class="lazy-video-wrap" data-type="video" data-src="${b.video}" style="position:relative; cursor:pointer; width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden;">
-                  <img src="${b.poster}" alt="${b.title}" loading="lazy" decoding="async" style="width:100%; height:100%; object-fit:cover;" />
+                  <img src="${b.poster}" alt="${b.title}" ${imgAttrs(false)} style="width:100%; height:100%; object-fit:cover;" />
                   <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;background:rgba(0,0,0,0.25);border-radius:10px;">▶</div>
                 </div>`
-              : `<img src="${b.image}" alt="${b.title}" loading="${i === 0 ? 'eager' : 'lazy'}" fetchpriority="${i === 0 ? 'high' : 'low'}" decoding="async" width="600" height="338" />`
+              : `<img src="${b.image}" alt="${b.title}" ${imgAttrs(i === 0)} width="600" height="338" />`
             }
           </div>
           <div class="benefit-content">
@@ -865,13 +871,14 @@
   `;
 
   /* ── ORDER NOTIFICATION ── */
-  const orderNotifTop = document.createElement("div");
-  orderNotifTop.className = "order-notif-top";
-  orderNotifTop.innerHTML = `<div class="order-notif-top-inner"><span class="order-notif-top-icon">🔔</span><span class="order-notif-top-text" id="orderNotifTopText"></span></div>`;
-  document.body.appendChild(orderNotifTop);
+  function initOrderNotificationTop() {
+    const orderNotifTop = document.createElement("div");
+    orderNotifTop.className = "order-notif-top";
+    orderNotifTop.innerHTML = `<div class="order-notif-top-inner"><span class="order-notif-top-icon">🔔</span><span class="order-notif-top-text" id="orderNotifTopText"></span></div>`;
+    document.body.appendChild(orderNotifTop);
 
-  (function initTopNotif() {
     const textEl = document.getElementById("orderNotifTopText");
+    if (!textEl) return;
 
     function showThenHide(entry) {
       textEl.textContent = entry.shortText;
@@ -881,23 +888,25 @@
       }, 5000);
     }
 
-    /* Nếu engine đã sẵn sàng thì subscribe ngay */
     if (window.__liveNotif) {
       window.__liveNotif.subscribe(showThenHide);
-    } else {
-      /* Fallback: chờ engine khởi động (core.js load sau) */
-      var waited = 0;
-      var waitInterval = setInterval(function() {
-        waited += 50;
-        if (window.__liveNotif) {
-          clearInterval(waitInterval);
-          window.__liveNotif.subscribe(showThenHide);
-        } else if (waited > 5000) {
-          clearInterval(waitInterval);
-        }
-      }, 50);
+      return;
     }
-  })();
+
+    var waited = 0;
+    var waitInterval = setInterval(function() {
+      waited += 100;
+
+      if (window.__liveNotif) {
+        clearInterval(waitInterval);
+        window.__liveNotif.subscribe(showThenHide);
+      } else if (waited > 5000) {
+        clearInterval(waitInterval);
+      }
+    }, 100);
+  }
+
+  setTimeout(initOrderNotificationTop, 3000);
 
   /* ── LIVE COUNT ── */
   (function liveCount() {
@@ -1486,8 +1495,6 @@
       hasColorVariant: true
     };
 
-    console.log("sizeVariant:", sizeVariant);
-    console.log("colorVariant.options[0].name:", colorVariant.options[0].name);
     vpBuildExtraGallerySlides();
     vpUpdateSizeUI(colorVariant.options[0].name);
 

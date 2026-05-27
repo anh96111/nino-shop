@@ -2196,11 +2196,19 @@ function getPhoneRaw() {
   return phoneInput.value.replace(/\D/g, "");
 }
 
+function runWhenIdle(fn, fallbackDelay) {
+  if (window.requestIdleCallback) {
+    requestIdleCallback(fn, { timeout: fallbackDelay || 3000 });
+  } else {
+    setTimeout(fn, fallbackDelay || 1000);
+  }
+}
+
 /* ===================================================
    SHARED LIVE NOTIF ENGINE
    window.__liveNotif — dùng chung cho mọi nơi
 =================================================== */
-(function initLiveNotifEngine() {
+function initLiveNotifEngine() {
   const MAX_HISTORY = 20;
   const history     = [];
   const subscribers = [];
@@ -2293,8 +2301,9 @@ function getPhoneRaw() {
     getHistory:    function() { return history; },
     formatTimeAgo: formatTimeAgo
   };
-})();
+}
 
+setTimeout(initLiveNotifEngine, 3500);
 /* ===================================================
    MODAL LIVE NOTIFICATION — subscribe engine
 =================================================== */
@@ -2421,8 +2430,7 @@ function bindCheckoutExitDiscountPopup() {
 (function init() {
   loadCartItems();
   buildFullGallery();
-  renderReviews();
-  setupReviewMediaLightbox();
+
   initLazyVideos();
   renderCartSummary();
   updateQtyDisplay();
@@ -2436,6 +2444,11 @@ function bindCheckoutExitDiscountPopup() {
 
   bindCheckoutExitDiscountPopup();
   initUrlDiscountPopupOnPriceSection();
+
+  runWhenIdle(function () {
+    renderReviews();
+    setupReviewMediaLightbox();
+  }, 1500);
 })();
 
 // force reupload

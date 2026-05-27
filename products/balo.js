@@ -26,7 +26,7 @@ const PRODUCT_CONFIG = {
   seo: {
     title:       "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6 – Đệm Lưng 3D, Phản Quang 360°, Chống Nước – BH 12 Tháng",
     description: "Balo học sinh chống gù cột sống – đệm lưng 3D, quai chữ S, phản quang 360°, chống nước lá sen, 6 ngăn riêng biệt. Size nhỏ lớp 1–3, size lớn lớp 4–6. Giao toàn quốc, COD, miễn phí ship.",
-    ogImage: "https://res.cloudinary.com/dvtgqfe2z/image/upload/v1779005373/Chot_jyylwm.jpg"
+    ogImage: "https://res.cloudinary.com/dfppbfjkm/image/upload/f_auto,q_auto,w_1200/v1779385611/c3_mrk14f.jpg"
   },
 
   // ── SUB HEADING ──
