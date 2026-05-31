@@ -3,6 +3,7 @@ const cldImage = (url, preset) => String(url || "").replace("/image/upload/", `/
 const imgCover = url => cldImage(url, "f_auto,q_auto:good,c_fill,g_auto,w_900,h_900");
 const imgContent = url => cldImage(url, "f_auto,q_auto:good,c_limit,w_900");
 const imgReview = url => cldImage(url, "f_auto,q_auto:good,c_fill,g_auto,w_260,h_260");
+const imgReviewFull = url => cldImage(url, "f_auto,q_auto:good,c_limit,w_1200");
 
 const PRODUCT_CONFIG = {
   id: "den-nang-luong-001",
@@ -171,7 +172,10 @@ const PRODUCT_CONFIG = {
         material: "",
         content: "Đèn ánh sáng tốt nên mua dùng thử. Sản phẩm tuy nhỏ nhưng ánh sáng chất lượng, mong sẽ sử dụng được lâu dài.",
         media: [
-          imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904649/vn-11134103-7r98o-lluu9tmij07z4b_hhphw2.webp"),
+          {
+            src: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904649/vn-11134103-7r98o-lluu9tmij07z4b_hhphw2.webp"),
+            fullSrc: imgReviewFull("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904649/vn-11134103-7r98o-lluu9tmij07z4b_hhphw2.webp")
+          },
           {
             type: "video",
             src: "https://res.cloudinary.com/dfppbfjkm/video/upload/v1779904653/vn-11110103-6ke16-lluuae4kiyfza3.16000051695136653_rr0ftr.mp4",
@@ -191,7 +195,10 @@ const PRODUCT_CONFIG = {
         material: "",
         content: "Shop ơi mình nhận được hàng rồi. Đóng gói chắc chắn cẩn thận. Sản phẩm tốt. Mình đánh giá 5 sao cảm ơn.",
         media: [
-          imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904661/vn-11134103-7r98o-lpot7rqf6awp18_soxyay.webp")
+          {
+            src: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904661/vn-11134103-7r98o-lpot7rqf6awp18_soxyay.webp"),
+            fullSrc: imgReviewFull("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904661/vn-11134103-7r98o-lpot7rqf6awp18_soxyay.webp")
+          }
         ],
         mediaFull: [],
         likes: 12
@@ -206,7 +213,10 @@ const PRODUCT_CONFIG = {
         material: "",
         content: "Shop giao hàng nhanh. Chất lượng sản phẩm đáng tiền mua. Đèn nhỏ gọn mà sáng lắm nha cả nhà. Shop tư vấn nhiệt tình.",
         media: [
-          imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904842/vn-11134103-7r98o-lnlln5a37y0d5b_afsikz.webp")
+          {
+            src: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904842/vn-11134103-7r98o-lnlln5a37y0d5b_afsikz.webp"),
+            fullSrc: imgReviewFull("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904842/vn-11134103-7r98o-lnlln5a37y0d5b_afsikz.webp")
+          }
         ],
         mediaFull: [],
         likes: 25
@@ -221,7 +231,10 @@ const PRODUCT_CONFIG = {
         material: "",
         content: "Giao nhanh đóng gói kĩ, đèn sáng, cánh của đèn gập lên xuống được. Chưa biết sạc bằng ánh sáng mặt trời được không do đèn có pin sẵn chưa test được. Nói chung rất ưng nha, nên mua.",
         media: [
-          imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904961/vn-11134103-7r98o-llluiem51ydrcb_xzlqiu.webp")
+          {
+            src: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904961/vn-11134103-7r98o-llluiem51ydrcb_xzlqiu.webp"),
+            fullSrc: imgReviewFull("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904961/vn-11134103-7r98o-llluiem51ydrcb_xzlqiu.webp")
+          }
         ],
         mediaFull: [],
         likes: 20
@@ -236,7 +249,10 @@ const PRODUCT_CONFIG = {
         material: "",
         content: "Đèn sáng ok mở dễ dàng, có nút điều chỉnh chế độ đèn. Giao hàng nhanh, đóng gói tốt. Mới mua nên chưa biết xài bền không, nếu bền sẽ ủng hộ tiếp.",
         media: [
-          imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904910/vn-11134103-7r98o-lpbw0ilo1v8bd0_onbbsl.webp")
+          {
+            src: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904910/vn-11134103-7r98o-lpbw0ilo1v8bd0_onbbsl.webp"),
+            fullSrc: imgReviewFull("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904910/vn-11134103-7r98o-lpbw0ilo1v8bd0_onbbsl.webp")
+          }
         ],
         mediaFull: [],
         likes: 30
@@ -251,7 +267,10 @@ const PRODUCT_CONFIG = {
         material: "",
         content: "Sản phẩm rất tốt, đóng gói chắc chắn giao hàng nhanh. Shop tư vấn hỗ trợ nhiệt tình, nói chung là thấy ưng về chất lượng và cách phục vụ. 5 sao.",
         media: [
-          imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904876/vn-11134103-7r98o-lsaw41gfv9hg06_smfwam.webp")
+          {
+            src: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904876/vn-11134103-7r98o-lsaw41gfv9hg06_smfwam.webp"),
+            fullSrc: imgReviewFull("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904876/vn-11134103-7r98o-lsaw41gfv9hg06_smfwam.webp")
+          }
         ],
         mediaFull: [],
         likes: 14
@@ -305,7 +324,10 @@ const PRODUCT_CONFIG = {
         material: "",
         content: "Bóng đèn đẹp lắm, nghe lại còn giá hạt dẻ. Mình mua rồi mà giờ mua thêm 4 cái nữa, cho shop 5 sao.",
         media: [
-          imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904928/vn-11134103-7ras8-mbq4h0gr7t1xdc_kvkkzm.webp")
+          {
+            src: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904928/vn-11134103-7ras8-mbq4h0gr7t1xdc_kvkkzm.webp"),
+            fullSrc: imgReviewFull("https://res.cloudinary.com/dfppbfjkm/image/upload/v1779904928/vn-11134103-7ras8-mbq4h0gr7t1xdc_kvkkzm.webp")
+          }
         ],
         mediaFull: [],
         likes: 17

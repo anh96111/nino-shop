@@ -155,15 +155,20 @@
      ? `<div class="solar-review-media">
          ${mediaArr.map(m => {
            const src = typeof m === "string" ? m : (m && m.src ? m.src : "");
-           const poster = typeof m === "object" && m.poster ? m.poster : src;
-           const isVideo = typeof m === "object" && m.type === "video";
+          const fullSrc = typeof m === "object" && m.fullSrc ? m.fullSrc : src;
+          const poster = typeof m === "object" && m.poster ? m.poster : src;
+          const isVideo = typeof m === "object" && m.type === "video";
+
+           if (!src) return "";
 
            return isVideo
              ? `<button type="button" class="solar-review-media-item is-video" data-review-video="${src}">
                   <img src="${poster}" alt="review video" loading="lazy">
                   <span class="material-symbols-outlined">play_circle</span>
                 </button>`
-             : `<img class="solar-review-media-item" src="${src}" alt="review media" loading="lazy">`;
+             : `<button type="button" class="solar-review-media-item is-image" data-review-image="${fullSrc}">
+                  <img src="${src}" alt="review media" loading="lazy">
+                </button>`;
          }).join("")}
        </div>`
      : "";
@@ -382,17 +387,22 @@
 
           <h1>${P.name || P.shortName || "Đèn Năng Lượng Mặt Trời 40W"}</h1>
 
-          <div class="solar-rating-row">
-            <div class="solar-rating-stars">
-              <span class="material-symbols-outlined filled">star</span>
-              <span class="material-symbols-outlined filled">star</span>
-              <span class="material-symbols-outlined filled">star</span>
-              <span class="material-symbols-outlined filled">star</span>
-              <span class="material-symbols-outlined filled">star</span>
-              <strong>5.0</strong>
-            </div>
-            <span class="solar-rating-sep">|</span>
-            <span class="solar-sold">Đã bán <strong>${P.soldText || "112.5k"}</strong></span>
+          <div class="solar-proof-row">
+            <span class="solar-proof-rating">★ <strong>4.8/5</strong> <span>(1.2k)</span></span>
+            <span class="solar-proof-sep">|</span>
+            <span class="solar-proof-sold">Đã bán <strong>112.7k</strong></span>
+            <span class="solar-proof-ship">🚚 Miễn phí vận chuyển</span>
+          </div>
+
+          <div class="solar-rank-box">
+            <div class="solar-rank-item">🏆 Top sản phẩm bán chạy</div>
+            <div class="solar-rank-item">Tỷ lệ khách hàng mua lại 95%</div>
+          </div>
+
+          <div class="solar-trust-row">
+            <div class="solar-trust-item">💳 Thanh toán bảo mật</div>
+            <div class="solar-trust-item">🛒 Hủy đơn dễ dàng</div>
+            <div class="solar-trust-item">💬 Hỗ trợ 24/7</div>
           </div>
 
           <div class="solar-price-box">
@@ -653,10 +663,129 @@
         wrap.innerHTML = buildReviewsHtml();
         bindReviewMoreBtn();
         bindReviewVideoBtns();
+        bindReviewImageBtns();
       }
     });
   }
   bindReviewMoreBtn();
+
+  function injectReviewImageStyle() {
+    if (document.getElementById("solar-review-image-style")) return;
+
+    const style = document.createElement("style");
+    style.id = "solar-review-image-style";
+    style.textContent = `
+      .solar-review-media-item.is-image {
+        position: relative;
+        overflow: hidden;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .solar-review-media-item.is-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        object-fit: cover;
+      }
+
+      .solar-review-image-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100002;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 14px;
+        background: rgba(0, 0, 0, 0.78);
+      }
+
+      .solar-review-image-box {
+        position: relative;
+        width: 100%;
+        max-width: 520px;
+        max-height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .solar-review-image-box img {
+        display: block;
+        max-width: 100%;
+        max-height: 90vh;
+        border-radius: 14px;
+        object-fit: contain;
+        background: #000;
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+      }
+
+      .solar-review-image-close {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        z-index: 2;
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(17, 24, 39, 0.86);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .solar-review-image-close .material-symbols-outlined {
+        font-size: 22px !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function openReviewImage(src) {
+    if (!src) return;
+
+    injectReviewImageStyle();
+
+    const old = document.getElementById("solarReviewImageOverlay");
+    if (old) old.remove();
+
+    const overlay = document.createElement("div");
+    overlay.id = "solarReviewImageOverlay";
+    overlay.className = "solar-review-image-overlay";
+    overlay.innerHTML = `
+      <div class="solar-review-image-box">
+        <button type="button" class="solar-review-image-close" id="solarReviewImageClose">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+        <img src="${src}" alt="review media full">
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const closeBtn = document.getElementById("solarReviewImageClose");
+    closeBtn.addEventListener("click", function () {
+      overlay.remove();
+    });
+
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) overlay.remove();
+    });
+  }
+
+  function bindReviewImageBtns() {
+    document.querySelectorAll("[data-review-image]").forEach(btn => {
+      btn.addEventListener("click", function () {
+        openReviewImage(btn.dataset.reviewImage);
+      });
+    });
+  }
 
   function openReviewVideo(src) {
     if (!src) return;
@@ -697,6 +826,8 @@
   }
 
   bindReviewVideoBtns();
+  bindReviewImageBtns();
+  injectReviewImageStyle();
 
   const descMoreBtn = document.getElementById("solarDescMoreBtn");
   const descFull = document.getElementById("solarDescFull");

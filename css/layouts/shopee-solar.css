@@ -271,6 +271,100 @@ body {
   gap: 10px;
   font-size: 13px;
 }
+/* ── PROOF / TRUST ROW GIỐNG SHOPEE ── */
+.solar-proof-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.35;
+  color: #111827;
+  margin-top: 8px;
+}
+
+.solar-proof-rating {
+  color: #111827;
+  font-weight: 700;
+}
+
+.solar-proof-rating::first-letter {
+  color: #f59e0b;
+}
+
+.solar-proof-rating strong {
+  font-weight: 900;
+}
+
+.solar-proof-rating span {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.solar-proof-sep {
+  color: #d1d5db;
+}
+
+.solar-proof-sold {
+  color: #374151;
+  font-weight: 500;
+}
+
+.solar-proof-sold strong {
+  color: #111827;
+  font-weight: 900;
+}
+
+.solar-proof-ship {
+  color: #059669;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.solar-rank-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 34px;
+  padding: 7px 0;
+  margin-top: 8px;
+  border-top: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.solar-rank-item {
+  display: flex;
+  align-items: center;
+  color: #c2410c;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.solar-rank-item + .solar-rank-item {
+  padding-left: 14px;
+  border-left: 1px solid #fed7aa;
+}
+
+.solar-trust-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 32px;
+  padding: 7px 0;
+  margin-top: 2px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.solar-trust-item {
+  color: #374151;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+}
 
 .solar-rating-stars {
   display: flex;
@@ -1042,6 +1136,26 @@ body {
 .solar-bottom-bar--single {
   display: block;
 }
+@keyframes solarBuyShake {
+  0%, 88%, 100% {
+    transform: translateX(0);
+  }
+  90% {
+    transform: translateX(-2px);
+  }
+  92% {
+    transform: translateX(2px);
+  }
+  94% {
+    transform: translateX(-2px);
+  }
+  96% {
+    transform: translateX(2px);
+  }
+  98% {
+    transform: translateX(0);
+  }
+}
 
 .solar-bottom-buy {
   width: 100%;
@@ -1060,8 +1174,8 @@ body {
   gap: 8px;
   box-shadow: 0 6px 16px rgba(238, 77, 45, 0.25);
   transition: transform .15s, filter .15s;
+  animation: solarBuyShake 4s ease-in-out infinite;
 }
-
 .solar-bottom-buy:hover {
   filter: brightness(1.08);
 }
@@ -1379,40 +1493,55 @@ body {
   margin-bottom: 16px !important;
   padding-top: 0 !important;
 }
-/* ── THU GỌN KHỐI GIÁ ĐỂ ĐẨY COMBO LÊN ── */
+/* ── GIÁ SẢN PHẨM — GỌN, NHẸ, ÍT ĐÓNG KHUNG ── */
 .solar-price-box {
   margin-top: 8px !important;
   margin-bottom: 10px !important;
-  padding: 10px 12px !important;
+  padding: 8px 0 10px !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  border-radius: 0 !important;
 }
 
 .solar-price-line {
   align-items: baseline !important;
-  gap: 7px !important;
+  gap: 8px !important;
 }
 
 .solar-price {
-  font-size: 24px !important;
-  line-height: 1.1 !important;
+  font-size: 28px !important;
+  line-height: 1.08 !important;
+  color: #ee4d2d !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
 }
 
 .solar-old-price {
   font-size: 13px !important;
+  color: #9ca3af !important;
 }
 
 .solar-discount {
-  font-size: 11px !important;
+  font-size: 10.5px !important;
   padding: 2px 5px !important;
+  border-radius: 4px !important;
+  background: #fff1ed !important;
+  color: #ee4d2d !important;
+  border: 1px solid #ffd8cf !important;
 }
 
 .solar-price-note {
-  margin-top: 4px !important;
+  margin-top: 5px !important;
   font-size: 11.5px !important;
   line-height: 1.35 !important;
+  color: #6b7280 !important;
+  font-weight: 500 !important;
 }
 
 .solar-price-note .material-symbols-outlined {
   font-size: 14px !important;
+  color: #9ca3af !important;
 }
 
 .solar-combo-area {
