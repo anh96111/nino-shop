@@ -544,22 +544,38 @@
           </div>
         </div>
 
-        <!-- ĐỊA CHỈ ĐƠN GIẢN -->
+        <!-- ĐỊA CHỈ 3 CẤP -->
         <div class="form-group">
           <label>Địa chỉ người nhận <span style="color:var(--primary)">*</span></label>
 
-          <textarea
-            id="address"
-            rows="3"
-            required
-            placeholder="VD: Số nhà, đường, xã/phường, quận/huyện, tỉnh/thành khi chưa sáp nhập"
-            style="width:100%; min-height:76px; resize:vertical;"
-          ></textarea>
+          <div class="checkout-address-field" id="checkoutAddressField">
+            <div class="checkout-location-display" id="checkoutLocationDisplay">
+              <span class="checkout-location-text placeholder" id="checkoutLocationText">
+                Chọn Tỉnh/Huyện/Xã
+              </span>
+            </div>
 
+            <span class="checkout-address-separator">|</span>
+
+            <input
+              type="text"
+              id="streetAddress"
+              class="checkout-street-input"
+              placeholder="Số nhà, tên đường"
+              autocomplete="street-address"
+            />
+
+            <div class="checkout-location-menu" id="checkoutLocationMenu"></div>
+          </div>
+
+          <div class="checkout-full-address-preview" id="checkoutFullAddressPreview">
+            Địa chỉ đầy đủ sẽ hiển thị tại đây
+          </div>
+
+          <input type="hidden" id="address" value="">
           <input type="hidden" id="province" value="">
           <input type="hidden" id="district" value="">
           <input type="hidden" id="ward" value="">
-          <input type="hidden" id="streetAddress" value="">
 
           <div class="field-error" id="addressError"></div>
         </div>
@@ -698,7 +714,7 @@
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
           coreScript.defer = true;
-          coreScript.src = "/js/core.js?v=11";
+          coreScript.src = "/js/core.js?v=12";
           document.body.appendChild(coreScript);
         };
 

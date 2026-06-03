@@ -1899,17 +1899,19 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
   try {
     const fullName  = document.getElementById("fullName").value.trim();
     const phoneRaw  = getPhoneRaw();
+    updateCheckoutAddressValue();
+
     const address   = document.getElementById("address").value.trim();
-    const province  = "";
-    const district  = "";
-    const ward      = "";
-    const street    = "";
+    const province  = document.getElementById("province").value.trim();
+    const district  = document.getElementById("district").value.trim();
+    const ward      = document.getElementById("ward").value.trim();
+    const street    = document.getElementById("streetAddress").value.trim();
     const orderNote = document.getElementById("orderNote").value.trim();
 
     let hasError = false;
 
-    if (!address) {
-      showFieldError("address", "addressError", "Vui lòng nhập địa chỉ người nhận");
+    if (!province || !district || !ward || !street || !address) {
+      showFieldError("address", "addressError", "Vui lòng chọn đầy đủ tỉnh/huyện/xã và nhập địa chỉ chi tiết");
       hasError = true;
     }
 
@@ -1949,10 +1951,10 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       full_name: fullName,
       phone: phoneRaw,
       address: address,
-      province: "",
-      district: "",
-      ward: "",
-      street_address: ""
+      province: province,
+      district: district,
+      ward: ward,
+      street_address: street
     };
 
     const payloadItems = activeItems.map(item => {
