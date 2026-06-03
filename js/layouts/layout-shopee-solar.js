@@ -78,7 +78,12 @@
   const slidesHtml = images.length
     ? images.map((src, index) => `
         <div class="slide">
-          <img src="${src}" alt="${P.shortName || P.name || "Sản phẩm"} ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}">
+          <img
+            src="${src}"
+            alt="${P.shortName || P.name || "Sản phẩm"} ${index + 1}"
+            loading="${index === 0 ? "eager" : "lazy"}"
+            fetchpriority="${index === 0 ? "high" : "low"}"
+            decoding="async">
         </div>
       `).join("")
     : `
@@ -96,7 +101,7 @@
   const thumbsHtml = images.length
   ? images.map((src, index) => `
       <button type="button" class="solar-thumb ${index === 0 ? "active" : ""}" data-thumb="${index}">
-        <img src="${src}" alt="thumb ${index + 1}" loading="lazy">
+        <img src="${src}" alt="thumb ${index + 1}" loading="lazy" decoding="async">
       </button>
     `).join("")
   : "";
@@ -146,7 +151,7 @@
           data-variant-type="${type}"
           data-variant-name="${name}"
           data-variant-index="${index}">
-          ${image ? `<img src="${image}" alt="${displayName}" loading="lazy">` : ""}
+          ${image ? `<img src="${image}" alt="${displayName}" loading="lazy" decoding="async">` : ""}
           <span>${displayName}</span>
         </button>
       `;
@@ -235,11 +240,11 @@
 
            return isVideo
              ? `<button type="button" class="solar-review-media-item is-video" data-review-video="${src}">
-                  <img src="${poster}" alt="review video" loading="lazy">
+                  <img src="${poster}" alt="review video" loading="lazy" decoding="async">
                   <span class="material-symbols-outlined">play_circle</span>
                 </button>`
              : `<button type="button" class="solar-review-media-item is-image" data-review-image="${fullSrc}">
-                  <img src="${src}" alt="review media" loading="lazy">
+                  <img src="${src}" alt="review media" loading="lazy" decoding="async">
                 </button>`;
          }).join("")}
        </div>`
@@ -250,7 +255,7 @@
     return `
       <div class="solar-review-item">
         <div class="solar-review-head">
-          <img class="solar-review-avatar" src="${rv.avatar || ""}" alt="${rv.name || ""}" loading="lazy">
+          <img class="solar-review-avatar" src="${rv.avatar || ""}" alt="${rv.name || ""}" loading="lazy" decoding="async">
           <div class="solar-review-meta">
             <div class="solar-review-name">${rv.name || ""}</div>
             <div class="solar-review-stars">${starsHtml}</div>
@@ -293,7 +298,7 @@
   const shopHtml = `
     <div class="solar-shop-block">
       <div class="solar-shop-head">
-        ${S.avatar ? `<img class="solar-shop-avatar" src="${S.avatar}" alt="${S.name || ""}" loading="lazy">` : ""}
+        ${S.avatar ? `<img class="solar-shop-avatar" src="${S.avatar}" alt="${S.name || ""}" loading="lazy" decoding="async">` : ""}
         <div class="solar-shop-meta">
           <div class="solar-shop-name">${S.name || ""}</div>
           <div class="solar-shop-online">
@@ -340,7 +345,7 @@
         `).join("")}
       </div>
       ${C.storeMapImage ? `
-        <img class="solar-store-map" src="${C.storeMapImage}" alt="Bản đồ cửa hàng" loading="lazy">
+        <img class="solar-store-map" src="${C.storeMapImage}" alt="Bản đồ cửa hàng" loading="lazy" decoding="async">
       ` : ""}
     </div>
   ` : "";
@@ -1132,7 +1137,7 @@ function openCheckout() {
         <button type="button" class="solar-review-image-close" id="solarReviewImageClose">
           <span class="material-symbols-outlined">close</span>
         </button>
-        <img src="${src}" alt="review media full">
+        <img src="${src}" alt="review media full" decoding="async">
       </div>
     `;
 
