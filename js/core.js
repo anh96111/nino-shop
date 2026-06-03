@@ -1021,9 +1021,18 @@ slider.addEventListener("touchend", () => {
    VARIANT / COMBO HELPERS
 =================================================== */
 function getSelectedVariants() {
+  if (
+    PRODUCT_CONFIG &&
+    PRODUCT_CONFIG.selectedVariants &&
+    Object.keys(PRODUCT_CONFIG.selectedVariants).length
+  ) {
+    return PRODUCT_CONFIG.selectedVariants;
+  }
+
   if (HAS_COLOR_VARIANT && window.__variantPopup) {
     return window.__variantPopup.getSelectedVariants();
   }
+
   const result = {};
   document.querySelectorAll(".variant-group").forEach(group => {
     const type = group.dataset.type;

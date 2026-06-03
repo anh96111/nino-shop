@@ -31,16 +31,19 @@
   const images = Array.isArray(P.images) && P.images.length ? P.images : [];
   const combos = Array.isArray(P.combos) ? P.combos : [];
 
+  const variants = Array.isArray(P.variants) ? P.variants : [];
+  const hasVariants = variants.length > 0;
+  const hasCombos = combos.length > 0;
+  const isBaloProduct = P.slug === "balo";
+
   /* ── Thứ tự hiển thị combo (đảo): index gốc 2,1,0 ── */
   const displayOrder = combos.map((_, i) => i).reverse();
 
-  const rawTags = Array.isArray(P.sliderTags) && P.sliderTags.length
-    ? P.sliderTags
-    : [
-        "Công suất<br>40W",
-        "Sử dụng liên tục<br>8h",
-        "Bảo hành 1 đổi 1<br>trong 6 tháng"
-      ];
+  const rawTags = Array.isArray(P.sliderTags) ? P.sliderTags : [
+    "Công suất<br>40W",
+    "Sử dụng liên tục<br>8h",
+    "Bảo hành 1 đổi 1<br>trong 6 tháng"
+  ];
 
   const tagIcons = ["bolt", "schedule", "verified"];
   const featureTags = rawTags.slice(0, 3).map((raw, idx) => {
@@ -66,6 +69,7 @@
   let reviewExpanded = false;
 
   let selectedComboIndex = null;
+  const selectedVariants = {};
 
   /* ── Snapshot thông tin nhận hàng trước khi submit ── */
   let lastCustomerSnapshot = null;
@@ -105,6 +109,71 @@
       <p class="solar-feature-value">${t.value}</p>
     </div>
   `).join("");
+
+  function buildVariantOptionsHtml(variant) {
+    const type = variant.type || "";
+    const label = variant.label || type;
+    const extraBagStockHtml = type === "extra_bag_color" && P.extraBagGift?.enabled
+      ? `<span class="solar-extra-bag-stock">(số lượng túi còn: <strong id="solarExtraBagStock">${P.extraBagGift.initialStock || 14}</strong>)</span>`
+      : "";
+    const options = Array.isArray(variant.options) ? variant.options : [];
+
+    if (!options.length) return "";
+
+    if (!selectedVariants[type]) {
+      selectedVariants[type] = options[0].name || "";
+    }
+
+    const optionsHtml = options.map((opt, index) => {
+      const name = opt.name || "";
+      const image = opt.image || "";
+      const active = selectedVariants[type] === name || (!selectedVariants[type] && index === 0);
+
+      const colorUiNameMap = {
+        "Navy Phối Xanh Lá": "Xanh lá",
+        "Navy": "Navy",
+        "Navy Phối Hồng": "Hồng",
+        "Nâu": "Nâu"
+      };
+
+      const displayName = type === "color"
+        ? (colorUiNameMap[name] || name)
+        : name;
+
+      return `
+        <button type="button"
+          class="solar-variant-option ${active ? "active" : ""}"
+          data-variant-type="${type}"
+          data-variant-name="${name}"
+          data-variant-index="${index}">
+          ${image ? `<img src="${image}" alt="${displayName}" loading="lazy">` : ""}
+          <span>${displayName}</span>
+        </button>
+      `;
+    }).join("");
+
+    return `
+      <div class="solar-variant-group" data-variant-group="${type}">
+        <div class="solar-section-head">
+          <div class="solar-section-title">${label} ${extraBagStockHtml}</div>
+          <div class="solar-section-hint" data-variant-hint="${type}">
+            Đã chọn: ${selectedVariants[type]}
+          </div>
+        </div>
+        <div class="solar-variant-list">
+          ${optionsHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  const variantHtml = hasVariants
+    ? `
+      <div class="solar-variant-area" id="solarVariantArea">
+        ${variants.map(buildVariantOptionsHtml).join("")}
+      </div>
+    `
+    : ""; 
 
   /* ── Combo cards hiển thị theo displayOrder, data-index vẫn dùng index GỐC ── */
   const comboHtml = displayOrder.map(index => {
@@ -153,9 +222,12 @@
     const mediaArr = Array.isArray(rv.media) ? rv.media : [];
     const mediaHtml = mediaArr.length
      ? `<div class="solar-review-media">
-         ${mediaArr.map(m => {
-           const src = typeof m === "string" ? m : (m && m.src ? m.src : "");
-          const fullSrc = typeof m === "object" && m.fullSrc ? m.fullSrc : src;
+         ${mediaArr.map((m, idx) => {
+          const src = typeof m === "string" ? m : (m && m.src ? m.src : "");
+          const mediaFullArr = Array.isArray(rv.mediaFull) ? rv.mediaFull : [];
+          const fullSrc = typeof m === "object" && m.fullSrc
+            ? m.fullSrc
+            : (mediaFullArr[idx] || src);
           const poster = typeof m === "object" && m.poster ? m.poster : src;
           const isVideo = typeof m === "object" && m.type === "video";
 
@@ -346,16 +418,18 @@
 
   root.innerHTML = `
     <main class="solar-page">
-      <header class="solar-hero">
-        <div class="solar-hero-inner">
-          <div class="solar-brand">
-            <span class="solar-brand-nino">Nino</span>
-            <span class="solar-brand-vn">Viet Nam</span>
+      ${isBaloProduct ? "" : `
+        <header class="solar-hero">
+          <div class="solar-hero-inner">
+            <div class="solar-brand">
+              <span class="solar-brand-nino">Nino</span>
+              <span class="solar-brand-vn">Viet Nam</span>
+            </div>
+            <p class="solar-hero-desc">Giải pháp chiếu sáng thông minh &amp; bền bỉ</p>
           </div>
-          <p class="solar-hero-desc">Giải pháp chiếu sáng thông minh &amp; bền bỉ</p>
-        </div>
-        <div class="solar-hero-blur"></div>
-      </header>
+          <div class="solar-hero-blur"></div>
+        </header>
+      `}
 
       <section class="solar-product-wrap">
         <div class="solar-gallery">
@@ -382,10 +456,12 @@
         <div class="solar-info">
           <div class="solar-shop-row">
             <span class="solar-fav-badge">Yêu thích</span>
-            <span class="solar-shop-cat">${P.category || "Đèn năng lượng mặt trời"}</span>
+            ${isBaloProduct ? "" : `
+              <span class="solar-shop-cat">${P.category || "Đèn năng lượng mặt trời"}</span>
+            `}
           </div>
 
-          <h1>${P.name || P.shortName || "Đèn Năng Lượng Mặt Trời 40W"}</h1>
+          <h1>${P.uiName || P.name || P.shortName || "Đèn Năng Lượng Mặt Trời 40W"}</h1>
 
           <div class="solar-proof-row">
             <span class="solar-proof-rating">★ <strong>4.8/5</strong> <span>(1.2k)</span></span>
@@ -399,11 +475,13 @@
             <div class="solar-rank-item">Tỷ lệ khách hàng mua lại 95%</div>
           </div>
 
-          <div class="solar-trust-row">
-            <div class="solar-trust-item">💳 Thanh toán bảo mật</div>
-            <div class="solar-trust-item">🛒 Hủy đơn dễ dàng</div>
-            <div class="solar-trust-item">💬 Hỗ trợ 24/7</div>
-          </div>
+          ${isBaloProduct ? "" : `
+            <div class="solar-trust-row">
+              <div class="solar-trust-item">💳 Thanh toán bảo mật</div>
+              <div class="solar-trust-item">🛒 Hủy đơn dễ dàng</div>
+              <div class="solar-trust-item">💬 Hỗ trợ 24/7</div>
+            </div>
+          `}
 
           <div class="solar-price-box">
             <div class="solar-price-line">
@@ -413,24 +491,40 @@
             </div>
             <p class="solar-price-note">
               <span class="material-symbols-outlined">info</span>
-              Giá lẻ 1 chiếc, chọn combo để tiết kiệm được 216.000đ.
+              ${isBaloProduct ? "Giá đã bao gồm bộ quà tặng và miễn phí vận chuyển." : "Giá lẻ 1 chiếc, chọn combo để tiết kiệm được 216.000đ."}
             </p>
           </div>
 
-          <div class="solar-combo-area" id="solarComboArea">
-            <div class="solar-section-head">
-              <div class="solar-section-title">Chọn combo ưu đãi</div>
-              <div class="solar-section-hint" id="solarComboHint">Chưa chọn</div>
-            </div>
+          ${hasCombos ? `
+            <div class="solar-combo-area" id="solarComboArea">
+              <div class="solar-section-head">
+                <div class="solar-section-title">Chọn combo ưu đãi</div>
+                <div class="solar-section-hint" id="solarComboHint">Chưa chọn</div>
+              </div>
 
-            <div class="solar-combo-list">
-              ${comboHtml}
-            </div>
+              <div class="solar-combo-list">
+                ${comboHtml}
+              </div>
 
-            <div class="solar-notice" id="solarNotice">
-              Vui lòng chọn combo trước khi đặt hàng
+              <div class="solar-notice" id="solarNotice">
+                Vui lòng chọn combo trước khi đặt hàng
+              </div>
             </div>
-          </div>
+          ` : ""}
+
+          ${isBaloProduct ? `
+            ${variantHtml}
+
+            <div class="solar-variant-actions">
+              <button type="button" class="solar-variant-add" id="solarVariantAddToCart">
+                Thêm giỏ hàng
+              </button>
+
+              <button type="button" class="solar-variant-buy" id="solarVariantBuyNow">
+                Mua ngay
+              </button>
+            </div>
+          ` : ""}
 
           <div class="solar-content-area">
 
@@ -484,7 +578,12 @@
     </main>
 
     <div class="solar-bottom-bar solar-bottom-bar--single">
-      <button class="solar-bottom-buy" id="solarBuyNow">
+      <button class="solar-bottom-cart" id="goToCartBtn" type="button">
+        <span class="material-symbols-outlined">shopping_cart</span>
+        <span class="cart-badge" id="cartBadge"></span>
+      </button>
+
+      <button class="solar-bottom-buy" id="solarBuyNow" type="button">
         <span class="material-symbols-outlined">bolt</span>
         MUA NGAY
       </button>
@@ -601,12 +700,27 @@
     return false;
   }
 
-  function openCheckout() {
-    const combo = requireCombo();
-    if (!combo) return;
+function applyBaloVariantsToProduct() {
+  const selectedText = Object.values(selectedVariants).filter(Boolean).join(" - ");
 
-    applyComboToProduct(combo);
-    syncHiddenCombo();
+  P.selectedVariantText = selectedText;
+  P.selectedVariants = { ...selectedVariants };
+
+  if (typeof window.PRODUCT === "object" && window.PRODUCT) {
+    window.PRODUCT.selectedVariantText = selectedText;
+    window.PRODUCT.selectedVariants = { ...selectedVariants };
+  }
+
+  const qtyInput = document.getElementById("quantity");
+  if (qtyInput) {
+    qtyInput.value = "1";
+    qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+}
+
+function openCheckout() {
+  if (isBaloProduct) {
+    applyBaloVariantsToProduct();
 
     if (triggerCoreBuy()) return;
 
@@ -614,11 +728,27 @@
       window.openVariantPopup();
       return;
     }
-    if (typeof window.openCheckoutPopup === "function") {
-      window.openCheckoutPopup();
-      return;
-    }
+
+    return;
   }
+
+  const combo = requireCombo();
+  if (!combo) return;
+
+  applyComboToProduct(combo);
+  syncHiddenCombo();
+
+  if (triggerCoreBuy()) return;
+
+  if (typeof window.openVariantPopup === "function") {
+    window.openVariantPopup();
+    return;
+  }
+  if (typeof window.openCheckoutPopup === "function") {
+    window.openCheckoutPopup();
+    return;
+  }
+}
 
   document.querySelectorAll("[data-combo-card]").forEach(card => {
     card.addEventListener("click", () => {
@@ -626,18 +756,89 @@
     });
   });
 
+  document.querySelectorAll("[data-variant-name]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const type = btn.dataset.variantType || "";
+      const name = btn.dataset.variantName || "";
+
+      if (!type || !name) return;
+
+      selectedVariants[type] = name;
+
+      document.querySelectorAll(`[data-variant-type="${type}"]`).forEach(item => {
+        item.classList.toggle("active", item.dataset.variantName === name);
+      });
+
+      const hint = document.querySelector(`[data-variant-hint="${type}"]`);
+      if (hint) {
+        hint.textContent = "Đã chọn: " + name;
+      }
+
+      if (type === "color") {
+        const idx = Number(btn.dataset.variantIndex || 0);
+        const slidesEl2 = document.getElementById("solarSlides");
+        const targetSlide = slidesEl2 ? slidesEl2.querySelectorAll(".slide")[idx] : null;
+
+        if (slidesEl2 && targetSlide) {
+          slidesEl2.scrollLeft = targetSlide.offsetLeft;
+        }
+
+        document.querySelectorAll("[data-dot]").forEach(dot => {
+          dot.classList.toggle("active", Number(dot.dataset.dot) === idx);
+        });
+
+        document.querySelectorAll("[data-thumb]").forEach(thumb => {
+          thumb.classList.toggle("active", Number(thumb.dataset.thumb) === idx);
+        });
+      }
+    });
+  });
+
   const slidesEl = document.getElementById("solarSlides");
   if (slidesEl) {
     slidesEl.addEventListener("scroll", () => {
-      const width = slidesEl.clientWidth || 1;
-      const activeIndex = Math.round(slidesEl.scrollLeft / width);
+      const slides = Array.from(slidesEl.querySelectorAll(".slide"));
+      if (!slides.length) return;
+
+      let activeIndex = 0;
+      let minDistance = Infinity;
+
+      slides.forEach((slide, index) => {
+        const distance = Math.abs(slide.offsetLeft - slidesEl.scrollLeft);
+        if (distance < minDistance) {
+          minDistance = distance;
+          activeIndex = index;
+        }
+      });
 
       document.querySelectorAll("[data-dot]").forEach(dot => {
         dot.classList.toggle("active", Number(dot.dataset.dot) === activeIndex);
       });
+
       document.querySelectorAll("[data-thumb]").forEach(t => {
         t.classList.toggle("active", Number(t.dataset.thumb) === activeIndex);
-     });
+      });
+
+      if (activeIndex <= 3) {
+        const colorBtn = document.querySelector(
+          `[data-variant-type="color"][data-variant-index="${activeIndex}"]`
+        );
+
+        if (colorBtn) {
+          const colorName = colorBtn.dataset.variantName || "";
+
+          selectedVariants.color = colorName;
+
+          document.querySelectorAll(`[data-variant-type="color"]`).forEach(item => {
+            item.classList.toggle("active", item === colorBtn);
+          });
+
+          const hint = document.querySelector(`[data-variant-hint="color"]`);
+          if (hint) {
+            hint.textContent = "Đã chọn: " + colorName;
+          }
+        }
+      }
 
     }, { passive: true });
   }
@@ -675,6 +876,173 @@
     const style = document.createElement("style");
     style.id = "solar-review-image-style";
     style.textContent = `
+
+      .solar-proof-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .solar-bottom-bar--single {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .solar-bottom-cart {
+        position: relative;
+        height: 52px;
+        border: 1px solid #ef4444;
+        border-radius: 14px;
+        background: #fff;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .solar-bottom-cart .material-symbols-outlined {
+        font-size: 26px;
+      }
+
+      .solar-bottom-cart .cart-badge {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        min-width: 18px;
+        height: 18px;
+        padding: 0 5px;
+        border-radius: 999px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 18px;
+        text-align: center;
+        display: none;
+      }
+
+      .solar-bottom-cart .cart-badge.show {
+        display: inline-block;
+      }
+
+      .solar-variant-actions {
+        display: grid;
+        grid-template-columns: 2fr 5fr;
+        gap: 10px;
+        margin: 12px 0 16px;
+      }
+
+      .solar-variant-add,
+      .solar-variant-buy {
+        border: none;
+        border-radius: 14px;
+        padding: 13px 10px;
+        font-size: 14px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .solar-variant-add {
+        background: #fff;
+        color: #ef4444;
+        border: 1px solid #ef4444;
+      }
+
+      .solar-variant-buy {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+      }
+
+      .solar-extra-bag-stock {
+        display: inline-block;
+        margin-left: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #ef4444;
+      }
+
+      .solar-extra-bag-stock strong {
+        font-weight: 900;
+      }
+
+      .solar-proof-ship {
+        margin-left: auto;
+        white-space: nowrap;
+      }
+
+      .solar-variant-area {
+        margin: 14px 0;
+      }
+
+      .solar-variant-group {
+        margin-bottom: 16px;
+      }
+
+      .solar-variant-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .solar-variant-group[data-variant-group="color"] .solar-variant-list,
+      .solar-variant-group[data-variant-group="extra_bag_color"] .solar-variant-list {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .solar-variant-group[data-variant-group="color"] .solar-variant-option,
+      .solar-variant-group[data-variant-group="extra_bag_color"] .solar-variant-option {
+        min-width: 0;
+        flex: unset;
+        padding: 6px 4px;
+        font-size: 11px;
+      }
+
+      .solar-variant-group[data-variant-group="color"] .solar-variant-option img,
+      .solar-variant-group[data-variant-group="extra_bag_color"] .solar-variant-option img {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 4px;
+      }
+
+      .solar-variant-option {
+        min-width: calc(50% - 4px);
+        flex: 1 1 calc(50% - 4px);
+        border: 1px solid #e5e7eb;
+        background: #fff;
+        border-radius: 12px;
+        padding: 8px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .solar-variant-option.active {
+        border-color: #ef4444;
+        background: #fff7f7;
+        box-shadow: 0 0 0 1px #ef4444 inset;
+      }
+
+      .solar-variant-option img {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 10px;
+        display: block;
+        margin: 0 auto 6px;
+      }
+
+      .solar-variant-option span {
+        display: block;
+        line-height: 1.35;
+      }
+
       .solar-review-media-item.is-image {
         position: relative;
         overflow: hidden;
@@ -706,8 +1074,8 @@
       .solar-review-image-box {
         position: relative;
         width: 100%;
-        max-width: 520px;
-        max-height: 90vh;
+        max-width: 92vw;
+        max-height: 94vh;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -715,8 +1083,9 @@
 
       .solar-review-image-box img {
         display: block;
-        max-width: 100%;
-        max-height: 90vh;
+        width: auto;
+        max-width: 92vw;
+        max-height: 94vh;
         border-radius: 14px;
         object-fit: contain;
         background: #000;
@@ -847,8 +1216,51 @@
     });
   });
 
+  const variantAddBtn = document.getElementById("solarVariantAddToCart");
+  if (variantAddBtn) {
+    variantAddBtn.addEventListener("click", () => {
+      applyBaloVariantsToProduct();
+
+      const inlineAdd = document.getElementById("inlineAddToCartBtn");
+      if (inlineAdd && typeof inlineAdd.click === "function") {
+        inlineAdd.click();
+      }
+    });
+  }
+
+  const variantBuyBtn = document.getElementById("solarVariantBuyNow");
+  if (variantBuyBtn) {
+    variantBuyBtn.addEventListener("click", () => {
+      openCheckout();
+    });
+  }
   const buyBtn = document.getElementById("solarBuyNow");
   if (buyBtn) buyBtn.addEventListener("click", openCheckout);
+
+  function startSolarExtraBagStockTimer() {
+    if (!isBaloProduct) return;
+    if (!P.extraBagGift?.enabled) return;
+
+    const stockEl = document.getElementById("solarExtraBagStock");
+    if (!stockEl) return;
+
+    let stock = Number(P.extraBagGift.initialStock || 14);
+    let delay = 3000;
+
+    function decreaseStock() {
+      if (stock <= 3) return;
+
+      stock -= 1;
+      stockEl.textContent = String(stock);
+
+      delay += 1000;
+      setTimeout(decreaseStock, delay);
+    }
+
+    setTimeout(decreaseStock, delay);
+  }
+
+  startSolarExtraBagStockTimer();
 
   /* ── ORDER NOTIFICATION RIÊNG CHO ĐÈN ── */
   function initSolarOrderNotificationTop() {
@@ -870,13 +1282,30 @@
     const textEl = document.getElementById("solarOrderNotifTopText");
     if (!textEl) return;
 
-    const comboTexts = [
-      "1 đèn năng lượng mặt trời",
-      "Combo 2 đèn năng lượng mặt trời",
-      "Combo 3 đèn năng lượng mặt trời"
-    ];
+    const baloColors = isBaloProduct
+      ? variants
+          .find(v => v.type === "color")
+          ?.options
+          ?.map(o => o.name)
+          ?.filter(Boolean) || []
+      : [];
 
     function pickComboText() {
+      if (isBaloProduct) {
+        const qty = Math.random() < 0.82 ? 1 : 2;
+        const color = baloColors.length
+          ? baloColors[Math.floor(Math.random() * baloColors.length)]
+          : "Nâu";
+
+        return qty + " balo màu " + color;
+      }
+
+      const comboTexts = [
+        "1 đèn năng lượng mặt trời",
+        "Combo 2 đèn năng lượng mặt trời",
+        "Combo 3 đèn năng lượng mặt trời"
+      ];
+
       return comboTexts[Math.floor(Math.random() * comboTexts.length)];
     }
 

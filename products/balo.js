@@ -3,8 +3,9 @@ const PRODUCT_CONFIG = {
   // ── CƠ BẢN ──
   id:        "balo-chong-gu-hoc-sinh-001",
   slug:      "balo",
-  layout:    "storytelling",
+  layout:    "shopee-solar",
   name:      "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6 – Đệm Lưng 3D, Phản Quang 360°, Chống Nước – BH 12 Tháng",
+  uiName:    "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6",
   displayName: "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6 – Đệm Lưng 3D, Phản Quang 360°, Chống Nước",
   shortName: "Balo Chống Gù Cao Cấp Cho Học Sinh Lớp 1–6 – Đệm Lưng 3D, Phản Quang 360°, Chống Nước",
   sheetProductName: "Balo Chống Gù",
@@ -34,7 +35,16 @@ const PRODUCT_CONFIG = {
 
   // ── GALLERY ──
   images: [
-    "https://res.cloudinary.com/dvtgqfe2z/image/upload/w_800,f_webp,q_auto/v1778693884/12_lszipf.jpg"
+    // 4 ảnh màu sản phẩm
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/c11_h17nrr.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385611/c5_u4xhbl.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385611/c3_mrk14f.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385612/c6_niqa7d.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x4_irdvni.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x3_z5poxu.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/c1_cxneiz.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/x2_fatdti.jpg"
+
   ],
   videos: [],
 
@@ -185,6 +195,51 @@ const PRODUCT_CONFIG = {
 
   // ── COMBO ──
   combos: [],
+
+  // ── TAG TRÊN SLIDER ──
+  sliderTags: [],
+
+  // ── MÔ TẢ SẢN PHẨM ──
+  description: {
+    shortHtml: `
+      <p><strong>Thiết kế công thái học – nhẹ trên vai, thẳng lưng, an toàn trên đường đến trường.</strong></p>
+      <p><strong>70% chiều cao và dáng của trẻ phụ thuộc vào quyết định và lựa chọn của bạn.</strong></p>
+      <p>Cột sống trẻ tiểu học đang trong giai đoạn phát triển mạnh nhất. Chỉ cần dây đeo kém chất lượng hoặc lưng balo không có đệm — lưng con bắt đầu cong dần mà không ai nhận ra cho đến khi đã muộn. Chọn đúng balo từ đầu, bạn giúp con giữ dáng thẳng tự nhiên mỗi ngày.</p>
+    `,
+    fullHtml: `
+      <p><strong>Thiết kế công thái học – nhẹ trên vai, thẳng lưng, an toàn trên đường đến trường.</strong></p>
+
+      <h3>70% chiều cao và dáng của trẻ phụ thuộc vào quyết định và lựa chọn của bạn.</h3>
+
+      <p>Cột sống trẻ tiểu học đang trong giai đoạn phát triển mạnh nhất. Chỉ cần dây đeo kém chất lượng hoặc lưng balo không có đệm — lưng con bắt đầu cong dần mà không ai nhận ra cho đến khi đã muộn. Chọn đúng balo từ đầu, bạn giúp con giữ dáng thẳng tự nhiên mỗi ngày.</p>
+
+      <p>Con mang balo đi học cả ngày — tối về mẹ mở ra thấy đồ nhét lộn tùng phèo. Không phải con cẩu thả, mà vì balo không có chỗ cố định cho từng thứ.</p>
+
+      <h3>Bảo vệ cột sống đúng cách — bảo vệ tương lai con</h3>
+      <p>Cột sống của trẻ yếu hơn bạn nghĩ rất nhiều. Dây đeo kém chất lượng gây lệch vai, balo quá nặng khiến lưng cong gù, đeo lâu quá sức gây đau lưng thoái hoá sớm.</p>
+      <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/7_gzneof.jpg" alt="Bảo vệ cột sống đúng cách">
+
+      <h3>Dây đeo chữ S – Khóa ngực chống trượt – Đệm lưng 3D lập thể</h3>
+      <p>Ôm sát vai không hằn, không đau, không lệch vai. Khóa ngực giữ cân bằng balo khi bé chạy nhảy. Đệm nổi khoa học giảm áp lực lên cột sống, thông thoáng không đổ mồ hôi.</p>
+      <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046281/4_g1h7ej.jpg" alt="Dây đeo chữ S và đệm lưng 3D">
+
+      <h3>6 ngăn riêng biệt — cất gọn mọi thứ, bé tự tìm được ngay</h3>
+      <p>Ngăn chính dung tích lớn, ngăn phụ khoá kéo, ngăn trước khoá kéo, túi nhỏ dán magic, túi bên trái khoá kéo, túi bên phải đàn hồi đựng bình nước. Mỗi ngăn một công dụng — bé nhìn vào là biết ngay cái gì để ở đâu.</p>
+      <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/6_xjux0t.jpg" alt="6 ngăn riêng biệt">
+
+      <h3>Chống nước kiểu lá sen — mưa lớn cũng không lo</h3>
+      <p>Vải mật độ cao chống thấm nước công nghệ lá sen. Nước bắn vào lăn tròn, không ngấm vào trong. Sách vở bên trong khô ráo hoàn toàn dù trời đổ mưa giữa đường.</p>
+      <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046285/1_i409ck.jpg" alt="Chống nước kiểu lá sen">
+
+      <h3>Phản quang 360° — nhìn thấy từ khoảng cách 200m</h3>
+      <p>Dải phản quang phía trước, hai bên và phía sau balo. Buổi sáng sớm, trời tối hay trời mưa — xe cộ vẫn nhìn thấy con rõ ràng từ xa.</p>
+      <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/8_vmqhx4.jpg" alt="Phản quang 360 độ">
+
+      <h3>Siêu nhẹ — đeo mãi không mỏi</h3>
+      <p>Balo chỉ nặng 550g — nhẹ như một chai nước. Chuyên gia xương khớp khuyến nghị balo không nên vượt quá 10% cân nặng của trẻ.</p>
+      <img src="https://res.cloudinary.com/dezednxpz/image/upload/w_800,f_webp,q_auto/v1777046282/9_qezl4k.jpg" alt="Balo siêu nhẹ">
+    `
+  },
 
   // ── TÍNH NĂNG ──
   features: [
