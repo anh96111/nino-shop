@@ -1635,6 +1635,25 @@ if (HAS_COMBO_POPUP) {
   }
 }
 
+function normalizeAddressSortName(name) {
+  return String(name || "")
+    .trim()
+    .replace(/^(tỉnh|thành phố|tp\.?|quận|huyện|thị xã|phường|xã|thị trấn)\s+/i, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase();
+}
+
+function sortAddressList(list) {
+  return (Array.isArray(list) ? list.slice() : []).sort(function (a, b) {
+    return normalizeAddressSortName(a.name).localeCompare(
+      normalizeAddressSortName(b.name),
+      "vi"
+    );
+  });
+}
 /* ===================================================
    CHECKOUT ADDRESS LOGIC
 =================================================== */
@@ -1749,7 +1768,7 @@ function showProvinceMenu() {
 
   setCheckoutMenuTitle("Chọn tỉnh/thành");
 
-  checkoutProvincesData.forEach(function (province) {
+  sortAddressList(checkoutProvincesData).forEach(function (province) {
     const option = document.createElement("div");
     option.className = "checkout-location-option";
     option.textContent = province.name;
@@ -1778,7 +1797,7 @@ function showDistrictMenu() {
 
   setCheckoutMenuTitle("Chọn quận/huyện");
 
-  selectedProvince.districts.forEach(function (district) {
+  sortAddressList(selectedProvince.districts).forEach(function (district) {
     const option = document.createElement("div");
     option.className = "checkout-location-option";
     option.textContent = district.name;
@@ -1806,7 +1825,7 @@ function showWardMenu() {
 
   setCheckoutMenuTitle("Chọn xã/phường");
 
-  selectedDistrict.wards.forEach(function (ward) {
+  sortAddressList(selectedDistrict.wards).forEach(function (ward) {
     const option = document.createElement("div");
     option.className = "checkout-location-option";
     option.textContent = ward.name;
