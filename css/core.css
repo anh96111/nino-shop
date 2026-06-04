@@ -534,12 +534,26 @@ button, input, textarea, select { font: inherit; }
 
 .form-group input.input-error,
 .form-group select.input-error,
-.form-group textarea.input-error {
-  border-color: var(--primary);
+.form-group textarea.input-error,
+.checkout-address-field.input-error {
+  border-color: var(--primary) !important;
+  background: #fff7f5;
 }
 
 .searchable-select-display.input-error {
   border-color: var(--primary);
+}
+
+.input-shake {
+  animation: inputShake 0.28s ease;
+}
+
+@keyframes inputShake {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-4px); }
+  50%  { transform: translateX(4px); }
+  75%  { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
 }
 
 /* ===================================================
@@ -592,7 +606,13 @@ button, input, textarea, select { font: inherit; }
 }
 
 .thank-icon { font-size: 54px; margin-bottom: 14px; line-height: 1; }
-.thank-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--primary-dark); }
+.thank-title {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.25;
+  margin-bottom: 14px;
+  color: var(--primary-dark);
+}
 .thank-body { font-size: 14px; line-height: 1.75; color: #555; margin-bottom: 22px; }
 
 .thank-close-btn {
@@ -1120,4 +1140,23 @@ button, input, textarea, select { font: inherit; }
 
 .discount-slot-count.is-changed {
   color: #b91c1c;
+}
+/* ===================================================
+   CHECKOUT MODAL — FULL SCREEN MOBILE
+=================================================== */
+@media (max-width: 768px) {
+  .modal {
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+    padding: 16px 16px 28px;
+    animation: none;
+  }
 }

@@ -197,6 +197,9 @@ const districtInput = document.getElementById("district");
 const wardInput     = document.getElementById("ward");
 
 let checkoutProvincesData = [];
+let checkoutProvinceLoadStatus = "idle"; // idle | loading | success | error
+let checkoutProvinceLoadPromise = null;
+
 let selectedProvince = null;
 let selectedDistrict = null;
 let selectedWard = null;
@@ -1124,6 +1127,32 @@ thankModal.addEventListener("click", e => { if (e.target === thankModal) hideTha
    CART — localStorage
 =================================================== */
 const CART_KEY = "nino_cart_" + PRODUCT_CONFIG.slug;
+const CHECKOUT_CUSTOMER_KEY = "nino_checkout_customer";
+
+function getCheckoutCustomerDraft() {
+  try {
+    return JSON.parse(localStorage.getItem(CHECKOUT_CUSTOMER_KEY)) || {};
+  } catch (_) {
+    return {};
+  }
+}
+
+function saveCheckoutCustomerDraft() {
+  const fullNameInput = document.getElementById("fullName");
+  const phoneInput = document.getElementById("phone");
+  const streetInput = document.getElementById("streetAddress");
+
+  const data = {
+    full_name: fullNameInput ? fullNameInput.value.trim() : "",
+    phone: phoneInput ? phoneInput.value.trim() : "",
+    province: selectedProvince ? selectedProvince.name : "",
+    district: selectedDistrict ? selectedDistrict.name : "",
+    ward: selectedWard ? selectedWard.name : "",
+    street_address: streetInput ? streetInput.value.trim() : ""
+  };
+
+  localStorage.setItem(CHECKOUT_CUSTOMER_KEY, JSON.stringify(data));
+}
 
 function loadCartItems() {
   const saved = localStorage.getItem(CART_KEY);
@@ -1610,14 +1639,47 @@ if (HAS_COMBO_POPUP) {
    CHECKOUT ADDRESS LOGIC
 =================================================== */
 async function loadCheckoutProvinces() {
-  if (!checkoutLocationText) return;
+  if (!checkoutLocationText) return [];
 
-  try {
-    const response = await fetch("https://provinces.open-api.vn/api/?depth=3");
-    checkoutProvincesData = await response.json();
-  } catch (error) {
-    checkoutLocationText.textContent = "Không tải được dữ liệu";
+  if (checkoutProvinceLoadStatus === "success" && checkoutProvincesData.length) {
+    return checkoutProvincesData;
   }
+
+  if (checkoutProvinceLoadPromise) {
+    return checkoutProvinceLoadPromise;
+  }
+
+  checkoutProvinceLoadStatus = "loading";
+
+  checkoutProvinceLoadPromise = fetch("https://provinces.open-api.vn/api/?depth=3")
+    .then(function (response) {
+      if (!response.ok) {
+        throw new Error("Province API failed");
+      }
+
+      return response.json();
+    })
+    .then(function (data) {
+      checkoutProvincesData = Array.isArray(data) ? data : [];
+      checkoutProvinceLoadStatus = checkoutProvincesData.length ? "success" : "error";
+      restoreCheckoutCustomerDraft();
+
+      return checkoutProvincesData;
+    })
+    .catch(function () {
+      checkoutProvinceLoadStatus = "error";
+      checkoutProvincesData = [];
+      checkoutLocationText.textContent = "Nhập địa chỉ đầy đủ bên dưới";
+      checkoutLocationText.classList.add("placeholder");
+      restoreCheckoutCustomerDraft();
+
+      return [];
+    })
+    .finally(function () {
+      checkoutProvinceLoadPromise = null;
+    });
+
+  return checkoutProvinceLoadPromise;
 }
 
 function openCheckoutLocationMenu() {
@@ -1636,9 +1698,54 @@ function setCheckoutMenuTitle(title) {
   if (!checkoutLocationMenu) return;
   checkoutLocationMenu.innerHTML = '<div class="checkout-menu-title">' + title + '</div>';
 }
+function showAddressFallbackMenu() {
+  if (!checkoutLocationMenu) return;
+
+  setCheckoutMenuTitle("Không tải được tỉnh/thành");
+
+  const option = document.createElement("div");
+  option.className = "checkout-location-option";
+  option.innerHTML = "Vui lòng nhập địa chỉ đầy đủ ở ô <strong>Địa chỉ chi tiết</strong> bên dưới.";
+
+  checkoutLocationMenu.appendChild(option);
+  openCheckoutLocationMenu();
+
+  if (checkoutLocationText) {
+    checkoutLocationText.textContent = "Nhập địa chỉ đầy đủ bên dưới";
+    checkoutLocationText.classList.add("placeholder");
+  }
+
+  if (streetAddressInput) {
+    setTimeout(function () {
+      streetAddressInput.focus();
+    }, 120);
+  }
+}
 
 function showProvinceMenu() {
   if (!checkoutLocationMenu) return;
+
+  if (checkoutProvinceLoadStatus !== "success" || !checkoutProvincesData.length) {
+    setCheckoutMenuTitle("Đang tải tỉnh/thành...");
+
+    const option = document.createElement("div");
+    option.className = "checkout-location-option";
+    option.textContent = "Vui lòng chờ giây lát";
+
+    checkoutLocationMenu.appendChild(option);
+    openCheckoutLocationMenu();
+
+    loadCheckoutProvinces().then(function (data) {
+      if (data && data.length) {
+        showProvinceMenu();
+        return;
+      }
+
+      showAddressFallbackMenu();
+    });
+
+    return;
+  }
 
   setCheckoutMenuTitle("Chọn tỉnh/thành");
 
@@ -1653,6 +1760,7 @@ function showProvinceMenu() {
       selectedWard = null;
 
       updateCheckoutAddressValue();
+      saveCheckoutCustomerDraft();
 
       setTimeout(function () {
         showDistrictMenu();
@@ -1680,6 +1788,7 @@ function showDistrictMenu() {
       selectedWard = null;
 
       updateCheckoutAddressValue();
+      saveCheckoutCustomerDraft();
 
       setTimeout(function () {
         showWardMenu();
@@ -1706,6 +1815,7 @@ function showWardMenu() {
       selectedWard = ward;
 
       updateCheckoutAddressValue();
+      saveCheckoutCustomerDraft();
       closeCheckoutLocationMenu();
 
       if (streetAddressInput) {
@@ -1819,32 +1929,126 @@ function initCheckoutAddressPicker() {
   });
 
   if (streetAddressInput) {
-    streetAddressInput.addEventListener("input", updateCheckoutAddressValue);
+    streetAddressInput.addEventListener("input", function () {
+      updateCheckoutAddressValue();
+      saveCheckoutCustomerDraft();
+    });
   }
 
   loadCheckoutProvinces();
 }
 
+function initCheckoutCustomerAutoSave() {
+  const fullNameInput = document.getElementById("fullName");
+  const phoneInput = document.getElementById("phone");
+
+  if (fullNameInput) {
+    fullNameInput.addEventListener("input", saveCheckoutCustomerDraft);
+  }
+
+  if (phoneInput) {
+    phoneInput.addEventListener("input", saveCheckoutCustomerDraft);
+  }
+}
+
+function restoreCheckoutCustomerDraft() {
+  const draft = getCheckoutCustomerDraft();
+
+  const fullNameInput = document.getElementById("fullName");
+  const phoneInput = document.getElementById("phone");
+
+  if (fullNameInput && draft.full_name) {
+    fullNameInput.value = draft.full_name;
+  }
+
+  if (phoneInput && draft.phone) {
+    phoneInput.value = draft.phone;
+  }
+
+  if (streetAddressInput && draft.street_address) {
+    streetAddressInput.value = draft.street_address;
+  }
+
+  if (!checkoutProvincesData.length) {
+    updateCheckoutAddressValue();
+    return;
+  }
+
+  selectedProvince = checkoutProvincesData.find(function (province) {
+    return province.name === draft.province;
+  }) || null;
+
+  selectedDistrict = selectedProvince && selectedProvince.districts
+    ? selectedProvince.districts.find(function (district) {
+        return district.name === draft.district;
+      }) || null
+    : null;
+
+  selectedWard = selectedDistrict && selectedDistrict.wards
+    ? selectedDistrict.wards.find(function (ward) {
+        return ward.name === draft.ward;
+      }) || null
+    : null;
+
+  updateCheckoutAddressValue();
+}
 /* ===================================================
-   Phone auto-format
+   Phone auto-format + validation message
 =================================================== */
 const phoneInput = document.getElementById("phone");
+
+function getPhoneValidationMessage(phoneRaw) {
+  const phoneRegex = /^(0[35789])[0-9]{8}$/;
+
+  if (!phoneRaw) {
+    return "Vui lòng nhập số điện thoại";
+  }
+
+  if (phoneRaw.length < 10) {
+    return "Số điện thoại đang thiếu " + (10 - phoneRaw.length) + " số";
+  }
+
+  if (phoneRaw.length > 10) {
+    return "Số điện thoại đang thừa " + (phoneRaw.length - 10) + " số";
+  }
+
+  if (!phoneRaw.startsWith("0")) {
+    return "Số điện thoại phải bắt đầu bằng số 0";
+  }
+
+  if (!phoneRegex.test(phoneRaw)) {
+    return "Số điện thoại chưa đúng, vui lòng kiểm tra lại đầu số";
+  }
+
+  return "";
+}
 
 phoneInput.addEventListener("input", function () {
   let raw = this.value.replace(/\D/g, "");
   if (raw.length > 10) raw = raw.slice(0, 10);
+
   let formatted = raw;
   if (raw.length > 4 && raw.length <= 7) {
     formatted = raw.slice(0, 4) + " " + raw.slice(4);
   } else if (raw.length > 7) {
     formatted = raw.slice(0, 4) + " " + raw.slice(4, 7) + " " + raw.slice(7);
   }
+
   this.value = formatted;
-  const phoneRegex = /^(0[35789])[0-9]{8}$/;
+
   if (raw.length === 0) {
     clearFieldError("phone", "phoneError");
-  } else if (raw.length === 10 && !phoneRegex.test(raw)) {
-    showFieldError("phone", "phoneError", "Số điện thoại không hợp lệ");
+    return;
+  }
+
+  if (raw.length === 10) {
+    const message = getPhoneValidationMessage(raw);
+
+    if (message) {
+      showFieldError("phone", "phoneError", message);
+    } else {
+      clearFieldError("phone", "phoneError");
+    }
   } else {
     clearFieldError("phone", "phoneError");
   }
@@ -1856,11 +2060,14 @@ phoneInput.addEventListener("input", function () {
 function showFieldError(fieldId, errorId, msg) {
   const field = document.getElementById(fieldId);
   const error = document.getElementById(errorId);
+  const target = fieldId === "address" && checkoutAddressField ? checkoutAddressField : field;
 
-  if (fieldId === "address" && checkoutAddressField) {
-    checkoutAddressField.classList.add("input-error");
-  } else if (field) {
-    field.classList.add("input-error");
+  if (target) {
+    target.classList.add("input-error");
+
+    target.classList.remove("input-shake");
+    void target.offsetWidth;
+    target.classList.add("input-shake");
   }
 
   if (error) {
@@ -1872,11 +2079,11 @@ function showFieldError(fieldId, errorId, msg) {
 function clearFieldError(fieldId, errorId) {
   const field = document.getElementById(fieldId);
   const error = document.getElementById(errorId);
+  const target = fieldId === "address" && checkoutAddressField ? checkoutAddressField : field;
 
-  if (fieldId === "address" && checkoutAddressField) {
-    checkoutAddressField.classList.remove("input-error");
-  } else if (field) {
-    field.classList.remove("input-error");
+  if (target) {
+    target.classList.remove("input-error");
+    target.classList.remove("input-shake");
   }
 
   if (error) {
@@ -1910,18 +2117,42 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
     const phoneRaw  = getPhoneRaw();
     updateCheckoutAddressValue();
 
-    const address   = document.getElementById("address").value.trim();
+    let address     = document.getElementById("address").value.trim();
     const province  = document.getElementById("province").value.trim();
     const district  = document.getElementById("district").value.trim();
     const ward      = document.getElementById("ward").value.trim();
     const street    = document.getElementById("streetAddress").value.trim();
     const orderNote = document.getElementById("orderNote").value.trim();
 
+    if (!address && checkoutProvinceLoadStatus === "error" && street) {
+      address = street;
+    }
+
     let hasError = false;
 
-    if (!province || !district || !ward || !street || !address) {
-      showFieldError("address", "addressError", "Vui lòng chọn đầy đủ tỉnh/huyện/xã và nhập địa chỉ chi tiết");
-      hasError = true;
+    const isProvinceApiFailed = checkoutProvinceLoadStatus === "error";
+    const manualAddressEnough = street.length >= 12;
+
+    if (isProvinceApiFailed) {
+      if (!manualAddressEnough) {
+        showFieldError(
+          "address",
+          "addressError",
+          "Không tải được tỉnh/thành. Vui lòng nhập địa chỉ đầy đủ vào ô địa chỉ chi tiết"
+        );
+        hasError = true;
+      }
+    } else {
+      if (!province) {
+        showFieldError("address", "addressError", "Vui lòng chọn Tỉnh/Thành phố");
+        hasError = true;
+      } else if (!district) {
+        showFieldError("address", "addressError", "Vui lòng chọn Quận/Huyện");
+        hasError = true;
+      } else if (!ward) {
+        showFieldError("address", "addressError", "Vui lòng chọn Xã/Phường");
+        hasError = true;
+      }
     }
 
     if (!fullName) {
@@ -1929,12 +2160,10 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       hasError = true;
     }
 
-    const phoneRegex = /^(0[35789])[0-9]{8}$/;
-    if (!phoneRaw) {
-      showFieldError("phone", "phoneError", "Vui lòng nhập số điện thoại");
-      hasError = true;
-    } else if (!phoneRegex.test(phoneRaw)) {
-      showFieldError("phone", "phoneError", "Số điện thoại không hợp lệ");
+    const phoneMessage = getPhoneValidationMessage(phoneRaw);
+
+    if (phoneMessage) {
+      showFieldError("phone", "phoneError", phoneMessage);
       hasError = true;
     }
 
@@ -2014,9 +2243,9 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       customer:           customerData
     };
 
-    /* Reset form trước khi gửi */
-    document.getElementById("orderForm").reset();
-    resetCheckoutAddressUI();
+    /* Reset ghi chú, giữ lại thông tin khách đã lưu */
+    document.getElementById("orderNote").value = "";
+    restoreCheckoutCustomerDraft();
 
     /* Đóng ghi chú nếu đang mở */
     const noteToggle   = document.getElementById("noteToggleBtn");
@@ -2490,6 +2719,8 @@ function bindCheckoutExitDiscountPopup() {
   updateCartBadge();
   initModalLiveNotif();
   initCheckoutAddressPicker();
+  initCheckoutCustomerAutoSave();
+  restoreCheckoutCustomerDraft();
 
   document.querySelectorAll(".combo-option").forEach(btn => {
     btn.addEventListener("click", () => updatePriceDisplay());

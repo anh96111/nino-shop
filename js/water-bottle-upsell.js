@@ -880,7 +880,7 @@
         <div class="nino-thank-icon">✅</div>
         <div class="nino-thank-title">Cảm ơn bạn đã đặt hàng</div>
         <div class="nino-thank-sub">
-          Shop đã ghi nhận đơn hàng. Vui lòng giữ điện thoại, shop sẽ liên hệ xác nhận.
+          Shop đã ghi nhận đơn hàng. Sau 1 - 3 ngày nhân viên giao hàng sẽ liên hệ với bạn.
         </div>
 
         <div class="nino-thank-box">
