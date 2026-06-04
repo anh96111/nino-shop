@@ -37,9 +37,13 @@ const PRODUCT_CONFIG = {
   images: [
     // 4 ảnh màu sản phẩm
     "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/c11_h17nrr.jpg",
-    "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385611/c5_u4xhbl.jpg",
-    "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385611/c3_mrk14f.jpg",
-    "https://res.cloudinary.com/dfppbfjkm/image/upload/v1779385612/c6_niqa7d.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/c5_u4xhbl.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385611/c3_mrk14f.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/c6_niqa7d.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1780570991/c5_o0dpfv.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1780570990/c1_ezgmge.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1780570991/c2_k2at1z.jpg",
+    "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1780570991/c4_ta34mh.jpg",
     "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x4_irdvni.jpg",
     "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/x3_z5poxu.jpg",
     "https://res.cloudinary.com/dfppbfjkm/image/upload/w_500,f_webp,q_auto/v1779385612/c1_cxneiz.jpg",
