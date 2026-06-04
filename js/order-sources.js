@@ -27,5 +27,7 @@ window.ORDER_SOURCES = {
   cmtphunuanh: "cmtphunuanh",
   postphunuanh: "postphunuanh",
   postphunuvideo: "postphunuvideo",
-  cmtphunuvideo: "cmtphunuvideo"
+  cmtphunuvideo: "cmtphunuvideo",
+  cmtanhnew46: "cmtanhnew46",
+  postanhnew46: "postanhnew46"
 };
