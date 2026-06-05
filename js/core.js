@@ -1344,64 +1344,16 @@ function renderCartSummary() {
     </div>`;
   }).join("");
 
-  const cartDiscountAmount = getActiveDiscountAmount();
+  const shipFee = getActiveShipFee();
+  const freeShipEl = document.querySelector(".checkout-free-ship");
 
-  if (cartDiscountAmount > 0 && appliedDiscountCode) {
-    cartSummaryList.innerHTML += `
-      <div class="cart-discount-row">
-        <span>Mã giảm giá ${appliedDiscountCode}</span>
-        <strong>-${formatPrice(cartDiscountAmount)}</strong>
-      </div>
-    `;
-  }
-
-
-  const shipFee     = getActiveShipFee();
-  const freeshipRow = document.querySelector(".order-totals-row.freeship");
-  if (freeshipRow) {
-    if (shipFee > 0) {
-      freeshipRow.querySelector("span:first-child").textContent = "🚚 Phí vận chuyển";
-      freeshipRow.querySelector("span:last-child").textContent  = formatPrice(shipFee);
-    } else {
-      freeshipRow.querySelector("span:first-child").textContent = "🚚 Miễn phí vận chuyển";
-      freeshipRow.querySelector("span:last-child").textContent  = "0đ";
-    }
+  if (freeShipEl) {
+    freeShipEl.textContent = shipFee > 0 ? formatPrice(shipFee) : "Miễn phí";
   }
 
   grandTotalEl.textContent = formatPrice(getActiveGrandTotal());
-  const discountAmount = getActiveDiscountAmount();
-  const discountCode = appliedDiscountCode;
 
-  let discountRow = document.getElementById("summaryDiscountRow");
-
-  if (!discountRow && grandTotalEl) {
-    const totalRow = grandTotalEl.closest(".order-totals-row");
-
-    if (totalRow) {
-      discountRow = document.createElement("div");
-      discountRow.id = "summaryDiscountRow";
-      discountRow.className = "order-totals-row discount-row";
-      discountRow.innerHTML = `
-        <span>Mã giảm giá <strong id="summaryDiscountCode"></strong></span>
-        <span id="summaryDiscountAmount"></span>
-      `;
-
-      totalRow.parentNode.insertBefore(discountRow, totalRow);
-    }
-  }
-
-  if (discountRow) {
-    const codeEl = document.getElementById("summaryDiscountCode");
-    const amountEl = document.getElementById("summaryDiscountAmount");
-
-    if (discountAmount > 0 && discountCode) {
-      discountRow.style.display = "";
-      if (codeEl) codeEl.textContent = discountCode;
-      if (amountEl) amountEl.textContent = "-" + formatPrice(discountAmount);
-    } else {
-      discountRow.style.display = "none";
-    }
-  }
+  renderDiscountUI();
   updateSubmitBtnPrice();
 
   cartSummaryList.querySelectorAll("[data-action]").forEach(btn => {

@@ -2107,3 +2107,40 @@ button, input, textarea, select { font: inherit; }
     height: 64px;
   }
 }
+/* ===================================================
+   CHECKOUT MODAL — MOBILE/TABLET OVERRIDE
+   Chặn CSS modal cũ làm lệch popup checkout mới
+=================================================== */
+
+@media (max-width: 768px) {
+  #orderModal .checkout-modal-content {
+    width: 100%;
+    max-width: 560px;
+    height: auto;
+    min-height: 0;
+    max-height: 94vh;
+    padding: 0;
+    border-radius: 22px;
+    overflow: hidden;
+  }
+
+  #orderModal .checkout-body {
+    max-height: none;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  #orderModal.modal {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  #orderModal .checkout-modal-content {
+    max-width: none;
+    width: 100%;
+    max-height: 96vh;
+    height: auto;
+    border-radius: 24px 24px 0 0;
+  }
+}
