@@ -34,7 +34,7 @@
   </noscript>
   <noscript><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
 
-  <link rel="stylesheet" href="/css/core.css?v=4" />
+  <link rel="stylesheet" href="/css/core.css?v=5" />
   <link id="layoutCSS" rel="stylesheet" href="" />
 
   <style>
@@ -334,18 +334,40 @@
 </head>
 <body>
 
-  <!-- LAYOUT RENDER VÀO ĐÂY -->
-  <div class="app" id="layoutRoot"></div>
+  <!-- APP -->
+  <div class="app">
+    <!-- GLOBAL HERO -->
+    <header class="nino-global-hero" id="ninoGlobalHero">
+      <div class="nino-global-hero-inner">
+        <div class="nino-global-brand">
+          <div class="nino-home-icon" aria-hidden="true">
+            <span class="nino-home-roof"></span>
+            <span class="nino-home-body"></span>
+            <span class="nino-home-dot"></span>
+          </div>
 
-  <!-- BOTTOM BAR -->
-  <div class="bottom-bar">
-    <div class="bottom-inner">
-      <button class="btn-bar-ghost bottom-cart-btn" id="goToCartBtn" aria-label="Mở giỏ hàng">
-      🛒<span class="cart-badge" id="cartBadge"></span>
-    </button>
-    <button class="btn-bar-solid bottom-buy-btn" id="buyNowBtn">Mua ngay</button>
-    </div>
+          <div class="nino-logo-wrap">
+            <span class="nino-logo-main">Nino</span>
+            <span class="nino-logo-vn">VIET NAM</span>
+          </div>
+        </div>
+
+        <div class="nino-global-divider"></div>
+
+        <div class="nino-global-copy">
+          <div class="nino-copy-top">Kho đồ gia dụng</div>
+          <div class="nino-copy-badge">lớn nhất Việt Nam</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- LAYOUT RENDER VÀO ĐÂY -->
+    <div id="layoutRoot"></div>
   </div>
+
+
+  <!-- CORE STUB: giữ buyNowBtn để core.js không lỗi, bottom bar thật do layout render -->
+  <button type="button" id="buyNowBtn" style="display:none;" aria-hidden="true"></button>
 
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
@@ -671,7 +693,7 @@
 
       const productScript = document.getElementById("productScript");
       productScript.defer = true;
-      productScript.src = `/products/${slug}.js?v=3`;
+      productScript.src = `/products/${slug}.js?v=4`;
 
       productScript.onload = function () {
         if (typeof PRODUCT_CONFIG === "undefined") {
@@ -705,7 +727,7 @@
         /* ── LOAD LAYOUT JS → sau đó LOAD CORE.JS ── */
         const layoutScript = document.createElement("script");
         layoutScript.defer = true;
-        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=5`;
+        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=6`;
 
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");

@@ -2144,3 +2144,273 @@ button, input, textarea, select { font: inherit; }
     border-radius: 24px 24px 0 0;
   }
 }
+/* ===================================================
+   NINO GLOBAL HERO
+=================================================== */
+.nino-global-hero {
+  width: 100%;
+  height: 74px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 3;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 55%, rgba(255, 232, 93, 0.32) 0 3%, transparent 13%),
+    linear-gradient(135deg, #c91804 0%, #ef3b08 45%, #ff7a00 100%);
+}
+
+.nino-global-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, transparent 0 36%, rgba(255,255,255,0.08) 37% 48%, transparent 49%),
+    linear-gradient(125deg, transparent 0 73%, rgba(255,255,255,0.12) 74% 84%, transparent 85%);
+  pointer-events: none;
+}
+
+.nino-global-hero::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  top: -38px;
+  width: 118px;
+  height: 118px;
+  border-radius: 28px;
+  background: rgba(255, 200, 80, 0.18);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.nino-global-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 74px;
+  padding: 10px 14px;
+  display: grid;
+  grid-template-columns: 1.1fr 1px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.nino-global-brand {
+  position: relative;
+  height: 56px;
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  padding-left: 2px;
+}
+
+.nino-logo-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 0;
+}
+
+.nino-logo-main {
+  font-family: "Hanken Grotesk", "Inter", "Be Vietnam Pro", Arial, sans-serif;
+  font-size: 43px;
+  line-height: 0.82;
+  font-weight: 900;
+  letter-spacing: -0.065em;
+  color: #ffe23d;
+  text-shadow:
+    0 2px 0 rgba(149, 45, 0, 0.65),
+    0 9px 16px rgba(86, 24, 0, 0.42);
+}
+
+.nino-logo-vn {
+  font-family: "Hanken Grotesk", "Inter", "Be Vietnam Pro", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1;
+  font-weight: 900;
+  color: #fff263;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  margin-bottom: 5px;
+  text-shadow: 0 2px 8px rgba(86, 24, 0, 0.42);
+}
+
+.nino-home-icon {
+  position: absolute;
+  left: -6px;
+  top: -9px;
+  width: 62px;
+  height: 42px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.82;
+}
+
+.nino-home-roof {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  width: 29px;
+  height: 29px;
+  border-left: 2px solid #ffe45c;
+  border-top: 2px solid #ffe45c;
+  transform: rotate(45deg) scaleX(1.12) scaleY(0.9);
+  transform-origin: left center;
+  filter: drop-shadow(0 2px 3px rgba(126, 37, 0, 0.16));
+}
+
+.nino-home-roof::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -2px;
+  width: 11px;
+  height: 2px;
+  background: #f2460a;
+}
+
+.nino-home-body {
+  display: block;
+  position: absolute;
+  left: 4px;
+  top: 29px;
+  width: 2px;
+  height: 17px;
+  background: #ffe45c;
+  opacity: 0.72;
+  filter: drop-shadow(0 2px 3px rgba(126, 37, 0, 0.12));
+}
+
+.nino-home-dot {
+  position: absolute;
+  left: 17px;
+  top: 22px;
+  width: 2px;
+  height: 2px;
+  background: rgba(255, 228, 92, 0.78);
+  opacity: 0.9;
+  box-shadow:
+    4px 0 0 rgba(255, 228, 92, 0.78),
+    0 4px 0 rgba(255, 228, 92, 0.78),
+    4px 4px 0 rgba(255, 228, 92, 0.78);
+  border-radius: 0;
+}
+
+.nino-global-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.nino-global-copy {
+  min-width: 0;
+  padding-left: 2px;
+}
+
+.nino-copy-top {
+  font-size: 18px;
+  line-height: 1;
+  font-weight: 900;
+  color: #fff;
+  white-space: nowrap;
+  text-shadow: 0 2px 8px rgba(88, 22, 0, 0.35);
+}
+
+.nino-copy-badge {
+  position: relative;
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 11px 5px;
+  transform: skewX(-9deg);
+  background: linear-gradient(135deg, #9f1d05, #5f1203);
+  color: #ffe94f;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 900;
+  white-space: nowrap;
+  box-shadow:
+    0 4px 12px rgba(84, 15, 0, 0.32),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+.nino-copy-badge::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  bottom: -3px;
+  width: 34px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffeb52, transparent);
+  box-shadow: 0 0 8px #ffeb52;
+}
+
+/* Layout sản phẩm sát hero */
+#layoutRoot {
+  background: #fff;
+}
+
+.nino-global-hero + #layoutRoot,
+.nino-global-hero + #layoutRoot .solar-page,
+.nino-global-hero + #layoutRoot .solar-product-wrap,
+.nino-global-hero + #layoutRoot .solar-gallery,
+.nino-global-hero + #layoutRoot .solar-slider {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.nino-global-hero + #layoutRoot .solar-product-wrap,
+.nino-global-hero + #layoutRoot .solar-gallery,
+.nino-global-hero + #layoutRoot .solar-slider,
+.nino-global-hero + #layoutRoot .solar-slider img,
+.nino-global-hero + #layoutRoot .slide img {
+  border-radius: 0 !important;
+}
+
+@media (max-width: 390px) {
+  .nino-global-hero,
+  .nino-global-hero-inner {
+    height: 68px;
+  }
+
+  .nino-global-hero-inner {
+    padding: 8px 10px;
+    grid-template-columns: 1.06fr 1px 1fr;
+    gap: 8px;
+  }
+
+  .nino-global-brand {
+    height: 50px;
+    padding-left: 5px;
+  }
+
+  .nino-logo-main {
+    font-size: 38px;
+  }
+
+  .nino-logo-vn {
+    font-size: 10.5px;
+    margin-bottom: 4px;
+  }
+
+  .nino-home-icon {
+    transform: scale(0.82);
+    transform-origin: left top;
+    left: 7px;
+    top: -3px;
+  }
+
+  .nino-global-divider {
+    height: 32px;
+  }
+
+  .nino-copy-top {
+    font-size: 15px;
+  }
+
+  .nino-copy-badge {
+    font-size: 12px;
+    padding: 4px 8px 5px;
+    margin-top: 5px;
+  }
+}

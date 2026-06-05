@@ -36,6 +36,20 @@
   const hasCombos = combos.length > 0;
   const isBaloProduct = P.slug === "balo";
 
+  function getComboSaveAmount(combo) {
+    if (!combo || isBaloProduct) return 0;
+
+    const qty = Math.max(1, Number(combo.quantity || 1));
+    const basePrice = Number(P.price || 0);
+    const comboPrice = Number(combo.price || 0);
+
+    return Math.max(0, basePrice * qty - comboPrice);
+  }
+
+  const maxComboSaveAmount = (!isBaloProduct && combos.length)
+    ? Math.max(...combos.map(getComboSaveAmount))
+    : 0;
+
   /* ── Thứ tự hiển thị combo (đảo): index gốc 2,1,0 ── */
   const displayOrder = combos.map((_, i) => i).reverse();
 
@@ -191,8 +205,8 @@
     const shipClass = hasShip ? "ship-fee" : "ship-free";
     const priceK = Math.round(Number(c.price || 0) / 1000) + "K";
 
-    const saveAmount = Number(c.oldPrice || 0) - Number(c.price || 0);
-    const saveHtml = (c.tag && saveAmount > 0)
+    const saveAmount = getComboSaveAmount(c);
+    const saveHtml = saveAmount > 0
       ? `<div class="combo-save-amount">Tiết kiệm ${formatPrice(saveAmount)}</div>`
       : "";
 
@@ -423,33 +437,20 @@
 
   root.innerHTML = `
     <main class="solar-page">
-      ${isBaloProduct ? "" : `
-        <header class="solar-hero">
-          <div class="solar-hero-inner">
-            <div class="solar-brand">
-              <span class="solar-brand-nino">Nino</span>
-              <span class="solar-brand-vn">Viet Nam</span>
-            </div>
-            <p class="solar-hero-desc">Giải pháp chiếu sáng thông minh &amp; bền bỉ</p>
-          </div>
-          <div class="solar-hero-blur"></div>
-        </header>
-      `}
-
       <section class="solar-product-wrap">
         <div class="solar-gallery">
           <div class="solar-slider">
             <div class="solar-slides" id="solarSlides">
               ${slidesHtml}
             </div>
-
-            <div class="solar-feature-tags solar-feature-tags--sticky">
-              ${featureTagsHtml}
-            </div>
           </div>
 
           <div class="solar-dots">
             ${dotsHtml}
+          </div>
+
+          <div class="solar-feature-tags solar-feature-tags--below">
+            ${featureTagsHtml}
           </div>
 
           <div class="solar-thumbs" id="solarThumbs">
@@ -491,12 +492,18 @@
           <div class="solar-price-box">
             <div class="solar-price-line">
               <span class="solar-price">${formatPrice(P.price)}</span>
-              <span class="solar-old-price">${formatPrice(P.oldPrice)}</span>
-              <span class="solar-discount">-${discountPercent}%</span>
+              ${isBaloProduct ? `
+                <span class="solar-old-price">${formatPrice(P.oldPrice)}</span>
+                <span class="solar-discount">-${discountPercent}%</span>
+              ` : ""}
             </div>
             <p class="solar-price-note">
               <span class="material-symbols-outlined">info</span>
-              ${isBaloProduct ? "Giá đã bao gồm bộ quà tặng và miễn phí vận chuyển." : "Giá lẻ 1 chiếc, chọn combo để tiết kiệm được 216.000đ."}
+              ${isBaloProduct
+                ? "Giá đã bao gồm bộ quà tặng và miễn phí vận chuyển."
+                : (maxComboSaveAmount > 0
+                    ? `Chọn combo để tiết kiệm đến ${formatPrice(maxComboSaveAmount)}.`
+                    : "Chọn combo ưu đãi để đặt hàng.")}
             </p>
           </div>
 
@@ -881,6 +888,50 @@ function openCheckout() {
     const style = document.createElement("style");
     style.id = "solar-review-image-style";
     style.textContent = `
+      .combo-tag.tag-save {
+        background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+        color: #fff !important;
+      }
+
+      .solar-feature-tags--sticky {
+        display: none !important;
+      }
+
+      .solar-feature-tags--below {
+        position: static !important;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin: 10px 0 8px;
+        padding: 0 4px;
+      }
+
+      .solar-feature-tags--below .solar-feature-tag {
+        min-height: 58px;
+        border-radius: 12px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+      }
+
+      .solar-feature-tags--below .solar-feature-icon {
+        font-size: 18px;
+      }
+
+      .solar-feature-tags--below .solar-feature-label {
+        font-size: 11px;
+        line-height: 1.2;
+      }
+
+      .solar-feature-tags--below .solar-feature-value {
+        font-size: 12px;
+        line-height: 1.2;
+      }
+
+      .combo-tag.tag-hot {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+      }
 
       .solar-proof-row {
         display: flex;
