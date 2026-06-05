@@ -25,9 +25,16 @@
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
   <link rel="dns-prefetch" href="https://res.cloudinary.com">
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  </noscript>
   <noscript><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
 
-  <link rel="stylesheet" href="/css/core.css?v=2" />
+  <link rel="stylesheet" href="/css/core.css?v=3" />
   <link id="layoutCSS" rel="stylesheet" href="" />
 
   <style>
@@ -487,126 +494,264 @@
 
   <!-- ORDER MODAL -->
   <div class="modal" id="orderModal">
-    <div class="modal-content">
-      <div class="modal-top">
-        <div class="modal-title">Xác nhận đơn hàng</div>
-        <button class="close-btn" id="closeModal">&times;</button>
-      </div>
-
-      <!-- GIỎ HÀNG COMPACT -->
-      <div class="order-summary">
-        <div class="order-summary-title">🛒 Giỏ hàng</div>
-        <div id="cartSummaryList"></div>
-        <div class="order-totals">
-          <div class="order-totals-row freeship">
-            <span>🚚 Miễn phí vận chuyển</span>
-            <span>0đ</span>
+    <div class="modal-content checkout-modal-content">
+      <div class="checkout-header">
+        <div class="checkout-title-row">
+          <div>
+            <h2 class="checkout-title">Hoàn tất đơn hàng</h2>
+            <p class="checkout-subtitle">Thanh toán khi nhận hàng · Được kiểm tra sản phẩm</p>
           </div>
+
+          <button class="checkout-close close-btn" id="closeModal" type="button">
+            <span class="material-symbols-outlined">close</span>
+          </button>
         </div>
       </div>
 
-      <!-- TRUST STRIP -->
-      
+      <div class="checkout-body">
+        <section class="checkout-card">
+          <h3 class="checkout-card-title">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            Tóm tắt đơn hàng
+          </h3>
 
+          <div class="checkout-order-box">
+            <div id="cartSummaryList"></div>
 
-      <!-- LIVE ORDER NOTIFICATION - tạm ẩn trong checkout
-      <div class="modal-live-notif" id="modalLiveNotif">
-        <div class="modal-live-notif-inner" id="modalLiveNotifInner">
-          <span class="modal-live-notif-icon">🔔</span>
-          <span class="modal-live-notif-text" id="modalLiveNotifText"></span>
-        </div>
-      </div>
-      -->
+            <div class="checkout-summary-lines">
+              <div class="checkout-summary-line">
+                <span>Phí vận chuyển</span>
+                <strong class="checkout-free-ship">Miễn phí</strong>
+              </div>
 
-      <form id="orderForm" novalidate>
+              <div
+                class="checkout-summary-line checkout-discount-line"
+                data-discount-row
+                style="display:none;"
+              >
+                <span>Giảm giá <b data-discount-code-text></b></span>
+                <strong data-discount-amount-text></strong>
+              </div>
 
-        <!-- TIÊU ĐỀ -->
-        <div class="form-section-title">📍 Thông tin nhận hàng</div>
+              <div class="checkout-summary-total">
+                <span class="checkout-summary-total-label">Tổng cộng</span>
 
-        <!-- TÊN + SỐ ĐIỆN THOẠI -->
-        <div class="checkout-name-phone-row">
-          <div class="form-group">
-            <label>Tên người nhận <span style="color:var(--primary)">*</span></label>
-            <input type="text" id="fullName" required placeholder="VD: Vân Anh" />
-            <div class="field-error" id="fullNameError"></div>
+                <div>
+                  <div class="checkout-summary-total-price" id="summaryGrandTotal">0đ</div>
+                  <span class="checkout-tax-note">Thanh toán khi nhận</span>
+                </div>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <div class="form-group" style="position:relative;">
-            <label>Số điện thoại <span style="color:var(--primary)">*</span></label>
-            <input type="tel" id="phone" required maxlength="12" inputmode="numeric" placeholder="09xx xxx xxx" />
-            <span style="position:absolute; right:13px; top:42px; font-size:13px; color:#bbb; pointer-events:none;">🔒</span>
-            <div class="field-error" id="phoneError"></div>
-          </div>
-        </div>
+        <form id="orderForm" novalidate>
+          <section class="checkout-card">
+            <h3 class="checkout-card-title">
+              <span class="material-symbols-outlined">local_shipping</span>
+              Thông tin nhận hàng
+            </h3>
 
-        <!-- ĐỊA CHỈ NHẬN HÀNG -->
-        <div class="form-group">
-          <label>Địa chỉ nhận hàng <span style="color:var(--primary)">*</span></label>
+            <div class="checkout-form-grid">
+              <div class="checkout-two-cols">
+                <div class="form-group checkout-field">
+                  <label>Tên người nhận <span class="checkout-required">*</span></label>
+                  <input type="text" id="fullName" required placeholder="Nhập họ tên" />
+                  <div class="field-error" id="fullNameError"></div>
+                </div>
 
-          <div class="checkout-address-field" id="checkoutAddressField">
-            <div class="checkout-location-display" id="checkoutLocationDisplay">
-              <span class="checkout-location-text placeholder" id="checkoutLocationText">
-                Chọn Tỉnh/Huyện/Xã
-              </span>
+                <div class="form-group checkout-field checkout-phone-field">
+                  <label>Số điện thoại <span class="checkout-required">*</span></label>
+
+                  <div class="checkout-phone-wrap">
+                    <input
+                      type="tel"
+                      id="phone"
+                      required
+                      maxlength="12"
+                      inputmode="numeric"
+                      placeholder="Nhập SĐT"
+                    />
+                    <span class="material-symbols-outlined checkout-lock-icon icon-fill">lock</span>
+                  </div>
+
+                  <div class="field-error" id="phoneError"></div>
+                </div>
+              </div>
+
+              <div class="form-group checkout-field">
+                <label>Địa chỉ nhận hàng <span class="checkout-required">*</span></label>
+
+                <div class="checkout-address-field" id="checkoutAddressField">
+                  <button
+                    class="checkout-area-trigger"
+                    id="checkoutLocationDisplay"
+                    type="button"
+                  >
+                    <span class="checkout-location-text placeholder" id="checkoutLocationText">
+                      Chọn tỉnh / huyện / xã
+                    </span>
+                    <span class="material-symbols-outlined checkout-area-arrow">expand_more</span>
+                  </button>
+                </div>
+
+                <input
+                  type="text"
+                  id="streetAddress"
+                  class="checkout-street-input"
+                  placeholder="Nhập số nhà, tên đường, thôn/xóm"
+                  autocomplete="street-address"
+                />
+
+                <div class="checkout-full-address-preview" id="checkoutFullAddressPreview">
+                  Địa chỉ đầy đủ sẽ hiển thị tại đây
+                </div>
+
+                <input type="hidden" id="address" value="">
+                <input type="hidden" id="province" value="">
+                <input type="hidden" id="district" value="">
+                <input type="hidden" id="ward" value="">
+
+                <div class="field-error" id="addressError"></div>
+              </div>
+
+              <div class="form-group checkout-note-group">
+                <button type="button" class="note-toggle-btn" id="noteToggleBtn">
+                  <span class="material-symbols-outlined">add_notes</span>
+                  <span>Thêm ghi chú cho shop</span>
+                  <span class="note-toggle-arrow">⌄</span>
+                </button>
+
+                <div class="note-collapse" id="noteCollapse">
+                  <textarea
+                    id="orderNote"
+                    rows="2"
+                    placeholder="VD: Giao sau 18h, gọi trước khi giao, để hàng ở bảo vệ."
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="checkout-card">
+            <h3 class="checkout-card-title">
+              <span class="material-symbols-outlined">payments</span>
+              Phương thức thanh toán
+            </h3>
+
+            <div class="checkout-payment-box">
+              <div class="checkout-radio-dot"></div>
+
+              <div class="checkout-payment-content">
+                <div class="checkout-payment-title-row">
+                  <span class="checkout-payment-title">Thanh toán khi nhận hàng (COD)</span>
+                  <span class="material-symbols-outlined checkout-payment-check icon-fill">check_circle</span>
+                </div>
+
+                <p class="checkout-payment-desc">
+                  Quý khách thanh toán bằng tiền mặt cho nhân viên giao hàng sau khi đã kiểm tra sản phẩm.
+                </p>
+              </div>
             </div>
 
-            <div class="checkout-location-menu" id="checkoutLocationMenu"></div>
+            <div class="checkout-trust-box">
+              <span class="material-symbols-outlined icon-fill">verified</span>
+              <span>Bạn được kiểm tra hàng trước khi thanh toán.</span>
+            </div>
+
+            <button type="submit" class="submit-btn checkout-submit-btn" id="submitBtn">
+              <span class="checkout-submit-main">
+                <span class="material-symbols-outlined icon-fill">lock</span>
+                XÁC NHẬN ĐẶT HÀNG
+              </span>
+              <span class="checkout-submit-sub">Thanh toán khi nhận hàng</span>
+            </button>
+
+            <div class="checkout-trust-strip">
+              <div class="checkout-trust-item">
+                <span class="material-symbols-outlined">schedule</span>
+                <span>Giao 1–3 ngày</span>
+              </div>
+
+              <div class="checkout-trust-item">
+                <span class="material-symbols-outlined">payments</span>
+                <span>COD tận nơi</span>
+              </div>
+
+              <div class="checkout-trust-item">
+                <span class="material-symbols-outlined">verified_user</span>
+                <span>Bảo mật 100%</span>
+              </div>
+            </div>
+
+            <div class="status-message" id="statusMessage"></div>
+          </section>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKOUT ADDRESS SHEET -->
+  <div class="checkout-area-sheet" id="checkoutAreaSheet">
+    <div class="checkout-area-panel">
+      <div class="checkout-area-header">
+        <div class="checkout-area-top">
+          <div>
+            <h3 class="checkout-area-title">Chọn khu vực giao hàng</h3>
+            <p class="checkout-area-desc">Chọn lần lượt tỉnh / huyện / xã trong cùng một bảng</p>
           </div>
 
-          <input
-            type="text"
-            id="streetAddress"
-            class="checkout-street-input"
-            placeholder="Nhập số nhà, tên đường, thôn/xóm"
-            autocomplete="street-address"
-          />
-
-          <div class="checkout-full-address-preview" id="checkoutFullAddressPreview">
-            Địa chỉ đầy đủ sẽ hiển thị tại đây
-          </div>
-
-          <input type="hidden" id="address" value="">
-          <input type="hidden" id="province" value="">
-          <input type="hidden" id="district" value="">
-          <input type="hidden" id="ward" value="">
-
-          <div class="field-error" id="addressError"></div>
-        </div>
-
-        <!-- GHI CHÚ COLLAPSIBLE -->
-        <div class="form-group" style="margin-bottom:10px;">
-          <button type="button" class="note-toggle-btn" id="noteToggleBtn">
-            <span>＋ Thêm ghi chú cho shop</span>
-            <span class="note-toggle-arrow">⌄</span>
+          <button class="checkout-area-close" type="button" id="checkoutAreaClose">
+            <span class="material-symbols-outlined">close</span>
           </button>
-          <div class="note-collapse" id="noteCollapse">
-            <textarea id="orderNote" rows="2" placeholder="VD: Giao sau 18h, gọi trước khi giao, để hàng ở bảo vệ..."></textarea>
-          </div>
         </div>
 
-        <!-- REASSURANCE -->
-        <div class="reassurance">
-          <span>✅</span>
-          <div>Bạn được <strong>kiểm tra hàng</strong> trước khi thanh toán.</div>
-        </div>
+        <div class="checkout-area-steps">
+          <button
+            class="checkout-area-step active"
+            type="button"
+            id="checkoutStepProvince"
+            data-area-step="province"
+          >
+            Tỉnh / TP
+          </button>
 
-        <!-- TỔNG TIỀN -->
-        <div style="display:flex; justify-content:space-between; align-items:center; font-size:15px; font-weight:800; color:#16a34a; margin-bottom:12px; padding:0 2px;">
-          <span>💳 Thanh toán khi nhận hàng</span>
-          <span id="summaryGrandTotal">0đ</span>
-        </div>
+          <button
+            class="checkout-area-step"
+            type="button"
+            id="checkoutStepDistrict"
+            data-area-step="district"
+            disabled
+          >
+            Quận / Huyện
+          </button>
 
-        <button type="submit" class="submit-btn" id="submitBtn">
-          🔒 XÁC NHẬN ĐẶT HÀNG
-        </button>
-        <div class="submit-trust">
-          <div class="submit-trust-item">📦 Giao 2–5 ngày</div>
-          <div class="submit-trust-item">💳 COD — trả khi nhận hàng</div>
-          <div class="submit-trust-item">🔒 Thông tin được bảo mật</div>
+          <button
+            class="checkout-area-step"
+            type="button"
+            id="checkoutStepWard"
+            data-area-step="ward"
+            disabled
+          >
+            Phường / Xã
+          </button>
         </div>
-        <div class="mini-note">Thanh toán khi nhận hàng (COD)</div>
-        <div class="status-message" id="statusMessage"></div>
-      </form>
+      </div>
+
+      <div class="checkout-area-search-wrap">
+        <input
+          id="checkoutAreaSearch"
+          class="checkout-area-search"
+          type="text"
+          placeholder="Tìm kiếm tỉnh thành của bạn ở đây"
+        />
+      </div>
+
+      <div class="checkout-area-selected" id="checkoutAreaSelected">
+        Chưa chọn khu vực giao hàng
+      </div>
+
+      <div class="checkout-area-list" id="checkoutAreaList"></div>
     </div>
   </div>
 
@@ -707,7 +852,7 @@
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
           coreScript.defer = true;
-          coreScript.src = "/js/core.js?v=13";
+          coreScript.src = "/js/core.js?v=14";
           document.body.appendChild(coreScript);
         };
 

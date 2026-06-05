@@ -184,12 +184,23 @@ const cartBadge          = document.getElementById("cartBadge");
 /* ===================================================
    CHECKOUT ADDRESS — Tỉnh / Huyện / Xã | Số nhà
 =================================================== */
-const checkoutAddressField   = document.getElementById("checkoutAddressField");
+const checkoutAddressField    = document.getElementById("checkoutAddressField");
 const checkoutLocationDisplay = document.getElementById("checkoutLocationDisplay");
-const checkoutLocationText   = document.getElementById("checkoutLocationText");
-const checkoutLocationMenu   = document.getElementById("checkoutLocationMenu");
-const streetAddressInput     = document.getElementById("streetAddress");
+const checkoutLocationText    = document.getElementById("checkoutLocationText");
+const streetAddressInput      = document.getElementById("streetAddress");
 const checkoutFullAddressPreview = document.getElementById("checkoutFullAddressPreview");
+
+const checkoutAreaSheet    = document.getElementById("checkoutAreaSheet");
+const checkoutAreaClose    = document.getElementById("checkoutAreaClose");
+const checkoutAreaSearch   = document.getElementById("checkoutAreaSearch");
+const checkoutAreaSelected = document.getElementById("checkoutAreaSelected");
+const checkoutAreaList     = document.getElementById("checkoutAreaList");
+
+const checkoutAreaSteps = {
+  province: document.getElementById("checkoutStepProvince"),
+  district: document.getElementById("checkoutStepDistrict"),
+  ward:     document.getElementById("checkoutStepWard")
+};
 
 const addressInput  = document.getElementById("address");
 const provinceInput = document.getElementById("province");
@@ -1421,9 +1432,16 @@ function renderCartSummary() {
 }
 
 function updateSubmitBtnPrice() {
+  if (!submitBtn) return;
+
+  const total = getActiveGrandTotal();
+
   submitBtn.innerHTML = `
-    <span class="submit-btn-main">🔒 XÁC NHẬN ĐẶT HÀNG</span>
-    <span class="submit-btn-sub">THANH TOÁN KHI NHẬN HÀNG</span>
+    <span class="checkout-submit-main">
+      <span class="material-symbols-outlined icon-fill">lock</span>
+      XÁC NHẬN ĐẶT HÀNG
+    </span>
+    <span class="checkout-submit-sub">${formatPrice(total)} · Thanh toán khi nhận hàng</span>
   `;
 }
 
@@ -1657,6 +1675,8 @@ function sortAddressList(list) {
 /* ===================================================
    CHECKOUT ADDRESS LOGIC
 =================================================== */
+let checkoutAddressLevel = "province";
+
 async function loadCheckoutProvinces() {
   if (!checkoutLocationText) return [];
 
@@ -1688,7 +1708,7 @@ async function loadCheckoutProvinces() {
     .catch(function () {
       checkoutProvinceLoadStatus = "error";
       checkoutProvincesData = [];
-      checkoutLocationText.textContent = "Nhập địa chỉ đầy đủ bên dưới";
+      checkoutLocationText.textContent = "Không tải được khu vực";
       checkoutLocationText.classList.add("placeholder");
       restoreCheckoutCustomerDraft();
 
@@ -1701,151 +1721,225 @@ async function loadCheckoutProvinces() {
   return checkoutProvinceLoadPromise;
 }
 
-function openCheckoutLocationMenu() {
-  if (!checkoutLocationMenu || !checkoutAddressField) return;
-  checkoutLocationMenu.classList.add("show");
-  checkoutAddressField.classList.add("active");
+function normalizeCheckoutSearchText(text) {
+  return String(text || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
-function closeCheckoutLocationMenu() {
-  if (!checkoutLocationMenu || !checkoutAddressField) return;
-  checkoutLocationMenu.classList.remove("show");
-  checkoutAddressField.classList.remove("active");
-}
-
-function setCheckoutMenuTitle(title) {
-  if (!checkoutLocationMenu) return;
-  checkoutLocationMenu.innerHTML = '<div class="checkout-menu-title">' + title + '</div>';
-}
-function showAddressFallbackMenu() {
-  if (!checkoutLocationMenu) return;
-
-  setCheckoutMenuTitle("Không tải được tỉnh/thành");
-
-  const option = document.createElement("div");
-  option.className = "checkout-location-option";
-  option.innerHTML = "Vui lòng nhập địa chỉ đầy đủ ở ô <strong>Địa chỉ chi tiết</strong> bên dưới.";
-
-  checkoutLocationMenu.appendChild(option);
-  openCheckoutLocationMenu();
-
-  if (checkoutLocationText) {
-    checkoutLocationText.textContent = "Nhập địa chỉ đầy đủ bên dưới";
-    checkoutLocationText.classList.add("placeholder");
+function getCheckoutAddressItems() {
+  if (checkoutAddressLevel === "province") {
+    return sortAddressList(checkoutProvincesData);
   }
 
-  if (streetAddressInput) {
+  if (checkoutAddressLevel === "district") {
+    if (!selectedProvince || !selectedProvince.districts) return [];
+    return sortAddressList(selectedProvince.districts);
+  }
+
+  if (checkoutAddressLevel === "ward") {
+    if (!selectedDistrict || !selectedDistrict.wards) return [];
+    return sortAddressList(selectedDistrict.wards);
+  }
+
+  return [];
+}
+
+function updateCheckoutAreaStepState() {
+  Object.keys(checkoutAreaSteps).forEach(function (level) {
+    const step = checkoutAreaSteps[level];
+    if (!step) return;
+
+    step.classList.toggle("active", level === checkoutAddressLevel);
+  });
+
+  if (checkoutAreaSteps.district) {
+    checkoutAreaSteps.district.disabled = !selectedProvince;
+  }
+
+  if (checkoutAreaSteps.ward) {
+    checkoutAreaSteps.ward.disabled = !selectedDistrict;
+  }
+}
+
+function updateCheckoutAreaSelectedText() {
+  if (!checkoutAreaSelected) return;
+
+  const parts = [
+    selectedProvince ? selectedProvince.name : "",
+    selectedDistrict ? selectedDistrict.name : "",
+    selectedWard ? selectedWard.name : ""
+  ].filter(Boolean);
+
+  checkoutAreaSelected.textContent = parts.length
+    ? parts.join(" / ")
+    : "Chưa chọn khu vực giao hàng";
+}
+
+function setCheckoutAddressLevel(level) {
+  if (level === "district" && !selectedProvince) return;
+  if (level === "ward" && !selectedDistrict) return;
+
+  checkoutAddressLevel = level;
+
+  if (checkoutAreaSearch) {
+    if (level === "province") {
+      checkoutAreaSearch.placeholder = "Tìm kiếm tỉnh thành của bạn ở đây";
+    }
+
+    if (level === "district") {
+      checkoutAreaSearch.placeholder = "Tìm kiếm quận/huyện của bạn ở đây";
+    }
+
+    if (level === "ward") {
+      checkoutAreaSearch.placeholder = "Tìm kiếm phường/xã của bạn ở đây";
+    }
+
+    checkoutAreaSearch.value = "";
+  }
+
+  updateCheckoutAreaStepState();
+  updateCheckoutAreaSelectedText();
+  renderCheckoutAreaOptions();
+
+  if (checkoutAreaSearch) {
     setTimeout(function () {
-      streetAddressInput.focus();
-    }, 120);
+      checkoutAreaSearch.focus();
+    }, 50);
   }
 }
 
-function showProvinceMenu() {
-  if (!checkoutLocationMenu) return;
+function renderCheckoutAreaOptions() {
+  if (!checkoutAreaList) return;
+
+  if (checkoutProvinceLoadStatus === "loading") {
+    checkoutAreaList.innerHTML = '<div class="checkout-area-empty">Đang tải khu vực...</div>';
+    return;
+  }
+
+  if (checkoutProvinceLoadStatus === "error") {
+    checkoutAreaList.innerHTML = '<div class="checkout-area-empty">Không tải được khu vực. Vui lòng nhập địa chỉ chi tiết bên dưới.</div>';
+    return;
+  }
+
+  const keyword = normalizeCheckoutSearchText(checkoutAreaSearch ? checkoutAreaSearch.value : "");
+  const items = getCheckoutAddressItems();
+
+  const filtered = items.filter(function (item) {
+    return normalizeCheckoutSearchText(item.name).includes(keyword);
+  });
+
+  if (!filtered.length) {
+    checkoutAreaList.innerHTML = '<div class="checkout-area-empty">Không tìm thấy kết quả</div>';
+    return;
+  }
+
+  checkoutAreaList.innerHTML = "";
+
+  filtered.forEach(function (item) {
+    const option = document.createElement("button");
+    option.type = "button";
+    option.className = "checkout-area-option";
+    option.textContent = item.name;
+
+    option.addEventListener("click", function () {
+      selectCheckoutAreaItem(item);
+    });
+
+    checkoutAreaList.appendChild(option);
+  });
+}
+
+function selectCheckoutAreaItem(item) {
+  if (checkoutAddressLevel === "province") {
+    selectedProvince = item;
+    selectedDistrict = null;
+    selectedWard = null;
+
+    updateCheckoutAddressValue();
+    saveCheckoutCustomerDraft();
+    setCheckoutAddressLevel("district");
+    return;
+  }
+
+  if (checkoutAddressLevel === "district") {
+    selectedDistrict = item;
+    selectedWard = null;
+
+    updateCheckoutAddressValue();
+    saveCheckoutCustomerDraft();
+    setCheckoutAddressLevel("ward");
+    return;
+  }
+
+  if (checkoutAddressLevel === "ward") {
+    selectedWard = item;
+
+    updateCheckoutAddressValue();
+    saveCheckoutCustomerDraft();
+    closeCheckoutAreaSheet();
+
+    if (streetAddressInput) {
+      setTimeout(function () {
+        streetAddressInput.focus();
+      }, 80);
+    }
+  }
+}
+
+function openCheckoutAreaSheet() {
+  if (!checkoutAreaSheet) return;
+
+  checkoutAreaSheet.classList.add("active");
+  document.body.style.overflow = "hidden";
 
   if (checkoutProvinceLoadStatus !== "success" || !checkoutProvincesData.length) {
-    setCheckoutMenuTitle("Đang tải tỉnh/thành...");
+    checkoutProvinceLoadStatus = checkoutProvinceLoadStatus === "idle"
+      ? "loading"
+      : checkoutProvinceLoadStatus;
 
-    const option = document.createElement("div");
-    option.className = "checkout-location-option";
-    option.textContent = "Vui lòng chờ giây lát";
-
-    checkoutLocationMenu.appendChild(option);
-    openCheckoutLocationMenu();
+    setCheckoutAddressLevel("province");
 
     loadCheckoutProvinces().then(function (data) {
       if (data && data.length) {
-        showProvinceMenu();
-        return;
+        setCheckoutAddressLevel(
+          selectedWard ? "ward" : selectedDistrict ? "ward" : selectedProvince ? "district" : "province"
+        );
+      } else {
+        renderCheckoutAreaOptions();
       }
-
-      showAddressFallbackMenu();
     });
 
     return;
   }
 
-  setCheckoutMenuTitle("Chọn tỉnh/thành");
+  if (selectedWard) {
+    setCheckoutAddressLevel("ward");
+    return;
+  }
 
-  sortAddressList(checkoutProvincesData).forEach(function (province) {
-    const option = document.createElement("div");
-    option.className = "checkout-location-option";
-    option.textContent = province.name;
+  if (selectedDistrict) {
+    setCheckoutAddressLevel("ward");
+    return;
+  }
 
-    option.onclick = function () {
-      selectedProvince = province;
-      selectedDistrict = null;
-      selectedWard = null;
+  if (selectedProvince) {
+    setCheckoutAddressLevel("district");
+    return;
+  }
 
-      updateCheckoutAddressValue();
-      saveCheckoutCustomerDraft();
-
-      setTimeout(function () {
-        showDistrictMenu();
-      }, 80);
-    };
-
-    checkoutLocationMenu.appendChild(option);
-  });
-
-  openCheckoutLocationMenu();
+  setCheckoutAddressLevel("province");
 }
 
-function showDistrictMenu() {
-  if (!checkoutLocationMenu || !selectedProvince) return;
+function closeCheckoutAreaSheet() {
+  if (!checkoutAreaSheet) return;
 
-  setCheckoutMenuTitle("Chọn quận/huyện");
+  checkoutAreaSheet.classList.remove("active");
 
-  sortAddressList(selectedProvince.districts).forEach(function (district) {
-    const option = document.createElement("div");
-    option.className = "checkout-location-option";
-    option.textContent = district.name;
-
-    option.onclick = function () {
-      selectedDistrict = district;
-      selectedWard = null;
-
-      updateCheckoutAddressValue();
-      saveCheckoutCustomerDraft();
-
-      setTimeout(function () {
-        showWardMenu();
-      }, 80);
-    };
-
-    checkoutLocationMenu.appendChild(option);
-  });
-
-  openCheckoutLocationMenu();
-}
-
-function showWardMenu() {
-  if (!checkoutLocationMenu || !selectedDistrict) return;
-
-  setCheckoutMenuTitle("Chọn xã/phường");
-
-  sortAddressList(selectedDistrict.wards).forEach(function (ward) {
-    const option = document.createElement("div");
-    option.className = "checkout-location-option";
-    option.textContent = ward.name;
-
-    option.onclick = function () {
-      selectedWard = ward;
-
-      updateCheckoutAddressValue();
-      saveCheckoutCustomerDraft();
-      closeCheckoutLocationMenu();
-
-      if (streetAddressInput) {
-        streetAddressInput.focus();
-      }
-    };
-
-    checkoutLocationMenu.appendChild(option);
-  });
-
-  openCheckoutLocationMenu();
+  const isOrderModalOpen = orderModal && orderModal.classList.contains("show");
+  document.body.style.overflow = isOrderModalOpen ? "hidden" : "auto";
 }
 
 function updateCheckoutLocationText() {
@@ -1854,7 +1948,7 @@ function updateCheckoutLocationText() {
   let text = "";
 
   if (!selectedProvince) {
-    text = "Chọn tỉnh/thành";
+    text = "Chọn tỉnh / huyện / xã";
     checkoutLocationText.classList.add("placeholder");
   } else if (!selectedDistrict) {
     text = selectedProvince.name + " / Chọn huyện";
@@ -1888,12 +1982,15 @@ function updateCheckoutAddressValue() {
   if (provinceInput) provinceInput.value = province;
   if (districtInput) districtInput.value = district;
   if (wardInput)     wardInput.value     = ward;
+
   if (checkoutFullAddressPreview) {
     checkoutFullAddressPreview.textContent = fullAddress || "Địa chỉ đầy đủ sẽ hiển thị tại đây.";
     checkoutFullAddressPreview.classList.toggle("has-value", !!fullAddress);
   }
 
   updateCheckoutLocationText();
+  updateCheckoutAreaSelectedText();
+  updateCheckoutAreaStepState();
 
   if (fullAddress) {
     clearFieldError("address", "addressError");
@@ -1910,42 +2007,54 @@ function resetCheckoutAddressUI() {
   if (provinceInput)      provinceInput.value = "";
   if (districtInput)      districtInput.value = "";
   if (wardInput)          wardInput.value = "";
+
   if (checkoutFullAddressPreview) {
     checkoutFullAddressPreview.textContent = "Địa chỉ đầy đủ sẽ hiển thị tại đây.";
     checkoutFullAddressPreview.classList.remove("has-value");
   }
 
-  updateCheckoutLocationText();
-  closeCheckoutLocationMenu();
+  updateCheckoutAddressValue();
+  closeCheckoutAreaSheet();
 }
 
 function initCheckoutAddressPicker() {
-  if (!checkoutLocationDisplay || !checkoutLocationMenu) return;
+  if (!checkoutLocationDisplay) return;
 
   checkoutLocationDisplay.addEventListener("click", function () {
-    if (!selectedProvince) {
-      showProvinceMenu();
-      return;
-    }
-
-    if (!selectedDistrict) {
-      showDistrictMenu();
-      return;
-    }
-
-    if (!selectedWard) {
-      showWardMenu();
-      return;
-    }
-
-    showProvinceMenu();
+    openCheckoutAreaSheet();
   });
 
-  document.addEventListener("click", function (event) {
-    if (!event.target.closest("#checkoutAddressField")) {
-      closeCheckoutLocationMenu();
-    }
+  if (checkoutAreaClose) {
+    checkoutAreaClose.addEventListener("click", function () {
+      closeCheckoutAreaSheet();
+    });
+  }
+
+  if (checkoutAreaSheet) {
+    checkoutAreaSheet.addEventListener("click", function (event) {
+      if (event.target === checkoutAreaSheet) {
+        closeCheckoutAreaSheet();
+      }
+    });
+  }
+
+  Object.keys(checkoutAreaSteps).forEach(function (level) {
+    const step = checkoutAreaSteps[level];
+    if (!step) return;
+
+    step.addEventListener("click", function () {
+      if (level === "district" && !selectedProvince) return;
+      if (level === "ward" && !selectedDistrict) return;
+
+      setCheckoutAddressLevel(level);
+    });
   });
+
+  if (checkoutAreaSearch) {
+    checkoutAreaSearch.addEventListener("input", function () {
+      renderCheckoutAreaOptions();
+    });
+  }
 
   if (streetAddressInput) {
     streetAddressInput.addEventListener("input", function () {
@@ -1954,7 +2063,9 @@ function initCheckoutAddressPicker() {
     });
   }
 
-  loadCheckoutProvinces();
+  runWhenIdle(function () {
+    loadCheckoutProvinces();
+  }, 1200);
 }
 
 function initCheckoutCustomerAutoSave() {
@@ -2195,8 +2306,14 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       return;
     }
 
-    submitBtn.disabled    = true;
-    submitBtn.textContent = "Đang gửi...";
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+      <span class="checkout-submit-main">
+        <span class="material-symbols-outlined icon-fill">lock</span>
+        ĐANG GỬI ĐƠN...
+      </span>
+      <span class="checkout-submit-sub">Vui lòng chờ trong giây lát</span>
+    `;
     statusMessage.textContent = "";
 
     const purchaseEventId = genEventId();
