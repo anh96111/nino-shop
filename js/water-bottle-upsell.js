@@ -719,6 +719,12 @@
               <span class="nino-water-old-price">99.000đ</span>
               <span class="nino-water-new-price">59.000đ</span>
             </div>
+
+            <div class="nino-water-qty" style="width: fit-content; margin-top: 8px;">
+              <button type="button" data-action="change-qty" data-id="${item.id}" data-delta="-1">−</button>
+              <span>${item.qty}</span>
+              <button type="button" data-action="change-qty" data-id="${item.id}" data-delta="1">+</button>
+            </div>
           </div>
 
           <button class="nino-water-color-btn" type="button" data-action="toggle-color" data-id="${item.id}">
@@ -1180,7 +1186,7 @@
         </button>
 
         <button class="nino-water-skip" type="button" data-action="close">
-          Không cần, tôi chỉ lấy balo
+          Không cần, tôi chỉ lấy sản phẩm đã đặt
         </button>
       </div>
 

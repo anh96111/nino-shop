@@ -196,13 +196,29 @@
     `;
   }
 
-  const variantHtml = hasVariants
+  const tableColorVariants = isBanProduct
+    ? variants.filter(v => v.type === "table_color")
+    : [];
+
+  const giftVariants = isBanProduct
+    ? variants.filter(v => v.type !== "table_color")
+    : variants;
+
+  const tableColorVariantHtml = tableColorVariants.length
     ? `
-      <div class="solar-variant-area" id="solarVariantArea">
-        ${variants.map(buildVariantOptionsHtml).join("")}
+      <div class="solar-variant-area solar-table-color-area" id="solarTableColorArea">
+        ${tableColorVariants.map(buildVariantOptionsHtml).join("")}
       </div>
     `
-    : ""; 
+    : "";
+
+  const variantHtml = giftVariants.length
+    ? `
+      <div class="solar-variant-area" id="solarVariantArea">
+        ${giftVariants.map(buildVariantOptionsHtml).join("")}
+      </div>
+    `
+    : "";
 
   /* ── Combo cards hiển thị theo displayOrder, data-index vẫn dùng index GỐC ── */
   const comboHtml = displayOrder.map(index => {
@@ -520,7 +536,7 @@
                     : "Chọn combo ưu đãi để đặt hàng.")}
             </p>
           </div>
-
+          ${isBanProduct ? tableColorVariantHtml : ""}
           ${hasCombos ? `
             <div class="solar-combo-area" id="solarComboArea">
               <div class="solar-section-head">
@@ -666,12 +682,13 @@
     const variantArea = document.getElementById("solarVariantArea");
     const extraBagGroup = document.querySelector('[data-variant-group="extra_bag_color"]');
 
-    if (variantArea) {
-      variantArea.style.display = shouldShow ? "" : "none";
-    }
-
     if (extraBagGroup) {
       extraBagGroup.style.display = shouldShow ? "" : "none";
+    }
+
+    if (variantArea) {
+      const hasVisibleGiftVariant = shouldShow && extraBagGroup;
+      variantArea.style.display = hasVisibleGiftVariant ? "" : "none";
     }
 
     if (shouldShow && !selectedVariants.extra_bag_color) {
@@ -774,14 +791,20 @@
   }
 
 function applySelectedVariantsToProduct(forceQty) {
-  const selectedText = Object.values(selectedVariants).filter(Boolean).join(" - ");
+  const finalVariants = { ...selectedVariants };
+
+  if (isBanProduct && finalVariants.table_color) {
+    finalVariants.color = finalVariants.table_color;
+  }
+
+  const selectedText = Object.values(finalVariants).filter(Boolean).join(" - ");
 
   P.selectedVariantText = selectedText;
-  P.selectedVariants = { ...selectedVariants };
+  P.selectedVariants = finalVariants;
 
   if (typeof window.PRODUCT === "object" && window.PRODUCT) {
     window.PRODUCT.selectedVariantText = selectedText;
-    window.PRODUCT.selectedVariants = { ...selectedVariants };
+    window.PRODUCT.selectedVariants = finalVariants;
   }
 
   if (forceQty) {
@@ -816,7 +839,7 @@ function openCheckout() {
   if (isBanProduct && combo.showExtraBagVariant) {
     applySelectedVariantsToProduct(combo.quantity);
   } else if (isBanProduct) {
-    selectedVariants.extra_bag_color = "";
+    delete selectedVariants.extra_bag_color;
     applySelectedVariantsToProduct(combo.quantity);
   }
 

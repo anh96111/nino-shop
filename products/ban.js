@@ -24,7 +24,7 @@ const PRODUCT_CONFIG = {
   currency: "VND",
   category: "Bàn học điều chỉnh tư thế cho bé",
 
-  disableWaterBottleUpsell: true,
+  disableWaterBottleUpsell: false,
 
   shipBar: "Miễn phí vận chuyển · Thanh toán khi nhận hàng · Được kiểm tra hàng",
 
@@ -52,6 +52,7 @@ const PRODUCT_CONFIG = {
 
   images: [
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780911896/12_xlwggl.png"),
+    imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780941344/5_p6okv5.png"),
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780935166/1_nibmn1.png"),
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780935169/2_lx3uo6.png"),
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780935168/3_v2wzqi.png"),
@@ -111,8 +112,22 @@ const PRODUCT_CONFIG = {
 
   variants: [
     {
-      type: "extra_bag_color",
-      label: "Màu túi học thêm",
+        type: "table_color",
+        label: "Màu bàn",
+        options: [
+            {
+            name: "Xanh Dương",
+            image: imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780935166/1_nibmn1.png")
+            },
+            {
+            name: "Hồng",
+            image: imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780941344/5_p6okv5.png")
+            }
+        ]
+    },
+    {
+        type: "extra_bag_color",
+        label: "Màu túi học thêm",
       options: [
         {
           name: "Xanh",
@@ -136,7 +151,7 @@ const PRODUCT_CONFIG = {
 
   combos: [
     {
-      name: "1 bàn",
+      name: "1 Bàn",
       quantity: 1,
       price: 385000,
       oldPrice: 485000,
@@ -145,24 +160,24 @@ const PRODUCT_CONFIG = {
       showExtraBagVariant: false
     },
     {
-      name: "Combo 2 bàn",
+      name: "Combo 2 bàn + tặng túi học thêm",
       quantity: 2,
       price: 699000,
       oldPrice: 970000,
       shipFee: 0,
-      note: "Miễn phí vận chuyển, tặng túi học thêm",
+      note: "Shop gửi random màu bàn. Khách muốn chọn màu, vui lòng ghi chú trong phần địa chỉ nhận hàng.",
       tag: "Bán chạy",
       tagType: "hot",
       showExtraBagVariant: true,
       giftText: "Tặng túi học thêm"
     },
     {
-      name: "Combo 3 bàn",
+      name: "Combo 3 bàn + tặng túi học thêm",
       quantity: 3,
       price: 999000,
       oldPrice: 1455000,
       shipFee: 0,
-      note: "Tặng 1 túi học thêm",
+      note: "Shop gửi random màu bàn. Khách muốn chọn màu, vui lòng ghi chú trong phần địa chỉ nhận hàng",
       tag: "Tiết kiệm",
       tagType: "save",
       showExtraBagVariant: true,
@@ -227,7 +242,9 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Từ khi mua bàn này, con mình thấy ngồi học thoải mái hơn. Mặt bàn nghiêng nên viết sẽ không bị mỏi tay và đỡ phải cúi xuống nhiều hơn.",
-        media: [],
+        media: [
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942063/vn-11134103-81ztc-mn97v5eujuo30e_lvpgbh.webp"
+        ],
         mediaFull: [],
         likes: 18
       },
@@ -240,7 +257,9 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Sản phẩm đóng hộp cực kì chắc chắn. Kệ ưng lắm, rất tốt cho con ngồi học. Cho shop 5 sao nhé.",
-        media: [],
+        media: [
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942063/vn-11134103-820l4-mhoceu735z41d7_tftzdy.webp"
+        ],
         mediaFull: [],
         likes: 12
       },
@@ -253,7 +272,9 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Mặt bàn nghiêng 12 độ giúp bé nhà mình không phải cúi đầu nhiều khi bé viết bài, ngoài ra có thêm giá để sách có thể điều chỉnh rất tiện lợi.",
-        media: [],
+        media: [
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942063/vn-11134103-81ztc-mk1z8zk1fz0i51_mkn5pn.webp"
+        ],
         mediaFull: [],
         likes: 25
       },
@@ -266,7 +287,13 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Thiết kế của mặt bàn rất hợp lý và khoa học nên có thể giúp con tôi hình thành thói quen ngồi học đúng tư thế.",
-        media: [],
+        media: [
+            {
+                type: "video",
+                src: "https://res.cloudinary.com/dfppbfjkm/video/upload/v1780942090/vn-11110103-6v8go-mhytutgec64g98.16000051765114055_zfaa4q.mp4",
+                poster: imgReview("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942063/vn-11134103-81ztc-mk1z8zk1fz0i51_mkn5pn.webp")
+            }
+            ],
         mediaFull: [],
         likes: 20
       },
@@ -279,7 +306,10 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Lần thứ 2 mua món này của shop rùi, chất lượng tốt, giá cả rất hợp lý, nhờ shop ship gấp làm quà sinh nhật cho đứa cháu là shop ok luôn 👌 10 điểm cho shop 😊",
-        media: [],
+        media: [
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942064/0_l1pvnx.webp",
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942089/1_oehoux.webp"
+        ],
         mediaFull: [],
         likes: 30
       },
@@ -305,7 +335,9 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Hàng ngon bổ rẻ, shipper nhiệt tình vui tính, lại còn được khuyến mại. Cảm ơn shop nhiều nhé. He he",
-        media: [],
+        media: [
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942064/vn-11134103-820l4-mik7phf2p1532b_seefrs.webp"
+        ],
         mediaFull: [],
         likes: 22
       },
@@ -318,7 +350,9 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Hàng rất đúng với quảng cáo, màu sắc rất đẹp, chất lượng sản phẩm rất tốt, tôi rất hài lòng.",
-        media: [],
+        media: [
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942063/vn-11134103-81ztc-mlf04p6099fmac_mghtos.webp"
+        ],
         mediaFull: [],
         likes: 9
       },
@@ -331,7 +365,9 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Sản phẩm tuyêt vòi shop đóng gói kĩ giao hàng nhanh sẽ ung ho shop.",
-        media: [],
+        media: [
+            "https://res.cloudinary.com/dfppbfjkm/image/upload/v1780942063/vn-11134103-81ztc-mk1z8zk1fz0i51_mkn5pn.webp"
+        ],
         mediaFull: [],
         likes: 27
       },
