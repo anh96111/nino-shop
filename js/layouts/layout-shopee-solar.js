@@ -35,6 +35,9 @@
   const hasVariants = variants.length > 0;
   const hasCombos = combos.length > 0;
   const isBaloProduct = P.slug === "balo";
+  const isBanProduct = P.slug === "ban";
+  const hasExtraBagVariant = variants.some(v => v.type === "extra_bag_color");
+  const shouldRenderVariantArea = isBaloProduct || (isBanProduct && hasExtraBagVariant);
 
   function getComboSaveAmount(combo) {
     if (!combo || isBaloProduct) return 0;
@@ -50,8 +53,15 @@
     ? Math.max(...combos.map(getComboSaveAmount))
     : 0;
 
-  /* ── Thứ tự hiển thị combo (đảo): index gốc 2,1,0 ── */
-  const displayOrder = combos.map((_, i) => i).reverse();
+    /* ── Thứ tự hiển thị combo ──
+    - ban: giữ đúng thứ tự trong file sản phẩm
+    - sản phẩm khác: giữ logic đảo như cũ
+  */
+  const shouldKeepComboOrder = P.slug === "ban";
+
+  const displayOrder = shouldKeepComboOrder
+    ? combos.map((_, i) => i)
+    : combos.map((_, i) => i).reverse();
 
   const rawTags = Array.isArray(P.sliderTags) ? P.sliderTags : [
     "Công suất<br>40W",
@@ -461,9 +471,13 @@
 
         <div class="solar-info">
           <div class="solar-shop-row">
-            <span class="solar-fav-badge">Yêu thích</span>
-            ${isBaloProduct ? "" : `
-              <span class="solar-shop-cat">${P.category || "Đèn năng lượng mặt trời"}</span>
+            ${isBanProduct ? `
+              <span class="solar-fav-badge">🏆 Đạt tiêu chuẩn Nhật Bản</span>
+            ` : `
+              <span class="solar-fav-badge">Yêu thích</span>
+              ${isBaloProduct ? "" : `
+                <span class="solar-shop-cat">${P.category || "Đèn năng lượng mặt trời"}</span>
+              `}
             `}
           </div>
 
@@ -524,18 +538,20 @@
             </div>
           ` : ""}
 
-          ${isBaloProduct ? `
+          ${shouldRenderVariantArea ? `
             ${variantHtml}
 
-            <div class="solar-variant-actions">
-              <button type="button" class="solar-variant-add" id="solarVariantAddToCart">
-                Thêm giỏ hàng
-              </button>
+            ${isBaloProduct ? `
+              <div class="solar-variant-actions">
+                <button type="button" class="solar-variant-add" id="solarVariantAddToCart">
+                  Thêm giỏ hàng
+                </button>
 
-              <button type="button" class="solar-variant-buy" id="solarVariantBuyNow">
-                Mua ngay
-              </button>
-            </div>
+                <button type="button" class="solar-variant-buy" id="solarVariantBuyNow">
+                  Mua ngay
+                </button>
+              </div>
+            ` : ""}
           ` : ""}
 
           <div class="solar-content-area">
@@ -638,6 +654,51 @@
       notice.classList.remove("is-error", "shake-error");
     }
     if (area) area.classList.remove("is-error");
+    updateExtraBagVariantVisibility();
+  }
+
+  function updateExtraBagVariantVisibility() {
+    if (!isBanProduct) return;
+
+    const combo = selectedComboIndex !== null ? combos[selectedComboIndex] : null;
+    const shouldShow = !!combo?.showExtraBagVariant;
+
+    const variantArea = document.getElementById("solarVariantArea");
+    const extraBagGroup = document.querySelector('[data-variant-group="extra_bag_color"]');
+
+    if (variantArea) {
+      variantArea.style.display = shouldShow ? "" : "none";
+    }
+
+    if (extraBagGroup) {
+      extraBagGroup.style.display = shouldShow ? "" : "none";
+    }
+
+    if (shouldShow && !selectedVariants.extra_bag_color) {
+      const firstExtraBagOption = document.querySelector('[data-variant-type="extra_bag_color"]');
+
+      if (firstExtraBagOption) {
+        selectedVariants.extra_bag_color = firstExtraBagOption.dataset.variantName || "";
+
+        document.querySelectorAll('[data-variant-type="extra_bag_color"]').forEach(item => {
+          item.classList.toggle("active", item === firstExtraBagOption);
+        });
+
+        const hint = document.querySelector('[data-variant-hint="extra_bag_color"]');
+        if (hint) {
+          hint.textContent = "Đã chọn: " + selectedVariants.extra_bag_color;
+        }
+      }
+    }
+
+    if (!shouldShow && selectedVariants.extra_bag_color) {
+      delete selectedVariants.extra_bag_color;
+      P.selectedVariants = { ...selectedVariants };
+
+      if (typeof window.PRODUCT === "object" && window.PRODUCT) {
+        window.PRODUCT.selectedVariants = { ...selectedVariants };
+      }
+    }
   }
 
   function requireCombo() {
@@ -712,7 +773,7 @@
     return false;
   }
 
-function applyBaloVariantsToProduct() {
+function applySelectedVariantsToProduct(forceQty) {
   const selectedText = Object.values(selectedVariants).filter(Boolean).join(" - ");
 
   P.selectedVariantText = selectedText;
@@ -723,16 +784,18 @@ function applyBaloVariantsToProduct() {
     window.PRODUCT.selectedVariants = { ...selectedVariants };
   }
 
-  const qtyInput = document.getElementById("quantity");
-  if (qtyInput) {
-    qtyInput.value = "1";
-    qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
+  if (forceQty) {
+    const qtyInput = document.getElementById("quantity");
+    if (qtyInput) {
+      qtyInput.value = String(forceQty);
+      qtyInput.dispatchEvent(new Event("input", { bubbles: true }));
+    }
   }
 }
 
 function openCheckout() {
   if (isBaloProduct) {
-    applyBaloVariantsToProduct();
+    applySelectedVariantsToProduct(1);
 
     if (triggerCoreBuy()) return;
 
@@ -749,6 +812,13 @@ function openCheckout() {
 
   applyComboToProduct(combo);
   syncHiddenCombo();
+
+  if (isBanProduct && combo.showExtraBagVariant) {
+    applySelectedVariantsToProduct(combo.quantity);
+  } else if (isBanProduct) {
+    selectedVariants.extra_bag_color = "";
+    applySelectedVariantsToProduct(combo.quantity);
+  }
 
   if (triggerCoreBuy()) return;
 
@@ -767,6 +837,7 @@ function openCheckout() {
       setSelectedCombo(card.dataset.index);
     });
   });
+  updateExtraBagVariantVisibility();
 
   document.querySelectorAll("[data-variant-name]").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -1275,7 +1346,7 @@ function openCheckout() {
   const variantAddBtn = document.getElementById("solarVariantAddToCart");
   if (variantAddBtn) {
     variantAddBtn.addEventListener("click", () => {
-      applyBaloVariantsToProduct();
+      applySelectedVariantsToProduct(1);
 
       const inlineAdd = document.getElementById("inlineAddToCartBtn");
       if (inlineAdd && typeof inlineAdd.click === "function") {
@@ -1294,7 +1365,7 @@ function openCheckout() {
   if (buyBtn) buyBtn.addEventListener("click", openCheckout);
 
   function startSolarExtraBagStockTimer() {
-    if (!isBaloProduct) return;
+    if (!isBaloProduct && !isBanProduct) return;
     if (!P.extraBagGift?.enabled) return;
 
     const stockEl = document.getElementById("solarExtraBagStock");
@@ -1329,7 +1400,7 @@ function openCheckout() {
       <div class="order-notif-icon">✓</div>
       <div class="order-notif-content">
         <div id="solarOrderNotifTopText"></div>
-        <div class="order-notif-sub">Vừa đặt hàng trên Nino Việt Nam</div>
+        <div class="order-notif-sub">${P.orderNotification?.subText || "Vừa đặt hàng trên Nino Việt Nam"}</div>
       </div>
     `;
 
@@ -1338,33 +1409,34 @@ function openCheckout() {
     const textEl = document.getElementById("solarOrderNotifTopText");
     if (!textEl) return;
 
-    const baloColors = isBaloProduct
-      ? variants
-          .find(v => v.type === "color")
-          ?.options
-          ?.map(o => o.name)
-          ?.filter(Boolean) || []
-      : [];
-
-    function pickComboText() {
-      if (isBaloProduct) {
-        const qty = Math.random() < 0.82 ? 1 : 2;
-        const color = baloColors.length
-          ? baloColors[Math.floor(Math.random() * baloColors.length)]
-          : "Nâu";
-
-        return qty + " balo màu " + color;
+    function getNotificationItems() {
+      if (
+        P.orderNotification &&
+        Array.isArray(P.orderNotification.items) &&
+        P.orderNotification.items.length
+      ) {
+        return P.orderNotification.items.filter(Boolean);
       }
 
-      const comboTexts = [
-        "1 đèn năng lượng mặt trời",
-        "Combo 2 đèn năng lượng mặt trời",
-        "Combo 3 đèn năng lượng mặt trời"
-      ];
+      if (Array.isArray(P.combos) && P.combos.length) {
+        return P.combos
+          .map(combo => combo.notificationText || combo.name)
+          .filter(Boolean);
+      }
 
-      return comboTexts[Math.floor(Math.random() * comboTexts.length)];
+      const fallbackName = P.shortName || P.sheetProductName || P.displayName || P.name || "sản phẩm";
+      return ["1 " + fallbackName];
     }
 
+    function pickComboText() {
+      const notificationItems = getNotificationItems();
+
+      if (!notificationItems.length) {
+        return P.shortName || P.sheetProductName || P.displayName || P.name || "sản phẩm";
+      }
+
+      return notificationItems[Math.floor(Math.random() * notificationItems.length)];
+    }
     let lastShownAt = 0;
     let minGapMs = 5000;
 
