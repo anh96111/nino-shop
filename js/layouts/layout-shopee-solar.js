@@ -57,7 +57,7 @@
     - ban: giữ đúng thứ tự trong file sản phẩm
     - sản phẩm khác: giữ logic đảo như cũ
   */
-  const shouldKeepComboOrder = P.slug === "ban";
+  const shouldKeepComboOrder = ["ban", "thietbitroluc"].includes(P.slug);
 
   const displayOrder = shouldKeepComboOrder
     ? combos.map((_, i) => i)
@@ -526,6 +526,7 @@
                 <span class="solar-old-price">${formatPrice(P.oldPrice)}</span>
                 <span class="solar-discount">-${discountPercent}%</span>
               ` : ""}
+              <span class="solar-return-tag">↩️ Miễn phí đổi trả 7 ngày</span>
             </div>
             <p class="solar-price-note">
               <span class="material-symbols-outlined">info</span>
@@ -1031,6 +1032,20 @@ function openCheckout() {
         display: flex;
         align-items: center;
         gap: 8px;
+      }
+
+      .solar-return-tag {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: #ecfdf5;
+        border: 1px solid #86efac;
+        color: #15803d;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
       }
 
       .solar-bottom-bar--single {
