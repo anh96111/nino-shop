@@ -1432,34 +1432,6 @@ function openCheckout() {
     const textEl = document.getElementById("solarOrderNotifTopText");
     if (!textEl) return;
 
-    function getNotificationItems() {
-      if (
-        P.orderNotification &&
-        Array.isArray(P.orderNotification.items) &&
-        P.orderNotification.items.length
-      ) {
-        return P.orderNotification.items.filter(Boolean);
-      }
-
-      if (Array.isArray(P.combos) && P.combos.length) {
-        return P.combos
-          .map(combo => combo.notificationText || combo.name)
-          .filter(Boolean);
-      }
-
-      const fallbackName = P.shortName || P.sheetProductName || P.displayName || P.name || "sản phẩm";
-      return ["1 " + fallbackName];
-    }
-
-    function pickComboText() {
-      const notificationItems = getNotificationItems();
-
-      if (!notificationItems.length) {
-        return P.shortName || P.sheetProductName || P.displayName || P.name || "sản phẩm";
-      }
-
-      return notificationItems[Math.floor(Math.random() * notificationItems.length)];
-    }
     let lastShownAt = 0;
     let minGapMs = 5000;
 
@@ -1477,7 +1449,7 @@ function openCheckout() {
       minGapMs = randomGap();
 
       const customerName = entry && entry.name ? entry.name : "Khách hàng";
-      textEl.textContent = customerName + " vừa đặt " + pickComboText();
+      textEl.textContent = customerName + " đã mua hàng";
 
       orderNotifTop.classList.add("show");
 

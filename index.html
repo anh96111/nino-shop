@@ -34,7 +34,7 @@
   </noscript>
   <noscript><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet"></noscript>
 
-  <link rel="stylesheet" href="/css/core.css?v=5" />
+  <link rel="stylesheet" href="/css/core.css?v=6" />
   <link id="layoutCSS" rel="stylesheet" href="" />
 
   <style>
@@ -130,35 +130,6 @@
       padding-top: 2px;
     }
 
-    /* ── LIVE ORDER NOTIF IN MODAL ── */
-    .modal-live-notif {
-      overflow: hidden;
-      height: 34px;
-      margin: 8px 0 10px;
-      border-radius: 8px;
-      background: #fffbeb;
-      border: 1px solid #fde68a;
-      position: relative;
-    }
-
-    .modal-live-notif-inner {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      padding: 7px 11px;
-      width: 100%;
-    }
-
-    .modal-live-notif-icon { font-size: 14px; flex-shrink: 0; }
-    .modal-live-notif-text {
-      font-size: 12.5px;
-      color: #92400e;
-      font-weight: 500;
-      line-height: 1.4;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
 
     /* ── FORM SECTION TITLE ── */
     .form-section-title {
@@ -327,8 +298,7 @@
       margin-top: 2px;
       white-space: nowrap;
     }
-    .modal-live-notif { cursor: pointer; }
-    .modal-live-notif:hover { background: #fef3c7; }
+
     
   </style>
 </head>
@@ -727,12 +697,12 @@
         /* ── LOAD LAYOUT JS → sau đó LOAD CORE.JS ── */
         const layoutScript = document.createElement("script");
         layoutScript.defer = true;
-        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=6`;
+        layoutScript.src = `/js/layouts/layout-${layoutName}.js?v=7`;
 
         layoutScript.onload = function () {
           const coreScript = document.createElement("script");
           coreScript.defer = true;
-          coreScript.src = "/js/core.js?v=14";
+          coreScript.src = "/js/core.js?v=15";
           document.body.appendChild(coreScript);
         };
 

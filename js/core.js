@@ -2603,42 +2603,20 @@ function initLiveNotifEngine() {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  function getRandomVariantLabel() {
-    const variants = PRODUCT_CONFIG.variants || [];
-    const parts = [];
-    variants.forEach(v => {
-      if (v.options && v.options.length) {
-        const opt = pick(v.options);
-        const name = typeof opt === "object" ? opt.name : opt;
-        /* Rút gọn tên size nếu quá dài */
-        const short = name.length > 20 ? name.slice(0, 20) + "…" : name;
-        parts.push(short);
-      }
-    });
-    return parts.join(" – ");
-  }
+    function buildEntry() {
+      const last      = pick(lastNames);
+      const mid       = pick(midNames);
+      const first     = pick(firstNames);
+      const maskedMid = mid.slice(0, 1) + "**";
+      const name      = `${last} ${maskedMid} ${first}`;
 
-  function getProductShortName() {
-    const name = PRODUCT_CONFIG.shortName || PRODUCT_CONFIG.name || "sản phẩm";
-    return name.length > 18 ? name.slice(0, 18) + "…" : name;
-  }
-
-  function buildEntry() {
-    const last      = pick(lastNames);
-    const mid       = pick(midNames);
-    const first     = pick(firstNames);
-    const maskedMid = mid.slice(0, 1) + "**";
-    const name      = `${last} ${maskedMid} ${first}`;
-    const variant   = getRandomVariantLabel();
-    const product   = getProductShortName();
-    const detail    = variant ? `${product} – ${variant}` : product;
-    return {
-      name:      name,
-      shortText: `${name} vừa đặt hàng`,
-      detail:    detail,
-      ts:        Date.now()
-    };
-  }
+      return {
+        name:      name,
+        shortText: `${name} đã mua hàng`,
+        detail:    "Đã mua hàng",
+        ts:        Date.now()
+      };
+    }
 
   function formatTimeAgo(ts) {
     const diff = Math.floor((Date.now() - ts) / 1000);
@@ -2660,11 +2638,10 @@ function initLiveNotifEngine() {
     history.unshift(entry);
     if (history.length > MAX_HISTORY) history.pop();
     broadcast(entry);
-    setTimeout(loop, rnd(5000, 15000));
+    setTimeout(loop, rnd(8000, 10000));
   }
 
-  /* Khởi động sau delay ngẫu nhiên */
-  setTimeout(loop, rnd(2000, 5000));
+  setTimeout(loop, rnd(8000, 10000));
 
   window.__liveNotif = {
     subscribe:     function(fn) { subscribers.push(fn); },
@@ -2684,24 +2661,24 @@ function initModalLiveNotif() {
 
   /* Subscribe nhận entry mới từ engine */
   window.__liveNotif.subscribe(function(entry) {
-    /* Fade out + slide up */
-    inner.style.transition = "transform 0.5s ease, opacity 0.5s ease";
-    inner.style.transform  = "translateY(-6px)";
+    /* Fade nhẹ, ít gây chú ý */
+    inner.style.transition = "transform 0.35s ease, opacity 0.35s ease";
+    inner.style.transform  = "translateY(-3px)";
     inner.style.opacity    = "0";
 
     setTimeout(function() {
       textEl.textContent = entry.shortText;
 
       inner.style.transition = "none";
-      inner.style.transform  = "translateY(6px)";
+      inner.style.transform  = "translateY(3px)";
       inner.style.opacity    = "0";
 
       void inner.offsetHeight;
 
-      inner.style.transition = "transform 0.6s ease, opacity 0.6s ease";
+      inner.style.transition = "transform 0.4s ease, opacity 0.4s ease";
       inner.style.transform  = "translateY(0)";
       inner.style.opacity    = "1";
-    }, 520);
+    }, 360);
   });
 
   /* Hiển thị ngay nếu đã có lịch sử */
@@ -2738,10 +2715,10 @@ function openNotifHistory() {
     list.innerHTML = historyData.map(function(entry) {
       return `
         <div class="notif-history-item">
-          <span class="notif-history-icon">🛍</span>
+          <span class="notif-history-icon">✓</span>
           <div class="notif-history-body">
             <div class="notif-history-name">${entry.name}</div>
-            <div class="notif-history-detail">${entry.detail}</div>
+            <div class="notif-history-detail">Đã mua hàng</div>
           </div>
           <div class="notif-history-time">${window.__liveNotif.formatTimeAgo(entry.ts)}</div>
         </div>
