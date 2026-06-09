@@ -91,6 +91,7 @@
   const reviewItems = (P.reviews && Array.isArray(P.reviews.items)) ? P.reviews.items : [];
   const REVIEW_INITIAL = 10;
   let reviewExpanded = false;
+  let reviewLoadErrorShown = false;
 
   let selectedComboIndex = null;
   const selectedVariants = {};
@@ -317,14 +318,20 @@
     const shown = reviewExpanded ? reviewItems : reviewItems.slice(0, REVIEW_INITIAL);
     const listHtml = shown.map(renderReviewItem).join("");
 
-    const moreBtnHtml = reviewItems.length > REVIEW_INITIAL && !reviewExpanded
+    const moreBtnHtml = !reviewExpanded
       ? `<button type="button" class="solar-review-more" id="solarReviewMoreBtn">
-           Xem thêm ${reviewItems.length - REVIEW_INITIAL} đánh giá
-           <span class="material-symbols-outlined">expand_more</span>
-         </button>`
+          Xem thêm 1.2k đánh giá
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>`
       : "";
 
-    return `<div class="solar-review-list" id="solarReviewList">${listHtml}</div>${moreBtnHtml}`;
+    const loadErrorHtml = reviewLoadErrorShown
+      ? `<div class="solar-review-load-error">
+          Không thể tải thêm đánh giá khác vì mất kết nối mạng
+        </div>`
+      : "";
+
+    return `<div class="solar-review-list" id="solarReviewList">${listHtml}</div>${moreBtnHtml}${loadErrorHtml}`;
   }
 
   const shopStats = Array.isArray(S.stats) ? S.stats : [];
@@ -966,10 +973,11 @@ function openCheckout() {
 
     btn.addEventListener("click", () => {
       reviewExpanded = true;
+      reviewLoadErrorShown = true;
+
       const wrap = document.getElementById("solarReviewWrap");
       if (wrap) {
         wrap.innerHTML = buildReviewsHtml();
-        bindReviewMoreBtn();
         bindReviewVideoBtns();
         bindReviewImageBtns();
       }
@@ -986,6 +994,18 @@ function openCheckout() {
       .combo-tag.tag-save {
         background: linear-gradient(135deg, #16a34a, #22c55e) !important;
         color: #fff !important;
+      }
+
+      .solar-review-load-error {
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        font-size: 13px;
+        font-weight: 800;
+        text-align: center;
       }
 
       .solar-feature-tags--sticky {

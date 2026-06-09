@@ -45,7 +45,10 @@ const PRODUCT_CONFIG = {
   ],
 
   images: [
+    imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1781027785/9_j3coak.png"),
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1781024373/7_wheyfw.png"),
+    imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1781027785/10_ligbsh.png"),
+    imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1781027786/8_nbwtqa.png"),
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1781024372/2_to2xcz.png"),
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1781024373/3_w8joyy.png"),
     imgCover("https://res.cloudinary.com/dfppbfjkm/image/upload/v1781024373/5_pysqwu.png"),
