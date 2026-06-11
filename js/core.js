@@ -1629,6 +1629,27 @@ function sortAddressList(list) {
 =================================================== */
 let checkoutAddressLevel = "province";
 
+(function injectCheckoutAreaHintStyle() {
+  if (document.getElementById("checkoutAreaHintStyle")) return;
+
+  const style = document.createElement("style");
+  style.id = "checkoutAreaHintStyle";
+  style.textContent = `
+    .checkout-area-hint {
+      margin: 8px 0 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fff7ed;
+      color: #c2410c;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+  `;
+
+  document.head.appendChild(style);
+})();
+
 async function loadCheckoutProvinces() {
   if (!checkoutLocationText) return [];
 
@@ -1789,6 +1810,13 @@ function renderCheckoutAreaOptions() {
   }
 
   checkoutAreaList.innerHTML = "";
+
+  if (keyword && filtered.length) {
+    const hint = document.createElement("div");
+    hint.className = "checkout-area-hint";
+    hint.textContent = "Bấm chọn 1 kết quả bên dưới để tiếp tục";
+    checkoutAreaList.appendChild(hint);
+  }
 
   filtered.forEach(function (item) {
     const option = document.createElement("button");
@@ -2226,13 +2254,13 @@ document.getElementById("orderForm").addEventListener("submit", async e => {
       }
     } else {
       if (!province) {
-        showFieldError("address", "addressError", "Vui lòng chọn Tỉnh/Thành phố");
+        showFieldError("address", "addressError", "Vui lòng Bấm chọn Tỉnh/Thành phố trong danh sách gợi ý");
         hasError = true;
       } else if (!district) {
-        showFieldError("address", "addressError", "Vui lòng chọn Quận/Huyện");
+        showFieldError("address", "addressError", "Vui lòng Bấm chọn Quận/Huyện trong danh sách gợi ý");
         hasError = true;
       } else if (!ward) {
-        showFieldError("address", "addressError", "Vui lòng chọn Xã/Phường");
+        showFieldError("address", "addressError", "Vui lòng Bấm chọn Xã/Phường trong danh sách gợi ý");
         hasError = true;
       }
     }
