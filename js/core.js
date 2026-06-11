@@ -49,6 +49,7 @@ const GAS_URL              = SHARED_CONFIG.gasUrl;
 const PRODUCT_EXTRA_IMAGES = PRODUCT_CONFIG.images;
 const PRODUCT_VIDEOS       = PRODUCT_CONFIG.videos;
 const REVIEWS              = PRODUCT_CONFIG.reviews.items;
+const IS_LOCAL = ["localhost", "127.0.0.1"].includes(window.location.hostname);
 
 /* ===================================================
    DETECT: SP có biến thể màu không?
@@ -79,22 +80,24 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 
-fbq('init', FB_PIXEL_ID);
-fbq('track', 'PageView');
+if (!IS_LOCAL) {
+  fbq('init', FB_PIXEL_ID);
+  fbq('track', 'PageView');
 
-const viewContentEventId = generateEventId();
+  const viewContentEventId = generateEventId();
 
-fbq('track', 'ViewContent', {
-  content_name: PRODUCT_CONFIG.name,
-  content_category: PRODUCT_CONFIG.category,
-  content_ids: [PRODUCT_CONFIG.id],
-  content_type: 'product',
-  value: PRODUCT_CONFIG.price,
-  currency: PRODUCT_CONFIG.currency
-}, {
-  eventID: viewContentEventId,
-  external_id: EXTERNAL_ID
-});
+  fbq('track', 'ViewContent', {
+    content_name: PRODUCT_CONFIG.name,
+    content_category: PRODUCT_CONFIG.category,
+    content_ids: [PRODUCT_CONFIG.id],
+    content_type: 'product',
+    value: PRODUCT_CONFIG.price,
+    currency: PRODUCT_CONFIG.currency
+  }, {
+    eventID: viewContentEventId,
+    external_id: EXTERNAL_ID
+  });
+}
 
 
 /* ===================================================
@@ -871,13 +874,15 @@ detectedOrderSource = detectOrderSourceFromUrl();
 /* ===================================================
    LẤY CLIENT IP
 =================================================== */
-fetch("https://api.ipify.org?format=json")
-  .then(r => r.json())
-  .then(d => { clientIp = d.ip; })
-  .catch(() => {})
-  .finally(() => {
-    sendViewContentToGAS();
-  });
+if (!IS_LOCAL) {
+  fetch("https://api.ipify.org?format=json")
+    .then(r => r.json())
+    .then(d => { clientIp = d.ip; })
+    .catch(() => {})
+    .finally(() => {
+      sendViewContentToGAS();
+    });
+}
 
 /* ===================================================
    BUILD BASE PAYLOAD
@@ -910,6 +915,8 @@ function buildBasePayload(eventIdObj) {
    GỬI LÊN GAS
 =================================================== */
 function sendToGAS(payload) {
+  if (IS_LOCAL) return;
+
   fetch(GAS_URL, {
     method:  "POST",
     mode:    "no-cors",
@@ -922,6 +929,7 @@ function sendToGAS(payload) {
    GỬI BÁO LỖI HỆ THỐNG
 =================================================== */
 function sendErrorReport(errorMessage, customerData, itemsData, total) {
+  if (IS_LOCAL) return;
   const payload = {
     event_type:    "error_report",
     error_message: errorMessage,
@@ -1964,8 +1972,12 @@ function updateCheckoutAddressValue() {
   if (wardInput)     wardInput.value     = ward;
 
   if (checkoutFullAddressPreview) {
-    checkoutFullAddressPreview.textContent = fullAddress || "Địa chỉ đầy đủ sẽ hiển thị tại đây.";
-    checkoutFullAddressPreview.classList.toggle("has-value", !!fullAddress);
+    const hasFullLocation = !!(province && district && ward);
+    const shouldShowPreview = hasFullLocation || !!street;
+
+    checkoutFullAddressPreview.textContent = fullAddress;
+    checkoutFullAddressPreview.classList.toggle("has-value", shouldShowPreview);
+    checkoutFullAddressPreview.style.display = shouldShowPreview ? "block" : "none";
   }
 
   updateCheckoutLocationText();
@@ -1989,8 +2001,9 @@ function resetCheckoutAddressUI() {
   if (wardInput)          wardInput.value = "";
 
   if (checkoutFullAddressPreview) {
-    checkoutFullAddressPreview.textContent = "Địa chỉ đầy đủ sẽ hiển thị tại đây.";
+    checkoutFullAddressPreview.textContent = "";
     checkoutFullAddressPreview.classList.remove("has-value");
+    checkoutFullAddressPreview.style.display = "none";
   }
 
   updateCheckoutAddressValue();
