@@ -5,6 +5,9 @@ const imgContent = url => cldImage(url, "f_auto,q_auto:good,c_limit,w_900");
 const imgReview = url => cldImage(url, "f_auto,q_auto:good,c_fill,g_auto,w_260,h_260");
 const imgReviewFull = url => cldImage(url, "f_auto,q_auto:good,c_limit,w_1200");
 const imgAvatar = url => cldImage(url, "f_auto,q_auto:good,c_fill,g_face,w_80,h_80");
+const videoPoster = url => String(url || "")
+  .replace("/video/upload/", "/video/upload/so_0,f_auto,q_auto:good,c_fill,g_auto,w_260,h_260/")
+  .replace(/\.(mp4|mov|webm)(\?.*)?$/i, ".jpg");
 
 const DEFAULT_AVATAR = imgAvatar("https://res.cloudinary.com/dfppbfjkm/image/upload/v1780689040/Avt_m%E1%BA%B7c_%C4%91%E1%BB%8Bnh_Facebook_isxluz.webp");
 
@@ -195,7 +198,17 @@ const PRODUCT_CONFIG = {
         match: "",
         material: "",
         content: "Nhận hàng đúng mẫu, màu đẹp, để sữa rửa mặt với kem đánh răng rất gọn. Shop đóng gói cẩn thận.",
-        media: [],
+        media: [
+          {
+            src: imgReview(""),
+            fullSrc: imgReviewFull("")
+          },
+          {
+            type: "video",
+            src: "https://res.cloudinary.com/dfppbfjkm/video/upload/v1781196686/20260602_4182892b6b2f571f_567960593005_459855922016333_published_mp4_264_hd_taobao_xjjhpo.mp4",
+            poster: videoPoster("https://res.cloudinary.com/dfppbfjkm/video/upload/v1781196686/20260602_4182892b6b2f571f_567960593005_459855922016333_published_mp4_264_hd_taobao_xjjhpo.mp4")
+          }
+        ],
         mediaFull: [],
         likes: 12
       },

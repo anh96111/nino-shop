@@ -2566,11 +2566,13 @@ function setupReviewMediaLightbox() {
     lightboxContent.querySelectorAll("img, video").forEach(el => el.remove());
     let mediaEl;
     if (type === "video") {
-      mediaEl             = document.createElement("video");
-      mediaEl.src         = src;
-      mediaEl.controls    = true;
-      mediaEl.autoplay    = true;
+      mediaEl = document.createElement("video");
+      mediaEl.src = src;
+      mediaEl.controls = true;
+      mediaEl.autoplay = true;
       mediaEl.playsInline = true;
+      mediaEl.muted = true;
+      mediaEl.preload = "metadata";
       mediaEl.style.cssText = "max-width:100%; max-height:80vh; border-radius:8px;";
     } else {
       mediaEl     = document.createElement("img");
@@ -2579,6 +2581,9 @@ function setupReviewMediaLightbox() {
     lightboxContent.appendChild(mediaEl);
     lightbox.classList.add("show");
     document.body.style.overflow = "hidden";
+    if (type === "video" && mediaEl) {
+      mediaEl.play().catch(function () {});
+    }
   });
 
   function closeLightbox() {
