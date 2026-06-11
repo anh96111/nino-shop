@@ -1671,17 +1671,33 @@ async function loadCheckoutProvinces() {
 
   checkoutProvinceLoadStatus = "loading";
 
-  checkoutProvinceLoadPromise = fetch("https://provinces.open-api.vn/api/?depth=3")
+  checkoutProvinceLoadPromise = fetch("/data/vn-address.json")
     .then(function (response) {
       if (!response.ok) {
-        throw new Error("Province API failed");
+        throw new Error("Local address file failed");
       }
 
       return response.json();
     })
+    .catch(function () {
+      return fetch("https://provinces.open-api.vn/api/?depth=3")
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Province API failed");
+          }
+
+          return response.json();
+        });
+    })
     .then(function (data) {
       checkoutProvincesData = Array.isArray(data) ? data : [];
       checkoutProvinceLoadStatus = checkoutProvincesData.length ? "success" : "error";
+
+      if (!checkoutProvincesData.length && checkoutLocationText) {
+        checkoutLocationText.textContent = "Không tải được khu vực";
+        checkoutLocationText.classList.add("placeholder");
+      }
+
       restoreCheckoutCustomerDraft();
 
       return checkoutProvincesData;
@@ -1689,8 +1705,10 @@ async function loadCheckoutProvinces() {
     .catch(function () {
       checkoutProvinceLoadStatus = "error";
       checkoutProvincesData = [];
+
       checkoutLocationText.textContent = "Không tải được khu vực";
       checkoutLocationText.classList.add("placeholder");
+
       restoreCheckoutCustomerDraft();
 
       return [];
@@ -1701,6 +1719,18 @@ async function loadCheckoutProvinces() {
 
   return checkoutProvinceLoadPromise;
 }
+function preloadCheckoutProvincesLater() {
+  if (checkoutProvinceLoadStatus === "success") return;
+  if (checkoutProvinceLoadPromise) return;
+
+  setTimeout(function () {
+    if (checkoutProvinceLoadStatus === "idle") {
+      loadCheckoutProvinces();
+    }
+  }, 4000);
+}
+
+preloadCheckoutProvincesLater();
 
 function normalizeCheckoutSearchText(text) {
   return String(text || "")
