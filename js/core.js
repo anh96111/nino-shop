@@ -80,11 +80,11 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 
+const viewContentEventId = generateEventId();
+
 if (!IS_LOCAL) {
   fbq('init', FB_PIXEL_ID);
   fbq('track', 'PageView');
-
-  const viewContentEventId = generateEventId();
 
   fbq('track', 'ViewContent', {
     content_name: PRODUCT_CONFIG.name,
