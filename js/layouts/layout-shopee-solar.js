@@ -528,7 +528,7 @@
 
           <div class="solar-price-box">
             <div class="solar-price-line">
-              <span class="solar-price">${formatPrice(P.price)}</span>
+              <span class="solar-price">${formatPrice(P.price)}${P.priceUnit ? `<span class="solar-price-unit"> ${P.priceUnit}</span>` : ""}</span>
               ${isBaloProduct ? `
                 <span class="solar-old-price">${formatPrice(P.oldPrice)}</span>
                 <span class="solar-discount">-${discountPercent}%</span>
